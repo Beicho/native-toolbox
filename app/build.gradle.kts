@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.toolbox.nativetoolbox"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.toolbox.nativetoolbox"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "0.1.0"
 
