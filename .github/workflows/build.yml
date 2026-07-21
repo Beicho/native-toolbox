@@ -21,22 +21,41 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        api-level: 34
-        build-tools: 34.0.0
+    - name: Remove corrupted Android SDK
+      run: |
+        sudo rm -rf /usr/lib/android-sdk
+        sudo rm -rf $ANDROID_HOME
+        sudo rm -rf ~/.android
 
-    - name: Clean Gradle cache
+    - name: Setup Android SDK manually
+      run: |
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+        unzip -q commandlinetools-linux-11076708_latest.zip
+        mv cmdline-tools latest
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+        yes | sdkmanager --licenses || true
+        sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+
+    - name: Clean all Gradle caches
       run: |
         rm -rf ~/.gradle/caches/
         rm -rf ~/.gradle/wrapper/
+        rm -rf ~/.gradle/daemon/
         rm -rf .gradle/
+        rm -rf build/
+        rm -rf app/build/
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
         cache-disabled: true
+        cache-read-only: true
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
