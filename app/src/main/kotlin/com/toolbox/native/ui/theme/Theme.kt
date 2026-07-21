@@ -17,33 +17,75 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryBlue,
-    secondary = SecondaryGreen,
-    error = ErrorRed,
-    background = BackgroundLight,
-    surface = SurfaceLight,
+    primary = MorandiBlue,
     onPrimary = Color.White,
+    primaryContainer = MorandiBlueLight,
+    onPrimaryContainer = MorlandiBlueDark,
+
+    secondary = MorandiPink,
     onSecondary = Color.White,
-    onBackground = TextPrimary,
-    onSurface = TextPrimary
+    secondaryContainer = MorandiPinkLight,
+    onSecondaryContainer = MorandiPinkDark,
+
+    tertiary = MorandiPurple,
+    onTertiary = Color.White,
+    tertiaryContainer = MorandiPurpleLight,
+    onTertiaryContainer = MorandiPurpleDark,
+
+    error = MorandiRed,
+    onError = Color.White,
+    errorContainer = MorandiRedLight,
+    onErrorContainer = MorandiRedDark,
+
+    background = BackgroundLight,
+    onBackground = TextPrimaryLight,
+
+    surface = SurfaceLight,
+    onSurface = TextPrimaryLight,
+    surfaceVariant = SurfaceVariantLight,
+    onSurfaceVariant = TextSecondaryLight,
+
+    outline = OutlineLight,
+    outlineVariant = DividerLight
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryBlue,
-    secondary = SecondaryGreen,
-    error = ErrorRed,
+    primary = MorandiBlueLight,
+    onPrimary = MorlandiBlueDark,
+    primaryContainer = MorlandiBlueDark,
+    onPrimaryContainer = MorandiBlueLight,
+
+    secondary = MorandiPinkLight,
+    onSecondary = MorandiPinkDark,
+    secondaryContainer = MorandiPinkDark,
+    onSecondaryContainer = MorandiPinkLight,
+
+    tertiary = MorandiPurpleLight,
+    onTertiary = MorandiPurpleDark,
+    tertiaryContainer = MorandiPurpleDark,
+    onTertiaryContainer = MorandiPurpleLight,
+
+    error = MorandiRedLight,
+    onError = MorandiRedDark,
+    errorContainer = MorandiRedDark,
+    onErrorContainer = MorandiRedLight,
+
     background = BackgroundDark,
-    surface = SurfaceDark,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
     onBackground = TextPrimaryDark,
-    onSurface = TextPrimaryDark
+
+    surface = SurfaceDark,
+    onSurface = TextPrimaryDark,
+    surfaceVariant = SurfaceVariantDark,
+    onSurfaceVariant = TextSecondaryDark,
+
+    outline = OutlineDark,
+    outlineVariant = DividerDark
 )
 
 @Composable
 fun NativeToolboxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, // 莫兰迪配色不使用动态取色
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -59,7 +101,7 @@ fun NativeToolboxTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
