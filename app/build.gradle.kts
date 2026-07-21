@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.toolbox.nativetoolbox"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.toolbox.nativetoolbox"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "0.1.0"
 
@@ -62,8 +62,8 @@ dependencies {
     // Kyant Liquid Glass UI
     implementation("io.github.kyant0:backdrop:1.0.0")
 
-    // Compose BOM - 使用兼容 Android 34 的版本
-    val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
+    // Compose BOM - 最新版本
+    val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
@@ -75,7 +75,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.foundation:foundation")
 
-    // Activity & Lifecycle - 锁定到兼容 Android 34 的版本
+    // Activity & Lifecycle
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
@@ -102,8 +102,8 @@ dependencies {
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
-    // Core - 锁定到兼容 Android 34 的版本
-    implementation("androidx.core:core-ktx:1.13.1")
+    // Core
+    implementation("androidx.core:core-ktx:1.15.0")
 
     // Debug
     debugImplementation("androidx.compose.ui:ui-tooling")
