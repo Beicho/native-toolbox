@@ -62,8 +62,8 @@ dependencies {
     // Kyant Liquid Glass UI
     implementation("io.github.kyant0:backdrop:1.0.0")
 
-    // Compose BOM - 最新版本
-    val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
+    // Compose BOM - 兼容 Android 34 的稳定版本
+    val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
