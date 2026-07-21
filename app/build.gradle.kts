@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "com.toolbox.nativetoolbox"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.toolbox.nativetoolbox"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
-        versionName = "3.0.0"
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -51,7 +51,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "2.0.21"
     }
 
     packaging {
@@ -62,6 +62,9 @@ android {
 }
 
 dependencies {
+    // Kyant Liquid Glass UI
+    implementation("io.github.kyant0:backdrop:1.0.0")
+
     // Compose BOM
     val composeBom = platform("androidx.compose:compose-bom:2024.02.00")
     implementation(composeBom)

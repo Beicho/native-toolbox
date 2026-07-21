@@ -16,26 +16,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val LightColorScheme = lightColorScheme(
-    primary = MorandiBlue,
+private val AstroLightColorScheme = lightColorScheme(
+    primary = AstroBlue,
     onPrimary = Color.White,
-    primaryContainer = MorandiBlueLight,
-    onPrimaryContainer = MorlandiBlueDark,
+    primaryContainer = AstroBlueContainer,
+    onPrimaryContainer = AstroBlueDark,
 
-    secondary = MorandiPink,
+    secondary = AstroPurple,
     onSecondary = Color.White,
-    secondaryContainer = MorandiPinkLight,
-    onSecondaryContainer = MorandiPinkDark,
+    secondaryContainer = AstroPurpleContainer,
+    onSecondaryContainer = AstroPurpleDark,
 
-    tertiary = MorandiPurple,
+    tertiary = AstroOrange,
     onTertiary = Color.White,
-    tertiaryContainer = MorandiPurpleLight,
-    onTertiaryContainer = MorandiPurpleDark,
+    tertiaryContainer = AstroOrangeContainer,
+    onTertiaryContainer = AstroOrangeDark,
 
-    error = MorandiRed,
+    error = AstroRed,
     onError = Color.White,
-    errorContainer = MorandiRedLight,
-    onErrorContainer = MorandiRedDark,
+    errorContainer = AstroRedContainer,
+    onErrorContainer = AstroRedDark,
 
     background = BackgroundLight,
     onBackground = TextPrimaryLight,
@@ -46,29 +46,31 @@ private val LightColorScheme = lightColorScheme(
     onSurfaceVariant = TextSecondaryLight,
 
     outline = OutlineLight,
-    outlineVariant = DividerLight
+    outlineVariant = OutlineVariantLight,
+
+    scrim = Scrim
 )
 
-private val DarkColorScheme = darkColorScheme(
-    primary = MorandiBlueLight,
-    onPrimary = MorlandiBlueDark,
-    primaryContainer = MorlandiBlueDark,
-    onPrimaryContainer = MorandiBlueLight,
+private val AstroDarkColorScheme = darkColorScheme(
+    primary = AstroBlueLight,
+    onPrimary = AstroBlueDark,
+    primaryContainer = AstroBlueDark,
+    onPrimaryContainer = AstroBlueContainer,
 
-    secondary = MorandiPinkLight,
-    onSecondary = MorandiPinkDark,
-    secondaryContainer = MorandiPinkDark,
-    onSecondaryContainer = MorandiPinkLight,
+    secondary = AstroPurpleLight,
+    onSecondary = AstroPurpleDark,
+    secondaryContainer = AstroPurpleDark,
+    onSecondaryContainer = AstroPurpleContainer,
 
-    tertiary = MorandiPurpleLight,
-    onTertiary = MorandiPurpleDark,
-    tertiaryContainer = MorandiPurpleDark,
-    onTertiaryContainer = MorandiPurpleLight,
+    tertiary = AstroOrangeLight,
+    onTertiary = AstroOrangeDark,
+    tertiaryContainer = AstroOrangeDark,
+    onTertiaryContainer = AstroOrangeContainer,
 
-    error = MorandiRedLight,
-    onError = MorandiRedDark,
-    errorContainer = MorandiRedDark,
-    onErrorContainer = MorandiRedLight,
+    error = AstroRedLight,
+    onError = AstroRedDark,
+    errorContainer = AstroRedDark,
+    onErrorContainer = AstroRedContainer,
 
     background = BackgroundDark,
     onBackground = TextPrimaryDark,
@@ -79,13 +81,15 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = TextSecondaryDark,
 
     outline = OutlineDark,
-    outlineVariant = DividerDark
+    outlineVariant = OutlineVariantDark,
+
+    scrim = Scrim
 )
 
 @Composable
-fun NativeToolboxTheme(
+fun AstroKitTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // 莫兰迪配色不使用动态取色
+    dynamicColor: Boolean = true, // 启用 Material You 动态取色
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -93,16 +97,18 @@ fun NativeToolboxTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> AstroDarkColorScheme
+        else -> AstroLightColorScheme
     }
 
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.surface.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
         }
     }
 

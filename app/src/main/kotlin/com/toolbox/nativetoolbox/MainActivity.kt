@@ -16,7 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.toolbox.nativetoolbox.ui.theme.NativeToolboxTheme
+import com.toolbox.nativetoolbox.ui.theme.AstroKitTheme
 import com.toolbox.nativetoolbox.ui.encoding.EncodingScreen
 import com.toolbox.nativetoolbox.ui.novel.NovelScreen
 import com.toolbox.nativetoolbox.ui.about.AboutScreen
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            NativeToolboxTheme {
+            AstroKitTheme {
                 MainScreen()
             }
         }
@@ -56,8 +56,8 @@ fun MainScreen() {
             TopAppBar(
                 title = {
                     Text(
-                        text = "综合工具包",
-                        style = MaterialTheme.typography.titleLarge
+                        text = "Astro Kit",
+                        style = MaterialTheme.typography.headlineMedium
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
