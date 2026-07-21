@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.toolbox.nativetoolbox.ui.theme.AstroCorner
 import com.toolbox.nativetoolbox.ui.theme.AstroDuration
@@ -30,7 +31,7 @@ fun AstroProgressBar(
     progress: Float,
     modifier: Modifier = Modifier,
     showPercentage: Boolean = true,
-    height: dp = 8.dp,
+    height: Dp = 8.dp,
     trackColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     progressColor: Color = MaterialTheme.colorScheme.primary
 ) {

@@ -144,7 +144,7 @@ fun AboutScreen(
                 Column {
                     Spacer(modifier = Modifier.height(AstroSpacing.sm))
                     AstroIndeterminateProgressBar()
-                </Column>
+                }
             }
 
             uiState.latestVersion?.let { version ->

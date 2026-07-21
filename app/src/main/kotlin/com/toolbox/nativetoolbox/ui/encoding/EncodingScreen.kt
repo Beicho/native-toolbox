@@ -264,12 +264,12 @@ fun FileItemCard(
         visible = visible,
         enter = fadeIn(
             animationSpec = tween(
-                durationMillis = AstroDuration.normal.inWholeMilliseconds.toInt(),
+                durationMillis = AstroDuration.short.inWholeMilliseconds.toInt(),
                 easing = AstroEasing.emphasized
             )
         ) + slideInVertically(
             animationSpec = tween(
-                durationMillis = AstroDuration.normal.inWholeMilliseconds.toInt(),
+                durationMillis = AstroDuration.short.inWholeMilliseconds.toInt(),
                 easing = AstroEasing.emphasized
             ),
             initialOffsetY = { it / 4 }

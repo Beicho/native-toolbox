@@ -355,7 +355,7 @@ fun UrlDownloadTab(viewModel: NovelViewModel, uiState: NovelUiState) {
 
                     Spacer(modifier = Modifier.height(AstroSpacing.sm))
 
-                    AstroLinearProgressBar(
+                    AstroProgressBar(
                         progress = uiState.downloadProgress
                     )
                 }
@@ -569,7 +569,7 @@ fun SearchResultCard(
                             )
                         }
                     }
-                </Column>
+                }
 
                 Spacer(modifier = Modifier.width(AstroSpacing.sm))
 
