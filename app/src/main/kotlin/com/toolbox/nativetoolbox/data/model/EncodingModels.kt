@@ -1,4 +1,4 @@
-package com.toolbox.native.data.model
+package com.toolbox.nativetoolbox.data.model
 
 data class EncodingFile(
     val uri: String,

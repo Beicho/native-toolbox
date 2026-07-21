@@ -1,4 +1,4 @@
-package com.toolbox.native.ui.encoding
+package com.toolbox.nativetoolbox.ui.encoding
 
 import android.Manifest
 import android.net.Uri
@@ -21,10 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.toolbox.native.data.model.EncodingFile
-import com.toolbox.native.data.model.EncodingType
-import com.toolbox.native.data.model.FileStatus
-import com.toolbox.native.util.FileHelper
+import com.toolbox.nativetoolbox.data.model.EncodingFile
+import com.toolbox.nativetoolbox.data.model.EncodingType
+import com.toolbox.nativetoolbox.data.model.FileStatus
+import com.toolbox.nativetoolbox.util.FileHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,14 +1,14 @@
-package com.toolbox.native.ui.novel
+package com.toolbox.nativetoolbox.ui.novel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.toolbox.native.data.api.RetrofitClient
-import com.toolbox.native.data.model.ChapterItem
-import com.toolbox.native.data.model.NovelDetail
-import com.toolbox.native.data.model.SearchResult
-import com.toolbox.native.util.FileHelper
-import com.toolbox.native.util.NovelUrlParser
+import com.toolbox.nativetoolbox.data.api.RetrofitClient
+import com.toolbox.nativetoolbox.data.model.ChapterItem
+import com.toolbox.nativetoolbox.data.model.NovelDetail
+import com.toolbox.nativetoolbox.data.model.SearchResult
+import com.toolbox.nativetoolbox.util.FileHelper
+import com.toolbox.nativetoolbox.util.NovelUrlParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

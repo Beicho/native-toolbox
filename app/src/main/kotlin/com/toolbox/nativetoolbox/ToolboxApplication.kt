@@ -1,4 +1,4 @@
-package com.toolbox.native
+package com.toolbox.nativetoolbox
 
 import android.app.Application
 

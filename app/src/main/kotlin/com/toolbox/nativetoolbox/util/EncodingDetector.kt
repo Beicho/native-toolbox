@@ -1,4 +1,4 @@
-package com.toolbox.native.util
+package com.toolbox.nativetoolbox.util
 
 import java.io.InputStream
 import java.nio.charset.Charset

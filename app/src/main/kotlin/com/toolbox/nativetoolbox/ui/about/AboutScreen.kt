@@ -1,4 +1,4 @@
-package com.toolbox.native.ui.about
+package com.toolbox.nativetoolbox.ui.about
 
 import android.content.Intent
 import android.net.Uri

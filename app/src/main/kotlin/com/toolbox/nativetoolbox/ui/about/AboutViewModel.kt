@@ -1,4 +1,4 @@
-package com.toolbox.native.ui.about
+package com.toolbox.nativetoolbox.ui.about
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

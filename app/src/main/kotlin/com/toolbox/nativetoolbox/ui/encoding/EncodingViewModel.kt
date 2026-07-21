@@ -1,14 +1,14 @@
-package com.toolbox.native.ui.encoding
+package com.toolbox.nativetoolbox.ui.encoding
 
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toolbox.native.data.model.EncodingFile
-import com.toolbox.native.data.model.EncodingType
-import com.toolbox.native.data.model.FileStatus
-import com.toolbox.native.util.EncodingDetector
-import com.toolbox.native.util.FileHelper
+import com.toolbox.nativetoolbox.data.model.EncodingFile
+import com.toolbox.nativetoolbox.data.model.EncodingType
+import com.toolbox.nativetoolbox.data.model.FileStatus
+import com.toolbox.nativetoolbox.util.EncodingDetector
+import com.toolbox.nativetoolbox.util.FileHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.toolbox.native.util
+package com.toolbox.nativetoolbox.util
 
 import android.content.ContentValues
 import android.content.Context

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.toolbox.native"
+    namespace = "com.toolbox.nativetoolbox"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.toolbox.native"
+        applicationId = "com.toolbox.nativetoolbox"
         minSdk = 21
         targetSdk = 34
         versionCode = 1

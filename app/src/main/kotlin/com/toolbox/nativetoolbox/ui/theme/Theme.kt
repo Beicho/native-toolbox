@@ -1,4 +1,4 @@
-package com.toolbox.native.ui.theme
+package com.toolbox.nativetoolbox.ui.theme
 
 import android.app.Activity
 import android.os.Build

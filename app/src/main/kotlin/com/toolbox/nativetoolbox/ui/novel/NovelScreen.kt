@@ -1,4 +1,4 @@
-package com.toolbox.native.ui.novel
+package com.toolbox.nativetoolbox.ui.novel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.toolbox.native.data.model.SearchResult
+import com.toolbox.nativetoolbox.data.model.SearchResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

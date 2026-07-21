@@ -1,6 +1,6 @@
-package com.toolbox.native.data.api
+package com.toolbox.nativetoolbox.data.api
 
-import com.toolbox.native.data.model.*
+import com.toolbox.nativetoolbox.data.model.*
 import retrofit2.http.GET
 import retrofit2.http.Query
 

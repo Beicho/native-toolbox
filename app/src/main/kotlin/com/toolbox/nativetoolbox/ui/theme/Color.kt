@@ -1,4 +1,4 @@
-package com.toolbox.native.ui.theme
+package com.toolbox.nativetoolbox.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.toolbox.native
+package com.toolbox.nativetoolbox
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,10 +16,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.toolbox.native.ui.theme.NativeToolboxTheme
-import com.toolbox.native.ui.encoding.EncodingScreen
-import com.toolbox.native.ui.novel.NovelScreen
-import com.toolbox.native.ui.about.AboutScreen
+import com.toolbox.nativetoolbox.ui.theme.NativeToolboxTheme
+import com.toolbox.nativetoolbox.ui.encoding.EncodingScreen
+import com.toolbox.nativetoolbox.ui.novel.NovelScreen
+import com.toolbox.nativetoolbox.ui.about.AboutScreen
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {

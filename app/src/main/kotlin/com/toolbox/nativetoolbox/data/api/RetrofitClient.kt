@@ -1,4 +1,4 @@
-package com.toolbox.native.data.api
+package com.toolbox.nativetoolbox.data.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json

@@ -1,4 +1,4 @@
-package com.toolbox.native.data.model
+package com.toolbox.nativetoolbox.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
