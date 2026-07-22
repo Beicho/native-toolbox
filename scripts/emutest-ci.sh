@@ -4,6 +4,12 @@ set -e
 PKG=com.toolbox.nativetoolbox
 mkdir -p screenshots
 
+# CI 模拟器很慢:隐藏系统 ANR/崩溃对话框,避免挡屏
+adb shell settings put global hide_error_dialogs 1 || true
+adb shell settings put global window_animation_scale 0 || true
+adb shell settings put global transition_animation_scale 0 || true
+adb shell settings put global animator_duration_scale 0 || true
+
 crashcheck() {
   local c
   c=$(adb logcat -d | grep -cE "FATAL EXCEPTION|Fatal signal" || true)
@@ -17,7 +23,7 @@ crashcheck() {
 
 opentool() {
   adb shell am start -n $PKG/.MainActivity --es route "$1" > /dev/null 2>&1
-  sleep 3
+  sleep 5
   crashcheck "$2"
   adb exec-out screencap -p > screenshots/$2.png
 }
@@ -26,7 +32,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb shell am force-stop $PKG
 adb logcat -c
 adb shell am start -n $PKG/.MainActivity > /dev/null
-sleep 8
+sleep 12
 crashcheck launch
 adb exec-out screencap -p > screenshots/home.png
 
