@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (如 v0.3.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Install Android platform 37.0
+      run: |
+        SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+        yes | "$SDKMANAGER" --licenses > /dev/null || true
+        yes | "$SDKMANAGER" "platforms;android-37.0" "build-tools;36.0.0" > /dev/null
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    - name: Build Release APK
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleRelease --stacktrace
+        cp app/build/outputs/apk/release/app-release.apk "AstroKit-${{ github.event.inputs.tag }}.apk"
+
+    - name: Create GitHub Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        TAG="${{ github.event.inputs.tag }}"
+        NOTES="docs/release-notes-${TAG}.md"
+        if [ ! -f "$NOTES" ]; then echo "release notes 文件缺失: $NOTES"; exit 1; fi
+        gh release create "$TAG" "AstroKit-${TAG}.apk" \
+          --title "Astro Kit ${TAG}" \
+          --notes-file "$NOTES"
