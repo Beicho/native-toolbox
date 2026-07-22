@@ -16,12 +16,13 @@ import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToggleRow
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
+import com.toolbox.nativetoolbox.util.ShareBus
 import java.util.Base64
 
 @Composable
 fun Base64ToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
-    var input by rememberSaveable { mutableStateOf("") }
+    var input by rememberSaveable { mutableStateOf(ShareBus.consume() ?: "") }
     var mode by rememberSaveable { mutableStateOf(0) }
     var urlSafe by rememberSaveable { mutableStateOf(false) }
 

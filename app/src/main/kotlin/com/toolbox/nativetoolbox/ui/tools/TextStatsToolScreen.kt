@@ -17,10 +17,11 @@ import com.toolbox.nativetoolbox.ui.components.IosTextArea
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.StatCell
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
+import com.toolbox.nativetoolbox.util.ShareBus
 
 @Composable
 fun TextStatsToolScreen(onBack: () -> Unit) {
-    var input by rememberSaveable { mutableStateOf("") }
+    var input by rememberSaveable { mutableStateOf(ShareBus.consume() ?: "") }
 
     val chars = input.length
     val charsNoSpace = input.count { !it.isWhitespace() }

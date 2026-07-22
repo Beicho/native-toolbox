@@ -13,12 +13,13 @@ import com.toolbox.nativetoolbox.ui.components.OutputCard
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
+import com.toolbox.nativetoolbox.util.ShareBus
 import java.net.URLDecoder
 import java.net.URLEncoder
 
 @Composable
 fun UrlToolScreen(onBack: () -> Unit) {
-    var input by rememberSaveable { mutableStateOf("") }
+    var input by rememberSaveable { mutableStateOf(ShareBus.consume() ?: "") }
     var mode by rememberSaveable { mutableStateOf(0) }
 
     val output = runCatching {

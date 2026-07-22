@@ -21,6 +21,7 @@ import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
+import com.toolbox.nativetoolbox.util.ShareBus
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -28,7 +29,7 @@ import org.json.JSONTokener
 @Composable
 fun JsonToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
-    var input by rememberSaveable { mutableStateOf("") }
+    var input by rememberSaveable { mutableStateOf(ShareBus.consume() ?: "") }
     var mode by rememberSaveable { mutableStateOf(0) }
     var output by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }

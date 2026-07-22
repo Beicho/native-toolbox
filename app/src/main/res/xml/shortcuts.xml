@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="json"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_json">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.toolbox.nativetoolbox"
+            android:targetClass="com.toolbox.nativetoolbox.MainActivity">
+            <extra android:name="route" android:value="tool/json" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="timestamp"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_timestamp">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.toolbox.nativetoolbox"
+            android:targetClass="com.toolbox.nativetoolbox.MainActivity">
+            <extra android:name="route" android:value="tool/timestamp" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="qrcode"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_qrcode">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.toolbox.nativetoolbox"
+            android:targetClass="com.toolbox.nativetoolbox.MainActivity">
+            <extra android:name="route" android:value="tool/qrcode" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="random"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_random">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.toolbox.nativetoolbox"
+            android:targetClass="com.toolbox.nativetoolbox.MainActivity">
+            <extra android:name="route" android:value="tool/random" />
+        </intent>
+    </shortcut>
+</shortcuts>

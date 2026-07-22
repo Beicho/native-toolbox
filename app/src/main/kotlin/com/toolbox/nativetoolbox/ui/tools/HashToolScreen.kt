@@ -14,6 +14,7 @@ import com.toolbox.nativetoolbox.ui.components.RowDivider
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.ToggleRow
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
+import com.toolbox.nativetoolbox.util.ShareBus
 import java.security.MessageDigest
 
 private fun hash(algorithm: String, input: String, upper: Boolean): String {
@@ -25,7 +26,7 @@ private fun hash(algorithm: String, input: String, upper: Boolean): String {
 
 @Composable
 fun HashToolScreen(onBack: () -> Unit) {
-    var input by rememberSaveable { mutableStateOf("") }
+    var input by rememberSaveable { mutableStateOf(ShareBus.consume() ?: "") }
     var upper by rememberSaveable { mutableStateOf(false) }
 
     ToolScaffold {

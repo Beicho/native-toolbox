@@ -12,8 +12,8 @@ android {
         applicationId = "com.toolbox.nativetoolbox"
         minSdk = 29
         targetSdk = 35
-        versionCode = 3
-        versionName = "0.2.1"
+        versionCode = 4
+        versionName = "0.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,6 +44,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -99,6 +100,9 @@ dependencies {
 
     // 二维码
     implementation("com.google.zxing:core:3.5.3")
+
+    // EXIF 读写
+    implementation("androidx.exifinterface:exifinterface:1.4.1")
 
     // Core
     implementation("androidx.core:core-ktx:1.16.0")
