@@ -1,589 +1,218 @@
 package com.toolbox.nativetoolbox.ui.novel
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.toolbox.nativetoolbox.data.model.SearchResult
-import com.toolbox.nativetoolbox.ui.components.*
-import com.toolbox.nativetoolbox.ui.theme.*
+import com.toolbox.nativetoolbox.ui.components.CardPadding
+import com.toolbox.nativetoolbox.ui.components.GroupedCard
+import com.toolbox.nativetoolbox.ui.components.IosTextField
+import com.toolbox.nativetoolbox.ui.components.RowDivider
+import com.toolbox.nativetoolbox.ui.components.SectionHeader
+import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
+import com.toolbox.nativetoolbox.ui.theme.MonoStyle
 
 @Composable
-fun NovelScreen(
-    viewModel: NovelViewModel = viewModel()
-) {
-    val context = LocalContext.current
+fun NovelScreen(viewModel: NovelViewModel = viewModel()) {
+    val palette = LocalIosPalette.current
     val uiState by viewModel.uiState.collectAsState()
-    var searchQuery by remember { mutableStateOf("") }
-    var selectedTab by remember { mutableIntStateOf(0) }
+    var keyword by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
+    LazyColumn(
+        Modifier
             .fillMaxSize()
-            .padding(AstroSpacing.md)
+            .background(palette.groupedBackground)
+            .imePadding(),
+        contentPadding = PaddingValues(bottom = 120.dp)
     ) {
-        // 自定义标签页
-        AstroCard(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(AstroSpacing.xxs)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xxs)
-            ) {
-                AstroTabButton(
-                    text = "URL 下载",
-                    icon = Icons.Default.Link,
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
-                    modifier = Modifier.weight(1f)
-                )
-                AstroTabButton(
-                    text = "搜索",
-                    icon = Icons.Default.Search,
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(AstroSpacing.md))
-
-        AnimatedContent(
-            targetState = selectedTab,
-            transitionSpec = {
-                fadeIn(animationSpec = tween(300, easing = AstroEasing.emphasized)) +
-                    slideInHorizontally(
-                        animationSpec = tween(300, easing = AstroEasing.emphasized),
-                        initialOffsetX = { if (targetState > initialState) it else -it }
-                    ) togetherWith
-                    fadeOut(animationSpec = tween(300, easing = AstroEasing.emphasized)) +
-                    slideOutHorizontally(
-                        animationSpec = tween(300, easing = AstroEasing.emphasized),
-                        targetOffsetX = { if (targetState > initialState) -it else it }
-                    )
-            },
-            label = "tab_content"
-        ) { tab ->
-            when (tab) {
-                0 -> UrlDownloadTab(viewModel, uiState)
-                1 -> SearchTab(viewModel, uiState, searchQuery) { searchQuery = it }
-            }
-        }
-    }
-}
-
-@Composable
-fun AstroTabButton(
-    text: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier.height(48.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (selected)
-                MaterialTheme.colorScheme.primary
-            else
-                MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = if (selected)
-                MaterialTheme.colorScheme.onPrimary
-            else
-                MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
+        item {
             Text(
-                text = text,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                "小说下载",
+                Modifier
+                    .statusBarsPadding()
+                    .padding(start = 20.dp, end = 20.dp, top = 12.dp),
+                style = MaterialTheme.typography.displayLarge,
+                color = palette.label
             )
         }
-    }
-}
 
-@Composable
-fun UrlDownloadTab(viewModel: NovelViewModel, uiState: NovelUiState) {
-    var urlInput by remember { mutableStateOf("") }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        // URL 输入卡片
-        AstroCard(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "📚 输入小说链接",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(AstroSpacing.sm))
-
-            OutlinedTextField(
-                value = urlInput,
-                onValueChange = { urlInput = it },
-                label = { Text("番茄小说链接或书籍ID") },
-                placeholder = { Text("例如：7441596182398218532") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                shape = MaterialTheme.shapes.medium,
-                leadingIcon = {
-                    Icon(Icons.Default.Link, contentDescription = null)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(AstroSpacing.xs))
-
-            Button(
-                onClick = { viewModel.parseNovelUrl(urlInput) },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = urlInput.isNotBlank() && !uiState.isParsing
-            ) {
-                AnimatedContent(
-                    targetState = uiState.isParsing,
-                    label = "parse_button"
-                ) { isParsing ->
-                    if (isParsing) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs),
-                            verticalAlignment = Alignment.CenterVertically
+        item { SectionHeader("搜索番茄小说 / 粘贴书籍链接") }
+        item {
+            GroupedCard {
+                CardPadding {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IosTextField(
+                            value = keyword,
+                            onValueChange = { keyword = it },
+                            placeholder = "书名 / 作者 / 链接 / 书籍 ID",
+                            modifier = Modifier.weight(1f)
+                        )
+                        LiquidButton(
+                            onClick = {
+                                val text = keyword.trim()
+                                if (text.isEmpty()) return@LiquidButton
+                                if (text.any { it.isDigit() } && (text.startsWith("http") || text.all { it.isDigit() })) {
+                                    viewModel.parseNovelUrl(text)
+                                } else {
+                                    viewModel.searchNovels(text)
+                                }
+                            },
+                            tint = palette.accent,
+                            height = 40.dp
                         ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                strokeWidth = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                            Text("解析中...")
-                        }
-                    } else {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.Search, contentDescription = null)
-                            Text("解析小说")
+                            if (uiState.isSearching || uiState.isParsing) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.width(16.dp),
+                                    strokeWidth = 2.dp,
+                                    color = Color.White
+                                )
+                            } else {
+                                Text("搜索", color = Color.White)
+                            }
                         }
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(AstroSpacing.md))
-
-        // 书籍信息卡片
-        AnimatedVisibility(
-            visible = uiState.currentNovel != null,
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
-        ) {
-            uiState.currentNovel?.let { novel ->
-                Column {
-                    AstroCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    ) {
+        if (uiState.searchResults.isNotEmpty() && uiState.currentNovel == null) {
+            item { SectionHeader("搜索结果 · ${uiState.searchResults.size}") }
+            item {
+                GroupedCard {
+                    uiState.searchResults.take(20).forEachIndexed { index, result ->
+                        if (index > 0) RowDivider()
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.Top
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
+                            Column(Modifier.weight(1f)) {
                                 Text(
-                                    text = novel.bookName,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
+                                    result.bookName,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = palette.label,
+                                    maxLines = 1
                                 )
-                                Spacer(modifier = Modifier.height(AstroSpacing.xs))
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        Icons.Default.Person,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Text(
-                                        text = novel.author,
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                }
-                                uiState.chapters?.let { chapters ->
-                                    Spacer(modifier = Modifier.height(AstroSpacing.xxs))
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            Icons.Default.MenuBook,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(
-                                            text = "${chapters.size} 章",
-                                            style = MaterialTheme.typography.bodyMedium
-                                        )
-                                    }
-                                }
+                                Text(
+                                    "${result.author}${if (result.category.isNotBlank()) " · ${result.category}" else ""}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = palette.secondaryLabel,
+                                    maxLines = 1
+                                )
                             }
-
-                            Box(
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        brush = Brush.radialGradient(
-                                            colors = listOf(
-                                                MaterialTheme.colorScheme.primary,
-                                                MaterialTheme.colorScheme.secondary
-                                            )
-                                        )
-                                    ),
-                                contentAlignment = Alignment.Center
+                            Spacer(Modifier.width(10.dp))
+                            LiquidButton(
+                                onClick = { viewModel.parseNovelUrl(result.bookId) },
+                                height = 34.dp
                             ) {
-                                Icon(
-                                    Icons.Default.MenuBook,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier.size(32.dp)
-                                )
+                                Text("解析", color = palette.accent, style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(AstroSpacing.xs))
-
-                    // 下载按钮
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs)
-                    ) {
-                        Button(
-                            onClick = { viewModel.downloadNovel(isHighSpeed = true) },
-                            modifier = Modifier.weight(1f),
-                            enabled = !uiState.isDownloading && uiState.chapters != null,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            Icon(Icons.Default.FlashOn, contentDescription = null)
-                            Spacer(modifier = Modifier.width(AstroSpacing.xxs))
-                            Text("高速")
-                        }
-
-                        OutlinedButton(
-                            onClick = { viewModel.downloadNovel(isHighSpeed = false) },
-                            modifier = Modifier.weight(1f),
-                            enabled = !uiState.isDownloading && uiState.chapters != null
-                        ) {
-                            Icon(Icons.Default.Speed, contentDescription = null)
-                            Spacer(modifier = Modifier.width(AstroSpacing.xxs))
-                            Text("降速")
-                        }
-                    }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(AstroSpacing.md))
-
-        // 下载进度
-        AnimatedVisibility(
-            visible = uiState.isDownloading,
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
-        ) {
-            Column {
-                AstroCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = "下载进度",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(AstroSpacing.xxs))
-                            Text(
-                                text = "${uiState.downloadedChapters}/${uiState.totalChapters} 章",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-
+        uiState.currentNovel?.let { novel ->
+            item { SectionHeader("当前书籍") }
+            item {
+                GroupedCard {
+                    CardPadding {
+                        Text(novel.bookName, style = MaterialTheme.typography.headlineMedium, color = palette.label)
                         Text(
-                            text = "${(uiState.downloadProgress * 100).toInt()}%",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(AstroSpacing.sm))
-
-                    AstroProgressBar(
-                        progress = uiState.downloadProgress
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(AstroSpacing.md))
-            }
-        }
-
-        // 下载日志
-        AnimatedVisibility(
-            visible = uiState.logs.isNotEmpty(),
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "📝 下载日志",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Spacer(modifier = Modifier.height(AstroSpacing.xs))
-
-                val listState = rememberLazyListState()
-
-                LaunchedEffect(uiState.logs.size) {
-                    if (uiState.logs.isNotEmpty()) {
-                        listState.animateScrollToItem(uiState.logs.size - 1)
-                    }
-                }
-
-                AstroCard(
-                    modifier = Modifier.fillMaxSize(),
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                ) {
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(AstroSpacing.xxs)
-                    ) {
-                        items(uiState.logs) { log ->
-                            Text(
-                                text = "→ $log",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontFamily = FontFamily.Monospace
-                                ),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun SearchTab(
-    viewModel: NovelViewModel,
-    uiState: NovelUiState,
-    searchQuery: String,
-    onSearchQueryChange: (String) -> Unit
-) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        // 搜索框
-        AstroCard(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "🔍 搜索小说",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(AstroSpacing.sm))
-
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = onSearchQueryChange,
-                label = { Text("搜索") },
-                placeholder = { Text("输入书名或作者...") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                shape = MaterialTheme.shapes.medium,
-                leadingIcon = {
-                    Icon(Icons.Default.Search, contentDescription = null)
-                },
-                trailingIcon = {
-                    AnimatedVisibility(visible = searchQuery.isNotBlank()) {
-                        IconButton(onClick = { viewModel.searchNovels(searchQuery) }) {
-                            Icon(Icons.Default.ArrowForward, contentDescription = "搜索")
-                        }
-                    }
-                }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(AstroSpacing.md))
-
-        // 搜索结果
-        AnimatedContent(
-            targetState = when {
-                uiState.isSearching -> "loading"
-                uiState.searchResults.isEmpty() && searchQuery.isNotBlank() -> "empty"
-                uiState.searchResults.isNotEmpty() -> "results"
-                else -> "initial"
-            },
-            transitionSpec = {
-                fadeIn() + expandVertically() togetherWith fadeOut() + shrinkVertically()
-            },
-            label = "search_state"
-        ) { state ->
-            when (state) {
-                "loading" -> {
-                    AstroLoadingState(
-                        message = "搜索中..."
-                    )
-                }
-                "empty" -> {
-                    AstroEmptyState(
-                        icon = Icons.Default.SearchOff,
-                        title = "未找到结果",
-                        description = "试试其他关键词吧"
-                    )
-                }
-                "results" -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(AstroSpacing.xs)
-                    ) {
-                        itemsIndexed(
-                            items = uiState.searchResults,
-                            key = { _, result -> result.bookId }
-                        ) { index, result ->
-                            SearchResultCard(
-                                result = result,
-                                viewModel = viewModel,
-                                index = index
-                            )
-                        }
-                    }
-                }
-                else -> {
-                    AstroEmptyState(
-                        icon = Icons.Default.TravelExplore,
-                        title = "开始探索",
-                        description = "输入书名或作者开始搜索"
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun SearchResultCard(
-    result: SearchResult,
-    viewModel: NovelViewModel,
-    index: Int
-) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(index * 30L)
-        visible = true
-    }
-
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn() + slideInVertically(initialOffsetY = { it / 4 })
-    ) {
-        AstroCard(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = result.bookName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.height(AstroSpacing.xxs))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(AstroSpacing.xs),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Person,
-                            contentDescription = null,
-                            modifier = Modifier.size(14.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = result.author,
+                            "作者 ${novel.author} · ${uiState.totalChapters} 章" +
+                                if (novel.category.isNotBlank()) " · ${novel.category}" else "",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = palette.secondaryLabel
                         )
-                        if (result.category.isNotBlank()) {
-                            Text(
-                                text = "•",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            StatusChip(
-                                text = result.category,
-                                type = StatusType.INFO
-                            )
+                        if (uiState.isDownloading) {
+                            Column {
+                                LinearProgressIndicator(
+                                    progress = { uiState.downloadProgress },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(6.dp)
+                                        .clip(RoundedCornerShape(3.dp)),
+                                    color = palette.accent,
+                                    trackColor = palette.fill
+                                )
+                                Spacer(Modifier.height(6.dp))
+                                Text(
+                                    "${uiState.downloadedChapters} / ${uiState.totalChapters} 章",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = palette.secondaryLabel
+                                )
+                            }
+                        } else {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+                            ) {
+                                LiquidButton(onClick = { viewModel.downloadNovel(true) }, tint = palette.accent) {
+                                    Text("高速下载", color = Color.White)
+                                }
+                                LiquidButton(onClick = { viewModel.downloadNovel(false) }) {
+                                    Text("降速下载", color = palette.accent)
+                                }
+                            }
                         }
                     }
                 }
+            }
+        }
 
-                Spacer(modifier = Modifier.width(AstroSpacing.sm))
-
-                FilledIconButton(
-                    onClick = { viewModel.parseNovelUrl(result.bookId) },
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.Download,
-                        contentDescription = "下载"
-                    )
+        if (uiState.logs.isNotEmpty()) {
+            item { SectionHeader("日志") }
+            item {
+                GroupedCard {
+                    Column(Modifier.padding(16.dp)) {
+                        uiState.logs.takeLast(12).forEach { log ->
+                            Text(
+                                log,
+                                style = MonoStyle,
+                                color = when {
+                                    log.contains("[错误]") -> palette.red
+                                    log.contains("[警告]") -> palette.orange
+                                    log.contains("[完成]") || log.contains("[成功]") -> palette.green
+                                    else -> palette.secondaryLabel
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
