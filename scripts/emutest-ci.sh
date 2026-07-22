@@ -9,6 +9,9 @@ adb shell settings put global hide_error_dialogs 1 || true
 adb shell settings put global window_animation_scale 0 || true
 adb shell settings put global transition_animation_scale 0 || true
 adb shell settings put global animator_duration_scale 0 || true
+# 清掉 boot 阶段可能已弹出的 Launcher ANR 弹窗
+adb shell am force-stop com.google.android.apps.nexuslauncher || true
+sleep 2
 
 crashcheck() {
   local c

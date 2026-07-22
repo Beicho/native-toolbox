@@ -36,6 +36,10 @@ jobs:
         chmod +x gradlew
         ./gradlew assembleDebug --stacktrace
 
+    # 释放 Gradle/Kotlin daemon 占用的几 GB 内存,防止模拟器被 OOM 杀掉
+    - name: Stop Gradle daemons
+      run: ./gradlew --stop || true
+
     - name: Run emulator tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
