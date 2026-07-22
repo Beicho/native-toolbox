@@ -66,7 +66,7 @@ fun RandomToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "随机密码", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("长度 · ${length.roundToInt()} 位") }
         item {
             GroupedCard {

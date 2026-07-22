@@ -28,7 +28,7 @@ fun HashToolScreen(onBack: () -> Unit) {
     var input by rememberSaveable { mutableStateOf("") }
     var upper by rememberSaveable { mutableStateOf(false) }
 
-    ToolScaffold(title = "哈希计算", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("输入") }
         item {
             GroupedCard {

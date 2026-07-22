@@ -59,7 +59,7 @@ fun QrToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "二维码", onBack = onBack) {
+    ToolScaffold {
         item {
             Box(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 SegmentedPicker(

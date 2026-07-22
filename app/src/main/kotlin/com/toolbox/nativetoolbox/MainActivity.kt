@@ -35,6 +35,7 @@ import com.toolbox.nativetoolbox.ui.home.HomeScreen
 import com.toolbox.nativetoolbox.ui.home.toolCategories
 import com.toolbox.nativetoolbox.ui.liquid.LiquidBottomTabs
 import com.toolbox.nativetoolbox.ui.liquid.LiquidTab
+import com.toolbox.nativetoolbox.ui.liquid.LiquidTopBar
 import com.toolbox.nativetoolbox.ui.liquid.LocalRootBackdrop
 import com.toolbox.nativetoolbox.ui.settings.SettingsScreen
 import com.toolbox.nativetoolbox.ui.theme.AstroKitTheme
@@ -79,6 +80,7 @@ private fun AppRoot(settings: SettingsStore) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val tabIndex = topLevelRoutes.indexOf(currentRoute)
+    val toolTitles = remember { toolCategories().flatMap { it.tools }.associate { it.route to it.title } }
 
     CompositionLocalProvider(LocalRootBackdrop provides backdrop) {
         Box(Modifier.fillMaxSize()) {
@@ -118,7 +120,17 @@ private fun AppRoot(settings: SettingsStore) {
                 }
             }
 
-            // 悬浮玻璃 Dock:只在三个顶级页显示
+            // 悬浮玻璃顶栏:必须在 layerBackdrop 录制层之外渲染,
+            // 否则玻璃会画到包含自己的层 → RenderThread 无限递归闪退
+            if (currentRoute != null && currentRoute.startsWith("tool/")) {
+                LiquidTopBar(
+                    title = toolTitles[currentRoute] ?: "",
+                    onBack = { navController.popBackStack() },
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
+
+            // 悬浮玻璃 Dock:只在顶级页显示
             if (tabIndex >= 0) {
                 LiquidBottomTabs(
                     selectedIndex = tabIndex,

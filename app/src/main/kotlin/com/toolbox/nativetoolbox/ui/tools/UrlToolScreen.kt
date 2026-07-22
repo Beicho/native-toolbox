@@ -27,7 +27,7 @@ fun UrlToolScreen(onBack: () -> Unit) {
         else URLDecoder.decode(input, "UTF-8")
     }.getOrElse { "解码失败:${it.message}" }
 
-    ToolScaffold(title = "URL 编解码", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("输入") }
         item {
             GroupedCard {

@@ -45,7 +45,7 @@ fun UuidToolScreen(onBack: () -> Unit) {
         s
     }
 
-    ToolScaffold(title = "UUID 生成", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("选项") }
         item {
             GroupedCard {

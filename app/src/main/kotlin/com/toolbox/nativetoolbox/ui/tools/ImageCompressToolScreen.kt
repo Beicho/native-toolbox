@@ -73,7 +73,7 @@ fun ImageCompressToolScreen(onBack: () -> Unit) {
         ).show()
     }
 
-    ToolScaffold(title = "图片压缩", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("源图片") }
         item {
             GroupedCard {

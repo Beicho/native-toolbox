@@ -54,7 +54,7 @@ fun TextProcessToolScreen(onBack: () -> Unit) {
         output = text
     }
 
-    ToolScaffold(title = "文本处理", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("输入") }
         item {
             GroupedCard {

@@ -61,7 +61,7 @@ fun JsonToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "JSON 工具", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("输入") }
         item {
             GroupedCard {

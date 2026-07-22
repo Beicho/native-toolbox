@@ -69,7 +69,7 @@ fun ImageConvertToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "格式转换", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("源图片") }
         item {
             GroupedCard {

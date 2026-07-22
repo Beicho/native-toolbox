@@ -62,7 +62,7 @@ fun RegexToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "正则测试", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("表达式") }
         item {
             GroupedCard {

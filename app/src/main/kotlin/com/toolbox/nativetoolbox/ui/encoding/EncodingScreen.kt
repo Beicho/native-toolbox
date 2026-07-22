@@ -63,7 +63,7 @@ fun EncodingScreen(onBack: () -> Unit, viewModel: EncodingViewModel = viewModel(
 
     val targetIndex = quickTargets.indexOf(uiState.targetEncoding).coerceAtLeast(0)
 
-    ToolScaffold(title = "编码转换", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("目标编码") }
         item {
             GroupedCard {

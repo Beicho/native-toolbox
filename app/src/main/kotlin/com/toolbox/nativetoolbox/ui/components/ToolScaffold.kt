@@ -2,62 +2,41 @@ package com.toolbox.nativetoolbox.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.toolbox.nativetoolbox.ui.liquid.LiquidTopBar
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 
 /**
- * 工具页脚手架:实色 grouped 背景内容 + 悬浮玻璃顶栏。
- * 内容顶部预留顶栏高度,底部预留导航栏与键盘。
+ * 工具页脚手架:实色 grouped 背景 + 顶部预留悬浮玻璃顶栏高度。
+ * 注意:玻璃顶栏本体由 MainActivity 在 layerBackdrop 录制层【外】渲染,
+ * 放在页面内部会导致 backdrop 层画到自己 → RenderThread 无限递归闪退。
  */
 @Composable
-fun ToolScaffold(
-    title: String,
-    onBack: () -> Unit,
-    actionIcon: (@Composable () -> Unit)? = null,
-    onAction: (() -> Unit)? = null,
-    content: LazyListScope.() -> Unit
-) {
+fun ToolScaffold(content: LazyListScope.() -> Unit) {
     val palette = LocalIosPalette.current
-    // 顶栏实际高度 = 状态栏 inset + 8(上边距) + 44(栏高) + 8(下边距)
+    // 顶栏实际高度 = 状态栏 inset + 8(上边距) + 44(栏高) + 12(呼吸)
     val statusBar = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    Box(
+    LazyColumn(
         Modifier
             .fillMaxSize()
             .background(palette.groupedBackground)
+            .imePadding(),
+        contentPadding = PaddingValues(top = statusBar + 64.dp, bottom = 48.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        LazyColumn(
-            Modifier
-                .fillMaxSize()
-                .imePadding(),
-            contentPadding = PaddingValues(top = statusBar + 64.dp, bottom = 48.dp),
-            verticalArrangement = Arrangement.spacedBy(0.dp)
-        ) {
-            content()
-        }
-        LiquidTopBar(
-            title = title,
-            onBack = onBack,
-            modifier = Modifier.align(Alignment.TopCenter),
-            actionIcon = actionIcon,
-            onAction = onAction
-        )
+        content()
     }
 }
 

@@ -64,7 +64,7 @@ fun TimestampToolScreen(onBack: () -> Unit) {
         instant.epochSecond.toString() to instant.toEpochMilli().toString()
     }.getOrNull()
 
-    ToolScaffold(title = "时间戳", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("当前时间(每秒刷新,点击复制)") }
         item {
             GroupedCard {

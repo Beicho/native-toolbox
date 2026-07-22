@@ -31,7 +31,7 @@ fun TextStatsToolScreen(onBack: () -> Unit) {
     val paragraphs = input.split(Regex("\\n\\s*\\n")).count { it.isNotBlank() }
     val punctuation = input.count { !it.isLetterOrDigit() && !it.isWhitespace() }
 
-    ToolScaffold(title = "字数统计", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("文本") }
         item {
             GroupedCard {

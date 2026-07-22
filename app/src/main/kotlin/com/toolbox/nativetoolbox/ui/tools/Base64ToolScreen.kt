@@ -36,7 +36,7 @@ fun Base64ToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "Base64", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("输入") }
         item {
             GroupedCard {

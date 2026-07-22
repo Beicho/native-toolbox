@@ -95,7 +95,7 @@ fun ColorToolScreen(onBack: () -> Unit) {
         }
     }
 
-    ToolScaffold(title = "颜色工具", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("预览") }
         item {
             GroupedCard {

@@ -28,7 +28,7 @@ fun RadixToolScreen(onBack: () -> Unit) {
         if (text.isEmpty()) null else BigInteger(text, bases[fromIndex])
     }.getOrNull()
 
-    ToolScaffold(title = "进制转换", onBack = onBack) {
+    ToolScaffold {
         item { SectionHeader("输入") }
         item {
             GroupedCard {
