@@ -1,7 +1,8 @@
 #!/bin/bash
-# Astro Kit 模拟器全流程自测
+# Astro Kit v0.3.0 模拟器全流程自测
 export ANDROID_HOME=$HOME/android-sdk
 ADB=$ANDROID_HOME/platform-tools/adb
+PKG=com.toolbox.nativetoolbox
 
 if ! pgrep -f qemu > /dev/null; then
   nohup $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -gpu swiftshader_indirect -no-boot-anim -no-snapshot > /tmp/emu.log 2>&1 &
@@ -13,49 +14,67 @@ done
 $ADB shell getprop sys.boot_completed 2>/dev/null | grep -q 1 || { echo BOOT_TIMEOUT; exit 1; }
 
 crashcheck() {
-  local tag=$1
   local c
   c=$($ADB logcat -d | grep -cE "FATAL EXCEPTION|Fatal signal")
   if [ "$c" -gt 0 ]; then
-    echo "!!! CRASH at $tag !!!"
+    echo "!!! CRASH at $1 !!!"
     $ADB logcat -d | grep -B2 -A18 -E "FATAL EXCEPTION|Fatal signal" | head -40
     exit 1
   fi
-  echo "OK_$tag"
+  echo "OK_$1"
+}
+
+opentool() { # $1 route  $2 tag
+  $ADB shell am start -n $PKG/.MainActivity --es route "$1" > /dev/null 2>&1
+  sleep 3
+  crashcheck "$2"
+  $ADB exec-out screencap -p > /tmp/t_$2.png
 }
 
 $ADB install -r /workspaces/native-toolbox/app/build/outputs/apk/debug/app-debug.apk 2>&1 | tail -1
-$ADB shell am force-stop com.toolbox.nativetoolbox
+$ADB shell am force-stop $PKG
 $ADB logcat -c
-$ADB shell am start -n com.toolbox.nativetoolbox/.MainActivity > /dev/null
+$ADB shell am start -n $PKG/.MainActivity > /dev/null
 sleep 7
 crashcheck "launch"
-$ADB exec-out screencap -p > /tmp/t1_home.png
+$ADB exec-out screencap -p > /tmp/t_home.png
 
-# 打开 JSON 工具
-$ADB shell input tap 284 642
-sleep 4
-crashcheck "open_json"
-$ADB exec-out screencap -p > /tmp/t2_json.png
+# 深链遍历新工具(同时验证快捷方式路径)
+opentool tool/jwt jwt
+opentool tool/diff diff
+opentool tool/cron cron
+opentool tool/unit unit
+opentool tool/datecalc datecalc
+opentool tool/deviceinfo deviceinfo
+opentool tool/level level
+opentool tool/screentest screentest
+opentool tool/banner banner
+opentool tool/decider decider
+opentool tool/wifiqr wifiqr
+opentool tool/exif exif
+opentool tool/pickcolor pickcolor
+opentool tool/watermark watermark
+opentool tool/gridcut gridcut
+opentool tool/stitch stitch
+opentool tool/filehash filehash
 
-# 返回
-$ADB shell input keyevent 4
-sleep 2
-crashcheck "back"
-
-# 打开 时间戳
-$ADB shell input tap 795 642
-sleep 4
-crashcheck "open_timestamp"
-$ADB exec-out screencap -p > /tmp/t3_timestamp.png
-
-# 返回,点 Dock 设置
-$ADB shell input keyevent 4
-sleep 2
-$ADB shell input tap 740 2226
+# 分享接入
+$ADB shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "hello_share_test" -n $PKG/.MainActivity > /dev/null 2>&1
 sleep 3
-crashcheck "settings_tab"
-$ADB exec-out screencap -p > /tmp/t4_settings.png
+crashcheck "share"
+$ADB exec-out screencap -p > /tmp/t_share.png
+
+# 首页滚动到底(看新分类)
+$ADB shell am start -n $PKG/.MainActivity --es route home > /dev/null 2>&1
+sleep 2
+$ADB shell input swipe 540 1900 540 500 400
+sleep 1
+$ADB shell input swipe 540 1900 540 500 400
+sleep 1
+$ADB shell input swipe 540 1900 540 500 400
+sleep 1
+$ADB exec-out screencap -p > /tmp/t_homebottom.png
+crashcheck "scroll"
 
 echo ALL_PASS
-ls -la /tmp/t*.png
+ls /tmp/t_*.png | wc -l
