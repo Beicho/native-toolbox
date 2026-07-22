@@ -22,7 +22,7 @@ import com.toolbox.nativetoolbox.ui.components.KeyValueRow
 import com.toolbox.nativetoolbox.ui.components.RowDivider
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import kotlinx.coroutines.delay
 import java.time.Instant
@@ -112,7 +112,8 @@ fun TimestampToolScreen(onBack: () -> Unit) {
                             mono = true,
                             modifier = Modifier.weight(1f)
                         )
-                        LiquidButton(
+                        SolidButton(
+                            filled = false,
                             onClick = {
                                 dateInput = LocalDateTime
                                     .ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault())

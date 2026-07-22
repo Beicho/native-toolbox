@@ -34,7 +34,7 @@ import com.toolbox.nativetoolbox.ui.components.RowDivider
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import com.toolbox.nativetoolbox.util.FileHelper
 
@@ -77,11 +77,12 @@ fun EncodingScreen(onBack: () -> Unit, viewModel: EncodingViewModel = viewModel(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
                     ) {
-                        LiquidButton(onClick = { picker.launch("text/*") }, tint = palette.accent) {
+                        SolidButton(onClick = { picker.launch("text/*") }, filled = true) {
                             Text("添加文件", color = Color.White)
                         }
-                        LiquidButton(
+                        SolidButton(
                             onClick = { viewModel.convertFiles(context) },
+                            filled = false,
                             enabled = uiState.files.isNotEmpty() && !uiState.isConverting
                         ) {
                             if (uiState.isConverting) {
@@ -153,7 +154,7 @@ fun EncodingScreen(onBack: () -> Unit, viewModel: EncodingViewModel = viewModel(
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    LiquidButton(onClick = { viewModel.clearFiles() }) {
+                    SolidButton(onClick = { viewModel.clearFiles() }, filled = false) {
                         Text("清空列表", color = palette.red)
                     }
                 }

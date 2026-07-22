@@ -20,7 +20,7 @@ import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToggleRow
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import java.util.UUID
 
@@ -69,7 +69,7 @@ fun UuidToolScreen(onBack: () -> Unit) {
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        LiquidButton(onClick = { generate() }, tint = palette.accent) {
+                        SolidButton(onClick = { generate() }, filled = true) {
                             Text("重新生成", color = Color.White)
                         }
                     }

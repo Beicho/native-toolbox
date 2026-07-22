@@ -19,7 +19,7 @@ import com.toolbox.nativetoolbox.ui.components.OutputCard
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 
 @Composable
@@ -88,7 +88,7 @@ fun TextProcessToolScreen(onBack: () -> Unit) {
                         onSelected = { caseOp = it }
                     )
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        LiquidButton(onClick = { apply() }, tint = palette.accent) {
+                        SolidButton(onClick = { apply() }, filled = true) {
                             Text("执行", color = Color.White)
                         }
                     }

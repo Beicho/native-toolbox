@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +36,6 @@ import com.toolbox.nativetoolbox.ui.home.toolCategories
 import com.toolbox.nativetoolbox.ui.liquid.LiquidBottomTabs
 import com.toolbox.nativetoolbox.ui.liquid.LiquidTab
 import com.toolbox.nativetoolbox.ui.liquid.LocalRootBackdrop
-import com.toolbox.nativetoolbox.ui.novel.NovelScreen
 import com.toolbox.nativetoolbox.ui.settings.SettingsScreen
 import com.toolbox.nativetoolbox.ui.theme.AstroKitTheme
 import com.toolbox.nativetoolbox.ui.theme.ThemeMode
@@ -72,7 +70,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private val topLevelRoutes = listOf("home", "novel", "settings")
+private val topLevelRoutes = listOf("home", "settings")
 
 @Composable
 private fun AppRoot(settings: SettingsStore) {
@@ -98,7 +96,6 @@ private fun AppRoot(settings: SettingsStore) {
                     composable("home") {
                         HomeScreen(onOpenTool = { route -> navController.navigate(route) })
                     }
-                    composable("novel") { NovelScreen() }
                     composable("settings") { SettingsScreen(settings) }
 
                     val back: () -> Unit = { navController.popBackStack() }
@@ -135,7 +132,6 @@ private fun AppRoot(settings: SettingsStore) {
                     },
                     tabs = listOf(
                         LiquidTab(Icons.Rounded.GridView, "工具"),
-                        LiquidTab(Icons.Rounded.AutoStories, "小说"),
                         LiquidTab(Icons.Rounded.Settings, "设置")
                     ),
                     modifier = Modifier

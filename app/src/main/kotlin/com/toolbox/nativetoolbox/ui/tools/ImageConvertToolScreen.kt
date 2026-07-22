@@ -27,7 +27,7 @@ import com.toolbox.nativetoolbox.ui.components.RowDivider
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import com.toolbox.nativetoolbox.util.FileHelper
 import com.toolbox.nativetoolbox.util.ImageUtil
@@ -75,7 +75,7 @@ fun ImageConvertToolScreen(onBack: () -> Unit) {
             GroupedCard {
                 CardPadding {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        LiquidButton(onClick = { picker.launch("image/*") }, tint = palette.accent) {
+                        SolidButton(onClick = { picker.launch("image/*") }, filled = true) {
                             Text("选择图片", color = Color.White)
                         }
                     }
@@ -95,9 +95,9 @@ fun ImageConvertToolScreen(onBack: () -> Unit) {
                         onSelected = { formatIndex = it }
                     )
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        LiquidButton(
+                        SolidButton(
                             onClick = { convertAndSave() },
-                            tint = palette.accent,
+                            filled = true,
                             enabled = sourceBitmap != null
                         ) {
                             Text("转换并保存", color = Color.White)

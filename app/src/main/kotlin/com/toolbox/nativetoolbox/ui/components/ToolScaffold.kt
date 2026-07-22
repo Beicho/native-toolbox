@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -32,6 +35,8 @@ fun ToolScaffold(
     content: LazyListScope.() -> Unit
 ) {
     val palette = LocalIosPalette.current
+    // 顶栏实际高度 = 状态栏 inset + 8(上边距) + 44(栏高) + 8(下边距)
+    val statusBar = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Box(
         Modifier
             .fillMaxSize()
@@ -41,7 +46,7 @@ fun ToolScaffold(
             Modifier
                 .fillMaxSize()
                 .imePadding(),
-            contentPadding = PaddingValues(top = 108.dp, bottom = 40.dp),
+            contentPadding = PaddingValues(top = statusBar + 64.dp, bottom = 48.dp),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             content()

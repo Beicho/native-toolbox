@@ -23,7 +23,7 @@ import com.toolbox.nativetoolbox.ui.components.OutputCard
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.ToggleRow
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import java.security.SecureRandom
 import kotlin.math.roundToInt
@@ -100,7 +100,7 @@ fun RandomToolScreen(onBack: () -> Unit) {
                 CardPadding {
                     OutputCard(text = results.joinToString("\n"), label = "密码")
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        LiquidButton(onClick = { generate() }, tint = palette.accent) {
+                        SolidButton(onClick = { generate() }, filled = true) {
                             Text("生成", color = Color.White)
                         }
                     }

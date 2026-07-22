@@ -33,7 +33,7 @@ import com.toolbox.nativetoolbox.ui.components.OutputCard
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import com.toolbox.nativetoolbox.util.ImageUtil
 
@@ -82,17 +82,17 @@ fun QrToolScreen(onBack: () -> Unit) {
                             minHeight = 100.dp
                         )
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp, androidx.compose.ui.Alignment.CenterHorizontally)) {
-                            LiquidButton(
+                            SolidButton(
                                 onClick = {
                                     if (input.isNotBlank()) qrBitmap = ImageUtil.generateQr(input)
                                 },
-                                tint = palette.accent
+                                filled = true
                             ) {
                                 Text("生成", color = Color.White)
                             }
-                            LiquidButton(
+                            SolidButton(
                                 onClick = {
-                                    val bmp = qrBitmap ?: return@LiquidButton
+                                    val bmp = qrBitmap ?: return@SolidButton
                                     val bytes = ImageUtil.encode(bmp, Bitmap.CompressFormat.PNG, 100)
                                     val name = "qr_${System.currentTimeMillis()}.png"
                                     val result = ImageUtil.saveToPictures(context, name, bytes, "image/png")
@@ -102,6 +102,7 @@ fun QrToolScreen(onBack: () -> Unit) {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
+                                filled = false,
                                 enabled = qrBitmap != null
                             ) {
                                 Text("保存", color = palette.accent)
@@ -142,7 +143,7 @@ fun QrToolScreen(onBack: () -> Unit) {
                 GroupedCard {
                     CardPadding {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                            LiquidButton(onClick = { picker.launch("image/*") }, tint = palette.accent) {
+                            SolidButton(onClick = { picker.launch("image/*") }, filled = true) {
                                 Text("选择图片", color = Color.White)
                             }
                         }

@@ -29,7 +29,7 @@ import com.toolbox.nativetoolbox.ui.components.RowDivider
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
-import com.toolbox.nativetoolbox.ui.liquid.LiquidButton
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import com.toolbox.nativetoolbox.util.FileHelper
 import com.toolbox.nativetoolbox.util.ImageUtil
@@ -79,7 +79,7 @@ fun ImageCompressToolScreen(onBack: () -> Unit) {
             GroupedCard {
                 CardPadding {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        LiquidButton(onClick = { picker.launch("image/*") }, tint = palette.accent) {
+                        SolidButton(onClick = { picker.launch("image/*") }, filled = true) {
                             Text("选择图片", color = Color.White)
                         }
                     }
@@ -116,10 +116,10 @@ fun ImageCompressToolScreen(onBack: () -> Unit) {
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
                     ) {
-                        LiquidButton(onClick = { compress() }, tint = palette.accent, enabled = sourceBitmap != null) {
+                        SolidButton(onClick = { compress() }, filled = true, enabled = sourceBitmap != null) {
                             Text("压缩", color = Color.White)
                         }
-                        LiquidButton(onClick = { save() }, enabled = resultBytes != null) {
+                        SolidButton(onClick = { save() }, filled = false, enabled = resultBytes != null) {
                             Text("保存", color = palette.accent)
                         }
                     }
