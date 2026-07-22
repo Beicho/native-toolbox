@@ -80,7 +80,7 @@ fun SettingsScreen(settings: SettingsStore) {
                     "版本",
                     icon = Icons.Rounded.Info,
                     iconTint = palette.accent,
-                    value = "0.2.0",
+                    value = "0.2.1",
                     showChevron = false
                 )
                 RowDivider(startIndent = 58.dp)
