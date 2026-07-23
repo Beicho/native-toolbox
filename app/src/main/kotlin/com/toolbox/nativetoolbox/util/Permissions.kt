@@ -68,20 +68,20 @@ fun PermissionGate(
             textAlign = TextAlign.Center
         )
         if (!denied) {
-            SolidButton(text = "允许使用") { launcher.launch(permission) }
+            SolidButton(onClick = { launcher.launch(permission) }) { Text("允许使用") }
         } else {
             Text(
                 "你拒绝了授权,此功能无法工作。可以去系统设置里手动开启。",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
-            SolidButton(text = "去设置开启") {
+            SolidButton(onClick = {
                 context.startActivity(
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         .setData(Uri.fromParts("package", context.packageName, null))
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 )
-            }
+            }) { Text("去设置开启") }
         }
     }
 }

@@ -11,9 +11,9 @@ data class ToolDef(
     val title: String,
     val subtitle: String,
     val icon: ImageVector,
-    val tint: (IosPalette) -> Color,
     val requiresNetwork: Boolean = false,
-    val permissions: List<String> = emptyList()
+    val permissions: List<String> = emptyList(),
+    val tint: (IosPalette) -> Color
 )
 
 data class ToolCategory(val name: String, val tools: List<ToolDef>)
