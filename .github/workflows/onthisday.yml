@@ -1,0 +1,31 @@
+name: OnThisDay Data
+
+# 抓取维基百科中文「历史上的今天」全年数据进仓库(历史数据基本不变,跑一次管很久)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch full year data
+        run: node scripts/fetch-onthisday.mjs
+
+      - name: Commit data
+        run: |
+          git config user.name "Beicho"
+          git config user.email "beicho@users.noreply.github.com"
+          git add server/data/onthisday
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "data: 历史上的今天全年数据(维基百科中文) [skip ci]"
+          git push
