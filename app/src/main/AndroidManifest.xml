@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 仅用于检查更新(GitHub Releases) -->
+    <!-- 联网:Astro 云服务(天气/翻译/临时邮箱等)与检查更新;所有工具默认离线 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 以下敏感权限全部在对应工具页首次使用时申请,拒绝不影响其他功能 -->
+    <!-- 相机:扫码 / 证件照 / 文档扫描 / 镜子 / 放大镜 / 指尖心率 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 麦克风:录音机 / 分贝仪 / 调音器 / 语音转文字 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 位置:WiFi 分析(系统要求) / 指南针海拔 / 停车助手 / 天气(可选) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 通知:喝水吃药久坐提醒 / 倒计时完成 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- NFC 读写标签 -->
+    <uses-permission android:name="android.permission.NFC" />
+    <!-- 蓝牙雷达(Android 12+ 专用权限,找设备场景声明不推导位置) -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- 振动反馈(解压玩具/木鱼/节拍器) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 铃声制作:写系统铃声设置(特殊权限,页面内引导开启) -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- App 内更新:下载 APK 后拉起安装 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- 屏幕时间统计(特殊权限,页面内引导开启) -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- 应用权限透视 / APK 分析:需要枚举已装应用 -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- 可选硬件:没有对应传感器/模块的设备照常安装,相关工具自动提示不可用 -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.compass" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.barometer" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 
     <application
         android:name=".ToolboxApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NativeToolbox">
@@ -29,10 +72,27 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+            <!-- 分享图片直达图片工具 -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <!-- 文件分享(压缩包导出/PDF 导出/APK 更新安装) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

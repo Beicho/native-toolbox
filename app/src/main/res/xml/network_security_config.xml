@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Astro 云服务跑在自有服务器 IP 上(暂无域名证书),仅对该地址放行明文;其余流量保持 HTTPS-only -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">39.98.89.19</domain>
+    </domain-config>
+</network-security-config>

@@ -52,38 +52,7 @@ import com.toolbox.nativetoolbox.ui.share.ShareScreen
 import com.toolbox.nativetoolbox.ui.theme.AstroKitTheme
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import com.toolbox.nativetoolbox.ui.theme.ThemeMode
-import com.toolbox.nativetoolbox.ui.tools.Base64ToolScreen
-import com.toolbox.nativetoolbox.ui.tools.BannerToolScreen
-import com.toolbox.nativetoolbox.ui.tools.ColorToolScreen
-import com.toolbox.nativetoolbox.ui.tools.CronToolScreen
-import com.toolbox.nativetoolbox.ui.tools.DateCalcToolScreen
-import com.toolbox.nativetoolbox.ui.tools.DeciderToolScreen
-import com.toolbox.nativetoolbox.ui.tools.DeviceInfoToolScreen
-import com.toolbox.nativetoolbox.ui.tools.DiffToolScreen
-import com.toolbox.nativetoolbox.ui.tools.ExifToolScreen
-import com.toolbox.nativetoolbox.ui.tools.FileHashToolScreen
-import com.toolbox.nativetoolbox.ui.tools.GridCutToolScreen
-import com.toolbox.nativetoolbox.ui.tools.HashToolScreen
-import com.toolbox.nativetoolbox.ui.tools.ImageCompressToolScreen
-import com.toolbox.nativetoolbox.ui.tools.ImageConvertToolScreen
-import com.toolbox.nativetoolbox.ui.tools.JsonToolScreen
-import com.toolbox.nativetoolbox.ui.tools.JwtToolScreen
-import com.toolbox.nativetoolbox.ui.tools.LevelToolScreen
-import com.toolbox.nativetoolbox.ui.tools.PickColorToolScreen
-import com.toolbox.nativetoolbox.ui.tools.QrToolScreen
-import com.toolbox.nativetoolbox.ui.tools.RadixToolScreen
-import com.toolbox.nativetoolbox.ui.tools.RandomToolScreen
-import com.toolbox.nativetoolbox.ui.tools.RegexToolScreen
-import com.toolbox.nativetoolbox.ui.tools.ScreenTestToolScreen
-import com.toolbox.nativetoolbox.ui.tools.StitchToolScreen
-import com.toolbox.nativetoolbox.ui.tools.TextProcessToolScreen
-import com.toolbox.nativetoolbox.ui.tools.TextStatsToolScreen
-import com.toolbox.nativetoolbox.ui.tools.TimestampToolScreen
-import com.toolbox.nativetoolbox.ui.tools.UnitToolScreen
-import com.toolbox.nativetoolbox.ui.tools.UrlToolScreen
-import com.toolbox.nativetoolbox.ui.tools.UuidToolScreen
-import com.toolbox.nativetoolbox.ui.tools.WatermarkToolScreen
-import com.toolbox.nativetoolbox.ui.tools.WifiQrToolScreen
+import com.toolbox.nativetoolbox.ui.tools.*
 import com.toolbox.nativetoolbox.util.ShareBus
 import com.toolbox.nativetoolbox.util.UpdateChecker
 import com.toolbox.nativetoolbox.util.UpdateInfo
@@ -227,39 +196,21 @@ private fun AppRoot(
                     }
 
                     val back: () -> Unit = { navController.popBackStack() }
-                    composable("tool/json") { JsonToolScreen(back) }
-                    composable("tool/timestamp") { TimestampToolScreen(back) }
-                    composable("tool/radix") { RadixToolScreen(back) }
-                    composable("tool/base64") { Base64ToolScreen(back) }
-                    composable("tool/url") { UrlToolScreen(back) }
-                    composable("tool/uuid") { UuidToolScreen(back) }
-                    composable("tool/regex") { RegexToolScreen(back) }
-                    composable("tool/color") { ColorToolScreen(back) }
-                    composable("tool/jwt") { JwtToolScreen(back) }
-                    composable("tool/diff") { DiffToolScreen(back) }
-                    composable("tool/cron") { CronToolScreen(back) }
-                    composable("tool/filehash") { FileHashToolScreen(back) }
-                    composable("tool/hash") { HashToolScreen(back) }
-                    composable("tool/textprocess") { TextProcessToolScreen(back) }
-                    composable("tool/textstats") { TextStatsToolScreen(back) }
-                    composable("tool/random") { RandomToolScreen(back) }
-                    composable("tool/encoding") { EncodingScreen(back) }
-                    composable("tool/qrcode") { QrToolScreen(back) }
-                    composable("tool/wifiqr") { WifiQrToolScreen(back) }
-                    composable("tool/imagecompress") { ImageCompressToolScreen(back) }
-                    composable("tool/imageconvert") { ImageConvertToolScreen(back) }
-                    composable("tool/pickcolor") { PickColorToolScreen(back) }
-                    composable("tool/watermark") { WatermarkToolScreen(back) }
-                    composable("tool/gridcut") { GridCutToolScreen(back) }
-                    composable("tool/stitch") { StitchToolScreen(back) }
-                    composable("tool/exif") { ExifToolScreen(back) }
-                    composable("tool/unit") { UnitToolScreen(back) }
-                    composable("tool/datecalc") { DateCalcToolScreen(back) }
-                    composable("tool/deviceinfo") { DeviceInfoToolScreen(back) }
-                    composable("tool/level") { LevelToolScreen(back) }
-                    composable("tool/screentest") { ScreenTestToolScreen(back) }
-                    composable("tool/banner") { BannerToolScreen(back) }
-                    composable("tool/decider") { DeciderToolScreen(back) }
+
+                    // 已有的 32 个工具（保持原路由）
+                    devToolsGraph(back)
+                    devProToolsGraph(back)
+                    networkToolsGraph(back)
+                    textToolsGraph(back)
+                    securityToolsGraph(back)
+                    imageEditToolsGraph(back)
+                    imageStudioToolsGraph(back)
+                    avToolsGraph(back)
+                    calcToolsGraph(back)
+                    deviceToolsGraph(back)
+                    officeToolsGraph(back)
+                    lifeToolsGraph(back)
+                    funToolsGraph(back)
                 }
             }
 
