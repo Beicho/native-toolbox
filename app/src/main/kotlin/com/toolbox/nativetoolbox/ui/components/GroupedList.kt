@@ -34,7 +34,7 @@ fun SectionHeader(text: String, modifier: Modifier = Modifier) {
     val palette = LocalIosPalette.current
     Text(
         text,
-        modifier = modifier.padding(start = 32.dp, end = 32.dp, top = 22.dp, bottom = 7.dp),
+        modifier = modifier.padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 7.dp),
         style = MaterialTheme.typography.bodySmall,
         color = palette.secondaryLabel
     )
@@ -49,7 +49,8 @@ fun GroupedCard(
     val palette = LocalIosPalette.current
     Column(
         modifier
-            .padding(horizontal = 16.dp)
+            // bottom 12dp:相邻卡片之间的呼吸感。之前两张卡贴死在一起,是全局观感差的主因之一
+            .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(palette.cardBackground),
