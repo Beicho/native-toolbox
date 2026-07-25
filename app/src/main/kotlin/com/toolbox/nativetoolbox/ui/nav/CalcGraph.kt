@@ -11,7 +11,7 @@ fun NavGraphBuilder.calcToolsGraph(back: () -> Unit) {
     composable("tool/sci_calc") { SciCalcToolScreen(back) }
     composable("tool/exchange") { PlaceholderToolScreen("汇率换算", back) }
     composable("tool/mortgage") { MortgageToolScreen(back) }
-    composable("tool/interest") { PlaceholderToolScreen("利息与利率", back) }
+    composable("tool/interest") { InterestToolScreen(back) }
     composable("tool/tax") { TaxToolScreen(back) }
     composable("tool/amount_upper") { AmountUpperToolScreen(back) }
     composable("tool/percent") { PercentToolScreen(back) }

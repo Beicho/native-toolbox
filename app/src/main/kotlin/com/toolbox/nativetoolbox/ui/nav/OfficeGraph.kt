@@ -13,10 +13,10 @@ fun NavGraphBuilder.officeToolsGraph(back: () -> Unit) {
     composable("tool/speech_to_text") { PlaceholderToolScreen("语音转文字", back) }
     composable("tool/pomodoro") { PomodoroToolScreen(back) }
     composable("tool/notes") { PlaceholderToolScreen("便签与清单", back) }
-    composable("tool/countdown") { PlaceholderToolScreen("倒计时秒表", back) }
+    composable("tool/countdown") { CountdownToolScreen(back) }
     composable("tool/counter") { CounterToolScreen(back) }
     composable("tool/teleprompter") { PlaceholderToolScreen("提词器", back) }
-    composable("tool/random_group") { PlaceholderToolScreen("随机分组点名", back) }
+    composable("tool/random_group") { RandomGroupToolScreen(back) }
     composable("tool/whiteboard") { PlaceholderToolScreen("白板画板", back) }
     composable("tool/file_transfer") { PlaceholderToolScreen("传输助手", back) }
     composable("tool/batch_rename") { PlaceholderToolScreen("批量重命名", back) }
