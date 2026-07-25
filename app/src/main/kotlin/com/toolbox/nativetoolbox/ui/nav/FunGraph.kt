@@ -15,7 +15,7 @@ fun NavGraphBuilder.funToolsGraph(back: () -> Unit) {
     composable("tool/tarot") { PlaceholderToolScreen("塔罗抽牌", back) }
     composable("tool/hitokoto") { HitokotoToolScreen(back) }
     composable("tool/reaction_test") { ReactionTestToolScreen(back) }
-    composable("tool/classic_games") { PlaceholderToolScreen("经典小游戏", back) }
+    composable("tool/classic_games") { ClassicGamesToolScreen(back) }
     composable("tool/typing_test") { PlaceholderToolScreen("打字测速", back) }
     composable("tool/math_training") { MathTrainingToolScreen(back) }
 }
