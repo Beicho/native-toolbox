@@ -16,11 +16,11 @@ fun NavGraphBuilder.deviceToolsGraph(back: () -> Unit) {
     composable("tool/hardware_test") { HardwareTestToolScreen(back) }
     composable("tool/storage_clean") { StorageCleanToolScreen(back) }
     composable("tool/wifi_analyze") { WifiAnalyzeToolScreen(back) }
-    composable("tool/bluetooth_scan") { PlaceholderToolScreen("蓝牙雷达", back) }
-    composable("tool/nfc_tool") { PlaceholderToolScreen("NFC 读写", back) }
-    composable("tool/gps_speed") { PlaceholderToolScreen("GPS 速度表", back) }
+    composable("tool/bluetooth_scan") { BluetoothScanToolScreen(back) }
+    composable("tool/nfc_tool") { NfcToolScreen(back) }
+    composable("tool/gps_speed") { GpsSpeedToolScreen(back) }
     composable("tool/decibel_meter") { DecibelMeterToolScreen(back) }
     composable("tool/flashlight") { FlashlightToolScreen(back) }
     composable("tool/screen_on") { ScreenOnToolScreen(back) }
-    composable("tool/screen_time") { PlaceholderToolScreen("屏幕时间", back) }
+    composable("tool/screen_time") { ScreenTimeToolScreen(back) }
 }

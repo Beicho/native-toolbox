@@ -14,5 +14,5 @@ fun NavGraphBuilder.securityToolsGraph(back: () -> Unit) {
     composable("tool/keypair_gen") { KeypairGenToolScreen(back) }
     composable("tool/image_steg") { ImageStegToolScreen(back) }
     composable("tool/app_permissions") { AppPermissionsToolScreen(back) }
-    composable("tool/private_album") { PlaceholderToolScreen("私密相册", back) }
+    composable("tool/private_album") { PrivateAlbumToolScreen(back) }
 }
