@@ -3,6 +3,7 @@ package com.toolbox.nativetoolbox.ui.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import com.toolbox.nativetoolbox.data.predict.PredictEngine
 import com.toolbox.nativetoolbox.data.prefs.UsageStore
 import com.toolbox.nativetoolbox.ui.components.IconTile
 import com.toolbox.nativetoolbox.ui.components.IosTextField
+import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import java.util.Calendar
 
@@ -74,6 +76,7 @@ fun HomeScreen(
     var countdowns by remember { mutableStateOf<List<HomeCardData.CountdownItem>>(emptyList()) }
     var todos by remember { mutableStateOf<List<HomeCardData.TodoItem>>(emptyList()) }
     var onThisDay by remember { mutableStateOf<String?>(null) }
+    var bookkeep by remember { mutableStateOf<HomeCardData.BookkeepSummary?>(null) }
 
     LaunchedEffect(refreshKey) {
         suggestions = if (PredictEngine.enabled) {
@@ -82,6 +85,7 @@ fun HomeScreen(
         countdowns = HomeCardData.getUpcomingCountdowns(context)
         todos = HomeCardData.getTodos(context)
         onThisDay = HomeCardData.getOnThisDay(context)
+        bookkeep = HomeCardData.getBookkeepSummary(context)
     }
 
     val greeting = remember(refreshKey) {
@@ -110,6 +114,7 @@ fun HomeScreen(
     val liveCards = buildList {
         if (countdowns.isNotEmpty()) add("countdown")
         if (todos.isNotEmpty()) add("todo")
+        if (bookkeep != null) add("bookkeep")
         if (onThisDay != null) add("onthisday")
     }
 
@@ -169,8 +174,23 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) { page ->
                     when (liveCards[page]) {
-                        "countdown" -> CountdownCard(countdowns.first(), onOpenTool)
-                        "todo" -> TodoCard(todos, onOpenTool)
+                        "countdown" -> CountdownCard(countdowns, onOpenTool)
+                        "todo" -> TodoCard(
+                            items = todos,
+                            onToggle = { id, done ->
+                                HomeCardData.toggleTodo(id, done)
+                                todos = HomeCardData.getTodos(context)
+                            },
+                            onOpenTool = onOpenTool,
+                        )
+                        "bookkeep" -> BookkeepCard(
+                            summary = bookkeep!!,
+                            onQuickAdd = { amount, category ->
+                                HomeCardData.addExpense(amount, category)
+                                bookkeep = HomeCardData.getBookkeepSummary(context)
+                            },
+                            onOpenTool = onOpenTool,
+                        )
                         "onthisday" -> OnThisDayCard(onThisDay!!, onOpenTool)
                     }
                 }
@@ -239,37 +259,68 @@ fun HomeScreen(
 }
 
 @Composable
-private fun CountdownCard(item: HomeCardData.CountdownItem, onOpenTool: (String) -> Unit) {
+private fun CountdownCard(items: List<HomeCardData.CountdownItem>, onOpenTool: (String) -> Unit) {
     val palette = LocalIosPalette.current
+    // 点卡片切换到下一个倒数日,不用进工具页
+    var idx by remember(items.size) { mutableStateOf(0) }
+    val item = items.getOrNull(idx) ?: return
     Column(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
-            .clickable { onOpenTool("tool/countdown_day") }
+            .combinedClickable(
+                onClick = { if (items.size > 1) idx = (idx + 1) % items.size },
+                onLongClick = { onOpenTool("tool/countdown_day") }
+            )
             .padding(20.dp)
     ) {
-        Text("倒数日", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel, letterSpacing = 0.5.sp)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text("倒数日", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel)
+            if (items.size > 1) {
+                Text(
+                    "${idx + 1}/${items.size}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = palette.tertiaryLabel
+                )
+            }
+        }
         Spacer(Modifier.height(8.dp))
-        Text(item.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = palette.label, maxLines = 2)
-        Spacer(Modifier.height(12.dp))
+        Text(
+            item.name,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = palette.label,
+            maxLines = 2
+        )
+        Spacer(Modifier.height(10.dp))
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                "${item.daysLeft}",
-                style = MaterialTheme.typography.displayLarge.copy(fontSize = 56.sp, lineHeight = 56.sp),
+                if (item.daysLeft == 0) "今天" else "${item.daysLeft}",
+                style = MaterialTheme.typography.displayLarge.copy(fontSize = 52.sp, lineHeight = 54.sp),
                 fontWeight = FontWeight.Bold,
-                color = palette.accent
+                color = if (item.daysLeft <= 3) palette.orange else palette.accent
             )
-            Spacer(Modifier.width(6.dp))
-            Text("天", style = MaterialTheme.typography.titleMedium, color = palette.secondaryLabel, modifier = Modifier.padding(bottom = 6.dp))
+            if (item.daysLeft > 0) {
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    "天后",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = palette.secondaryLabel,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
         }
-        Spacer(Modifier.height(4.dp))
         Text(item.dateIso, style = MaterialTheme.typography.bodySmall, color = palette.tertiaryLabel)
     }
 }
 
 @Composable
-private fun TodoCard(items: List<HomeCardData.TodoItem>, onOpenTool: (String) -> Unit) {
+private fun TodoCard(
+    items: List<HomeCardData.TodoItem>,
+    onToggle: (String, Boolean) -> Unit,
+    onOpenTool: (String) -> Unit,
+) {
     val palette = LocalIosPalette.current
     val doneCount = items.count { it.done }
     Column(
@@ -277,22 +328,42 @@ private fun TodoCard(items: List<HomeCardData.TodoItem>, onOpenTool: (String) ->
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
-            .clickable { onOpenTool("tool/notes") }
             .padding(20.dp)
     ) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("待办事项", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel, letterSpacing = 0.5.sp)
-            Text("$doneCount/${items.size}", style = MaterialTheme.typography.labelSmall, color = palette.green, fontWeight = FontWeight.SemiBold)
+        Row(
+            Modifier.fillMaxWidth().clickable { onOpenTool("tool/notes") },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("待办", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel)
+            Text(
+                "$doneCount/${items.size}",
+                style = MaterialTheme.typography.labelSmall,
+                color = if (doneCount == items.size) palette.green else palette.secondaryLabel,
+                fontWeight = FontWeight.SemiBold
+            )
         }
         Spacer(Modifier.height(12.dp))
+        // 直接在卡片上打勾 —— 不跳转,这是「每天开三次每次十秒」的关键
         items.take(3).forEach { todo ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { onToggle(todo.id, !todo.done) }
+                    .padding(vertical = 5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
                     Modifier
-                        .size(18.dp)
+                        .size(20.dp)
                         .clip(CircleShape)
-                        .background(if (todo.done) palette.green else palette.tertiaryLabel.copy(alpha = 0.2f))
-                )
+                        .background(if (todo.done) palette.green else palette.sunkenBackground),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (todo.done) {
+                        Text("✓", fontSize = 12.sp, color = androidx.compose.ui.graphics.Color.White)
+                    }
+                }
                 Spacer(Modifier.width(10.dp))
                 Text(
                     todo.text,
@@ -302,10 +373,97 @@ private fun TodoCard(items: List<HomeCardData.TodoItem>, onOpenTool: (String) ->
                     modifier = Modifier.weight(1f)
                 )
             }
-            Spacer(Modifier.height(8.dp))
         }
         if (items.size > 3) {
-            Text("还有 ${items.size - 3} 项…", style = MaterialTheme.typography.bodySmall, color = palette.tertiaryLabel)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "还有 ${items.size - 3} 项",
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.tertiaryLabel,
+                modifier = Modifier.clickable { onOpenTool("tool/notes") }
+            )
+        }
+    }
+}
+
+@Composable
+private fun BookkeepCard(
+    summary: HomeCardData.BookkeepSummary,
+    onQuickAdd: (Double, String) -> Unit,
+    onOpenTool: (String) -> Unit,
+) {
+    val palette = LocalIosPalette.current
+    var amountText by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("餐饮") }
+    val quickCategories = listOf("餐饮", "交通", "购物", "其他")
+
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(palette.cardBackground)
+            .padding(20.dp)
+    ) {
+        Row(
+            Modifier.fillMaxWidth().clickable { onOpenTool("tool/bookkeeping") },
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("本月支出", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel)
+            if (summary.todayTotal > 0) {
+                Text(
+                    "今天 ¥%.0f".format(summary.todayTotal),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = palette.secondaryLabel
+                )
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+        Text(
+            "¥%.2f".format(summary.monthTotal),
+            style = MaterialTheme.typography.displayLarge.copy(fontSize = 34.sp, lineHeight = 38.sp),
+            fontWeight = FontWeight.Bold,
+            color = palette.label
+        )
+        Spacer(Modifier.height(12.dp))
+        // 卡片上直接记一笔
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            IosTextField(
+                value = amountText,
+                onValueChange = { amountText = it.filter { c -> c.isDigit() || c == '.' } },
+                modifier = Modifier.weight(1f),
+                placeholder = "记一笔",
+            )
+            Spacer(Modifier.width(8.dp))
+            SolidButton(
+                onClick = {
+                    val amt = amountText.toDoubleOrNull()
+                    if (amt != null && amt > 0) {
+                        onQuickAdd(amt, category)
+                        amountText = ""
+                    }
+                },
+                modifier = Modifier.width(64.dp),
+                height = 40.dp,
+                enabled = amountText.toDoubleOrNull()?.let { it > 0 } == true
+            ) { Text("记") }
+        }
+        Spacer(Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            quickCategories.forEach { c ->
+                Box(
+                    Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (category == c) palette.accent.copy(alpha = 0.15f) else palette.sunkenBackground)
+                        .clickable { category = c }
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                ) {
+                    Text(
+                        c,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (category == c) palette.accent else palette.secondaryLabel
+                    )
+                }
+            }
         }
     }
 }
@@ -321,9 +479,15 @@ private fun OnThisDayCard(event: String, onOpenTool: (String) -> Unit) {
             .clickable { onOpenTool("tool/history_today") }
             .padding(20.dp)
     ) {
-        Text("历史上的今天", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel, letterSpacing = 0.5.sp)
+        Text("历史上的今天", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel)
         Spacer(Modifier.height(12.dp))
-        Text(event, style = MaterialTheme.typography.bodyLarge, color = palette.label, lineHeight = 22.sp, maxLines = 4)
+        Text(
+            event,
+            style = MaterialTheme.typography.bodyLarge,
+            color = palette.label,
+            lineHeight = 22.sp,
+            maxLines = 4
+        )
     }
 }
 

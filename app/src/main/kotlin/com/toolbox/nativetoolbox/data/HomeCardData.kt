@@ -1,68 +1,105 @@
 package com.toolbox.nativetoolbox.data
 
 import android.content.Context
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.toolbox.nativetoolbox.data.store.AstroStore
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-/** 主页动态卡片数据源 */
+/**
+ * 主页活数据卡片的数据源。
+ *
+ * 全部走 AstroStore(结构化存储),不再解析「空格分隔文本行」。
+ * 卡片支持就地操作 —— 打勾、记一笔、+1 都直接写回,不用跳进工具页。
+ * 这是「每天开三次、每次十秒」的关键。
+ */
 object HomeCardData {
+
     private val iso = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    data class CountdownItem(val name: String, val dateIso: String, val daysLeft: Int)
-    data class BirthdayItem(val name: String, val dateIso: String, val daysUntil: Int)
-    data class TodoItem(val text: String, val done: Boolean)
+    data class CountdownItem(val id: String, val name: String, val dateIso: String, val daysLeft: Int)
+    data class TodoItem(val id: String, val text: String, val done: Boolean)
+    data class BookkeepSummary(val monthTotal: Double, val todayTotal: Double, val count: Int)
 
-    private fun todayStart(): Long {
-        val cal = Calendar.getInstance()
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal.timeInMillis
-    }
+    private fun todayStart(): Long = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
 
     private fun daysUntil(dateIso: String): Int? {
         val target = runCatching { iso.parse(dateIso) }.getOrNull() ?: return null
         return Math.round((target.time - todayStart()) / 86_400_000.0).toInt()
     }
 
-    /** 获取最近的倒数日(未来 90 天内) */
-    fun getUpcomingCountdowns(context: Context): List<CountdownItem> {
-        val prefs = context.getSharedPreferences("countdown_day", Context.MODE_PRIVATE)
-        val raw = prefs.getString("events", "") ?: ""
-        return raw.lines().mapNotNull { line ->
-            val parts = line.split(Regex("[\\s,，]+")).filter { it.isNotBlank() }
-            if (parts.size < 2) return@mapNotNull null
-            val dateText = parts.last().replace('/', '-').replace('.', '-')
-            val dateIso = runCatching {
-                val d = iso.parse(dateText) ?: return@runCatching null
-                iso.format(d)
-            }.getOrNull() ?: return@mapNotNull null
-            val name = parts.dropLast(1).joinToString(" ")
+    // ---- 倒数日 ----
+
+    /** 未来 90 天内最近的几个倒数日 */
+    fun getUpcomingCountdowns(context: Context): List<CountdownItem> =
+        AstroStore.all(AstroStore.Collection.COUNTDOWN).mapNotNull { r ->
+            val dateIso = r.str("dateIso").ifBlank { return@mapNotNull null }
             val days = daysUntil(dateIso) ?: return@mapNotNull null
-            if (days in 0..90) CountdownItem(name.ifBlank { "倒数日" }, dateIso, days) else null
-        }.sortedBy { it.daysLeft }.take(3)
+            if (days in 0..90) {
+                CountdownItem(r.id, r.str("title").ifBlank { "倒数日" }, dateIso, days)
+            } else null
+        }.sortedBy { it.daysLeft }.take(5)
+
+    // ---- 待办 ----
+
+    fun getTodos(context: Context): List<TodoItem> =
+        AstroStore.all(AstroStore.Collection.TODO)
+            .sortedWith(compareBy({ it.bool("done") }, { -it.createdAt }))
+            .take(6)
+            .map { TodoItem(it.id, it.str("text"), it.bool("done")) }
+
+    /** 卡片上直接打勾 —— 不跳转 */
+    fun toggleTodo(id: String, done: Boolean) {
+        AstroStore.update(AstroStore.Collection.TODO, id) { put("done", done) }
     }
 
-    /** 获取待办事项(只取前 5 条) */
-    fun getTodos(context: Context): List<TodoItem> {
-        val prefs = context.getSharedPreferences("todo", Context.MODE_PRIVATE)
-        val raw = prefs.getString("items", "") ?: ""
-        return raw.lines().take(5).mapNotNull { line ->
-            if (line.isBlank()) return@mapNotNull null
-            val done = line.startsWith("[x]") || line.startsWith("[X]")
-            val text = line.removePrefix("[x]").removePrefix("[X]").removePrefix("[ ]").trim()
-            if (text.isBlank()) null else TodoItem(text, done)
+    fun addTodo(text: String) {
+        if (text.isBlank()) return
+        AstroStore.add(AstroStore.Collection.TODO) {
+            put("text", text.trim())
+            put("done", false)
         }
     }
 
-    /** 历史上的今天(从 prefs 读取) */
+    // ---- 记账 ----
+
+    fun getBookkeepSummary(context: Context): BookkeepSummary? {
+        val records = AstroStore.all(AstroStore.Collection.BOOKKEEPING)
+        if (records.isEmpty()) return null
+        val cal = Calendar.getInstance()
+        val monthPrefix = "%04d-%02d".format(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1)
+        val todayIso = iso.format(cal.time)
+        var month = 0.0
+        var today = 0.0
+        records.forEach { r ->
+            // 收入不计入支出统计
+            if (r.str("category") == "收入") return@forEach
+            val d = r.str("dateIso")
+            val amt = r.num("amount")
+            if (d.startsWith(monthPrefix)) month += amt
+            if (d == todayIso) today += amt
+        }
+        return BookkeepSummary(month, today, records.size)
+    }
+
+    /** 卡片上直接记一笔 */
+    fun addExpense(amount: Double, category: String, note: String = "") {
+        if (amount <= 0) return
+        AstroStore.add(AstroStore.Collection.BOOKKEEPING) {
+            put("amount", amount)
+            put("category", category)
+            put("note", note)
+            put("dateIso", iso.format(Calendar.getInstance().time))
+        }
+    }
+
+    // ---- 历史上的今天(仍走缓存,不是本地数据) ----
+
     fun getOnThisDay(context: Context): String? {
         val prefs = context.getSharedPreferences("onthisday", Context.MODE_PRIVATE)
-        val raw = prefs.getString("events", "") ?: ""
-        return raw.lines().firstOrNull()?.takeIf { it.isNotBlank() }
+        return prefs.getString("events", "")?.lines()?.firstOrNull()?.takeIf { it.isNotBlank() }
     }
 }
