@@ -11,7 +11,7 @@ fun NavGraphBuilder.devProToolsGraph(back: () -> Unit) {
     composable("tool/cron") { CronToolScreen(back) }
     composable("tool/hash") { HashToolScreen(back) }
     composable("tool/hex_viewer") { HexViewerToolScreen(back) }
-    composable("tool/apk_analyze") { PlaceholderToolScreen("APK 分析", back) }
+    composable("tool/apk_analyze") { ApkAnalyzeToolScreen(back) }
     composable("tool/log_analyze") { LogAnalyzeToolScreen(back) }
     composable("tool/code_screenshot") { CodeScreenshotToolScreen(back) }
     composable("tool/http_test") { HttpTestToolScreen(back) }

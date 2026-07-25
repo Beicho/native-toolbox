@@ -22,7 +22,7 @@ fun NavGraphBuilder.devToolsGraph(back: () -> Unit) {
     composable("tool/sql_format") { SqlFormatToolScreen(back) }
     composable("tool/config_convert") { ConfigConvertToolScreen(back) }
     composable("tool/markdown_preview") { MarkdownPreviewToolScreen(back) }
-    composable("tool/html_preview") { PlaceholderToolScreen("HTML 预览", back) }
+    composable("tool/html_preview") { HtmlPreviewToolScreen(back) }
     composable("tool/css_gen") { CssGenToolScreen(back) }
     composable("tool/svg_tool") { SvgToolScreen(back) }
     composable("tool/chmod") { ChmodToolScreen(back) }
@@ -30,6 +30,6 @@ fun NavGraphBuilder.devToolsGraph(back: () -> Unit) {
     composable("tool/ascii") { AsciiToolScreen(back) }
     composable("tool/json2code") { Json2CodeToolScreen(back) }
     composable("tool/android_ref") { AndroidRefToolScreen(back) }
-    composable("tool/icon_gen") { PlaceholderToolScreen("图标生成", back) }
+    composable("tool/icon_gen") { IconGenToolScreen(back) }
     composable("tool/resistor") { ResistorToolScreen(back) }
 }

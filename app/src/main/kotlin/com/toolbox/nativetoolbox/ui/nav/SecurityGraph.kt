@@ -12,7 +12,7 @@ fun NavGraphBuilder.securityToolsGraph(back: () -> Unit) {
     composable("tool/password_vault") { PasswordVaultToolScreen(back) }
     composable("tool/encrypt_capsule") { EncryptCapsuleToolScreen(back) }
     composable("tool/keypair_gen") { KeypairGenToolScreen(back) }
-    composable("tool/image_steg") { PlaceholderToolScreen("图片隐写", back) }
+    composable("tool/image_steg") { ImageStegToolScreen(back) }
     composable("tool/app_permissions") { AppPermissionsToolScreen(back) }
     composable("tool/private_album") { PlaceholderToolScreen("私密相册", back) }
 }
