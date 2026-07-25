@@ -12,8 +12,8 @@ fun NavGraphBuilder.devProToolsGraph(back: () -> Unit) {
     composable("tool/hash") { HashToolScreen(back) }
     composable("tool/hex_viewer") { PlaceholderToolScreen("Hex 查看器", back) }
     composable("tool/apk_analyze") { PlaceholderToolScreen("APK 分析", back) }
-    composable("tool/log_analyze") { PlaceholderToolScreen("日志分析", back) }
+    composable("tool/log_analyze") { LogAnalyzeToolScreen(back) }
     composable("tool/code_screenshot") { PlaceholderToolScreen("代码截图", back) }
-    composable("tool/http_test") { PlaceholderToolScreen("HTTP 请求测试", back) }
+    composable("tool/http_test") { HttpTestToolScreen(back) }
     composable("tool/websocket_test") { PlaceholderToolScreen("WebSocket 测试", back) }
 }

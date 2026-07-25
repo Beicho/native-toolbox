@@ -19,7 +19,7 @@ fun NavGraphBuilder.textToolsGraph(back: () -> Unit) {
     composable("tool/zero_width") { ZeroWidthToolScreen(back) }
     composable("tool/vertical_text") { VerticalTextToolScreen(back) }
     composable("tool/text_format") { TextFormatToolScreen(back) }
-    composable("tool/emoji_lib") { PlaceholderToolScreen("表情符号库", back) }
+    composable("tool/emoji_lib") { EmojiLibToolScreen(back) }
     composable("tool/mask_sensitive") { MaskSensitiveToolScreen(back) }
     composable("tool/clipboard_shelf") { PlaceholderToolScreen("剪贴板暂存架", back) }
     composable("tool/text_template") { PlaceholderToolScreen("文本模板", back) }
