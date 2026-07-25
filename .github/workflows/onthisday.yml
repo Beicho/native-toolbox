@@ -30,4 +30,12 @@ jobs:
           git add server/data/onthisday
           git diff --cached --quiet && echo "no changes" && exit 0
           git commit -m "data: 历史上的今天全年数据(维基百科中文) [skip ci]"
-          git push
+          # 抓取要跑十几分钟，期间 main 上很可能已经有新提交，
+          # 直接 push 会被 fetch-first 拒绝导致数据白抓。先 rebase 再推，并重试几次。
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            echo "推送第 $i 次失败，等 10 秒重试"
+            sleep 10
+          done
+          echo "推送始终失败"
+          exit 1

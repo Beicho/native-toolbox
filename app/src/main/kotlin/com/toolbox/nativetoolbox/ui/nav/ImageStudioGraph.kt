@@ -16,5 +16,5 @@ fun NavGraphBuilder.imageStudioToolsGraph(back: () -> Unit) {
     composable("tool/ascii_art") { PlaceholderToolScreen("艺术化转换", back) }
     composable("tool/meme_maker") { PlaceholderToolScreen("表情包制作", back) }
     composable("tool/checkin_watermark") { PlaceholderToolScreen("打卡水印", back) }
-    composable("tool/color_scheme") { PlaceholderToolScreen("配色方案", back) }
+    composable("tool/color_scheme") { ColorSchemeToolScreen(back) }
 }
