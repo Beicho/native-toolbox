@@ -52,6 +52,7 @@ import com.toolbox.nativetoolbox.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.toolbox.nativetoolbox.util.rememberPermission
 
 /** 四角透视矫正:corners 为归一化坐标(左上/右上/右下/左下) */
 private fun perspectiveCorrect(src: Bitmap, corners: List<Offset>): Bitmap {
@@ -96,6 +97,7 @@ private fun enhance(src: Bitmap, mode: Int): Bitmap {
 
 @Composable
 fun DocScanToolScreen(onBack: () -> Unit) {
+    val cameraOk = rememberPermission(android.Manifest.permission.CAMERA)
     val palette = LocalIosPalette.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

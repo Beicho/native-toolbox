@@ -35,6 +35,7 @@ import com.toolbox.nativetoolbox.util.ImageUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import com.toolbox.nativetoolbox.util.rememberPermission
 
 private suspend fun recognize(bmp: Bitmap): String? {
     val recognizer = TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build())
@@ -49,6 +50,7 @@ private suspend fun recognize(bmp: Bitmap): String? {
 
 @Composable
 fun OcrToolScreen(onBack: () -> Unit) {
+    val cameraOk = rememberPermission(android.Manifest.permission.CAMERA)
     val palette = LocalIosPalette.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

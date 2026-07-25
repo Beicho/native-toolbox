@@ -36,12 +36,14 @@ import com.toolbox.nativetoolbox.ui.components.ToolScaffold
 import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import com.toolbox.nativetoolbox.util.ShareBus
+import com.toolbox.nativetoolbox.util.rememberPermission
 import com.toolbox.nativetoolbox.util.ImageUtil
 
 @Composable
 fun QrToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
     val context = LocalContext.current
+    val cameraOk = rememberPermission(android.Manifest.permission.CAMERA)
     var mode by rememberSaveable { mutableStateOf(0) }
     var input by rememberSaveable { mutableStateOf(ShareBus.consume() ?: "") }
     var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
