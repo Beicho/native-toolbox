@@ -171,7 +171,8 @@ fun HomeScreen(
                     state = pagerState,
                     contentPadding = PaddingValues(horizontal = 20.dp),
                     pageSpacing = 12.dp,
-                    modifier = Modifier.fillMaxWidth()
+                    // 固定高度:不同卡片内容量不同,不固定的话滑动时整页跳高度
+                    modifier = Modifier.fillMaxWidth().height(190.dp)
                 ) { page ->
                     when (liveCards[page]) {
                         "countdown" -> CountdownCard(countdowns, onOpenTool)
@@ -266,7 +267,7 @@ private fun CountdownCard(items: List<HomeCardData.CountdownItem>, onOpenTool: (
     val item = items.getOrNull(idx) ?: return
     Column(
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
             .combinedClickable(
@@ -325,7 +326,7 @@ private fun TodoCard(
     val doneCount = items.count { it.done }
     Column(
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
             .padding(20.dp)
@@ -399,7 +400,7 @@ private fun BookkeepCard(
 
     Column(
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
             .padding(20.dp)
@@ -473,7 +474,7 @@ private fun OnThisDayCard(event: String, onOpenTool: (String) -> Unit) {
     val palette = LocalIosPalette.current
     Column(
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
             .clickable { onOpenTool("tool/history_today") }
@@ -544,6 +545,7 @@ private fun ToolCard(
                 tool.subtitle,
                 style = MaterialTheme.typography.bodySmall,
                 color = palette.secondaryLabel,
+                minLines = 2,   // 固定两行高度:两列卡片高度才对得齐
                 maxLines = 2
             )
         }
