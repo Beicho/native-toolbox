@@ -8,7 +8,7 @@ import com.toolbox.nativetoolbox.ui.tools.*
 fun NavGraphBuilder.calcToolsGraph(back: () -> Unit) {
     composable("tool/unit") { UnitToolScreen(back) }
     composable("tool/datecalc") { DateCalcToolScreen(back) }
-    composable("tool/sci_calc") { PlaceholderToolScreen("科学计算器", back) }
+    composable("tool/sci_calc") { SciCalcToolScreen(back) }
     composable("tool/exchange") { PlaceholderToolScreen("汇率换算", back) }
     composable("tool/mortgage") { MortgageToolScreen(back) }
     composable("tool/interest") { PlaceholderToolScreen("利息与利率", back) }
@@ -17,14 +17,14 @@ fun NavGraphBuilder.calcToolsGraph(back: () -> Unit) {
     composable("tool/percent") { PercentToolScreen(back) }
     composable("tool/combo_calc") { PlaceholderToolScreen("凑单计算", back) }
     composable("tool/price_compare") { PlaceholderToolScreen("比价计算", back) }
-    composable("tool/cost_split") { PlaceholderToolScreen("费用分摊", back) }
+    composable("tool/cost_split") { CostSplitToolScreen(back) }
     composable("tool/relative_name") { PlaceholderToolScreen("亲戚称呼", back) }
-    composable("tool/health_calc") { PlaceholderToolScreen("健康计算", back) }
+    composable("tool/health_calc") { HealthCalcToolScreen(back) }
     composable("tool/timezone") { PlaceholderToolScreen("时区对照", back) }
     composable("tool/random_num") { PlaceholderToolScreen("随机数", back) }
-    composable("tool/statistics") { PlaceholderToolScreen("统计计算", back) }
+    composable("tool/statistics") { StatisticsToolScreen(back) }
     composable("tool/geometry") { PlaceholderToolScreen("几何计算", back) }
     composable("tool/fuel_calc") { PlaceholderToolScreen("油耗计算", back) }
-    composable("tool/pace_calc") { PlaceholderToolScreen("配速计算", back) }
+    composable("tool/pace_calc") { PaceCalcToolScreen(back) }
     composable("tool/decoration") { PlaceholderToolScreen("装修计算", back) }
 }
