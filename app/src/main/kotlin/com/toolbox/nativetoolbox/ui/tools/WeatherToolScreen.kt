@@ -256,5 +256,84 @@ fun WeatherToolScreen(onBack: () -> Unit) {
                 }
             }
         }
+
+        // 未来7天预报
+        if (daily != null) {
+            item { SectionHeader("未来7天预报") }
+            item {
+                val timeArr = daily.optJSONArray("time")
+                val maxArr = daily.optJSONArray("temperature_2m_max")
+                val minArr = daily.optJSONArray("temperature_2m_min")
+                val codeArr = daily.optJSONArray("weather_code")
+                val sunriseArr = daily.optJSONArray("sunrise")
+                val sunsetArr = daily.optJSONArray("sunset")
+                val uvArr = daily.optJSONArray("uv_index_max")
+
+                if (timeArr != null && maxArr != null && minArr != null) {
+                    GroupedCard {
+                        val days = minOf(7, timeArr.length())
+                        for (i in 0 until days) {
+                            val date = timeArr.optString(i, "")
+                            val dayLabel = when (i) {
+                                0 -> "今天"
+                                1 -> "明天"
+                                else -> date.substring(5).replace("-", "/")
+                            }
+                            val high = maxArr.optDouble(i, Double.NaN)
+                            val low = minArr.optDouble(i, Double.NaN)
+                            val code = codeArr?.optInt(i, -1) ?: -1
+                            val weather = if (code >= 0) weatherText(code) else "—"
+
+                            Row(
+                                Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                            ) {
+                                Text(dayLabel, style = MaterialTheme.typography.bodyMedium, color = palette.label, modifier = Modifier.width(56.dp))
+                                Text(weather, style = MaterialTheme.typography.bodySmall, color = palette.secondaryLabel, modifier = Modifier.width(72.dp))
+                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(temp(low), style = MaterialTheme.typography.bodySmall, color = palette.tertiaryLabel)
+                                    Text("~", style = MaterialTheme.typography.bodySmall, color = palette.tertiaryLabel)
+                                    Text(temp(high), style = MaterialTheme.typography.bodyMedium, color = palette.label)
+                                }
+                            }
+                            if (i != days - 1) RowDivider()
+                        }
+                    }
+                }
+
+                // 日出日落 + 紫外线
+                if (sunriseArr != null || uvArr != null) {
+                    Spacer(Modifier.height(12.dp))
+                    GroupedCard {
+                        if (sunriseArr != null && sunriseArr.length() > 0) {
+                            val sunrise = sunriseArr.optString(0, "").let {
+                                if (it.length >= 16) it.substring(11, 16) else "—"
+                            }
+                            val sunset = sunsetArr?.optString(0, "")?.let {
+                                if (it.length >= 16) it.substring(11, 16) else "—"
+                            } ?: "—"
+                            KeyValueRow("日出", sunrise, copyable = false)
+                            RowDivider()
+                            KeyValueRow("日落", sunset, copyable = false)
+                        }
+                        if (uvArr != null && uvArr.length() > 0) {
+                            val uv = uvArr.optDouble(0, Double.NaN)
+                            if (!uv.isNaN()) {
+                                if (sunriseArr != null && sunriseArr.length() > 0) RowDivider()
+                                val uvLevel = when {
+                                    uv < 3 -> "低"
+                                    uv < 6 -> "中等"
+                                    uv < 8 -> "高"
+                                    uv < 11 -> "很高"
+                                    else -> "极高"
+                                }
+                                KeyValueRow("紫外线指数", "%.1f (%s)".format(uv, uvLevel), copyable = false)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
