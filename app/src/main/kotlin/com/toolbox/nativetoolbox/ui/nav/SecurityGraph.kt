@@ -8,10 +8,10 @@ import com.toolbox.nativetoolbox.ui.tools.*
 fun NavGraphBuilder.securityToolsGraph(back: () -> Unit) {
     composable("tool/random") { RandomToolScreen(back) }
     composable("tool/exif") { ExifToolScreen(back) }
-    composable("tool/totp") { PlaceholderToolScreen("TOTP 验证器", back) }
+    composable("tool/totp") { TotpToolScreen(back) }
     composable("tool/password_vault") { PlaceholderToolScreen("密码保险箱", back) }
-    composable("tool/encrypt_capsule") { PlaceholderToolScreen("加密胶囊", back) }
-    composable("tool/keypair_gen") { PlaceholderToolScreen("密钥对生成", back) }
+    composable("tool/encrypt_capsule") { EncryptCapsuleToolScreen(back) }
+    composable("tool/keypair_gen") { KeypairGenToolScreen(back) }
     composable("tool/image_steg") { PlaceholderToolScreen("图片隐写", back) }
     composable("tool/app_permissions") { PlaceholderToolScreen("应用权限透视", back) }
     composable("tool/private_album") { PlaceholderToolScreen("私密相册", back) }
