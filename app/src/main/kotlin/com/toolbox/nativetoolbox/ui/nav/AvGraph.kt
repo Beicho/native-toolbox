@@ -12,10 +12,10 @@ fun NavGraphBuilder.avToolsGraph(back: () -> Unit) {
     composable("tool/ringtone_make") { RingtoneMakeToolScreen(back) }
     composable("tool/audio_extract") { AudioExtractToolScreen(back) }
     composable("tool/voice_change") { VoiceChangeToolScreen(back) }
-    composable("tool/ab_player") { PlaceholderToolScreen("AB 循环播放器", back) }
+    composable("tool/ab_player") { AbPlayerToolScreen(back) }
     composable("tool/tts") { TtsToolScreen(back) }
-    composable("tool/video_compress") { PlaceholderToolScreen("视频压缩", back) }
-    composable("tool/video_to_gif") { PlaceholderToolScreen("视频转 GIF", back) }
+    composable("tool/video_compress") { VideoCompressToolScreen(back) }
+    composable("tool/video_to_gif") { VideoToGifToolScreen(back) }
     composable("tool/video_frame") { VideoFrameToolScreen(back) }
     composable("tool/video_info") { VideoInfoToolScreen(back) }
     composable("tool/metronome") { MetronomeToolScreen(back) }
