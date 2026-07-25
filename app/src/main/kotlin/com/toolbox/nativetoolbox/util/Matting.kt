@@ -3,7 +3,8 @@ package com.toolbox.nativetoolbox.util
 import android.graphics.Bitmap
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.segmentation.Segmentation
-import com.google.mlkit.vision.segmentation.SegmenterOptions
+import com.google.mlkit.vision.segmentation.SegmentationMask
+import com.google.mlkit.vision.segmentation.selfie.SelfieSegmenterOptions
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -16,11 +17,11 @@ object Matting {
     /** 返回 alpha 蒙版应用后的透明底人像,失败返回 null */
     suspend fun cutout(src: Bitmap, threshold: Float = 0.55f, feather: Boolean = true): Bitmap? {
         val segmenter = Segmentation.getClient(
-            SegmenterOptions.Builder()
-                .setDetectorMode(SegmenterOptions.SINGLE_IMAGE_MODE)
+            SelfieSegmenterOptions.Builder()
+                .setDetectorMode(SelfieSegmenterOptions.SINGLE_IMAGE_MODE)
                 .build()
         )
-        val mask = suspendCancellableCoroutine { cont ->
+        val mask = suspendCancellableCoroutine<SegmentationMask?> { cont ->
             segmenter.process(InputImage.fromBitmap(src, 0))
                 .addOnSuccessListener { cont.resume(it) }
                 .addOnFailureListener { cont.resume(null) }

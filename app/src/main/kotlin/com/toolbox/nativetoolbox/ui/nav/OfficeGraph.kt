@@ -18,7 +18,7 @@ fun NavGraphBuilder.officeToolsGraph(back: () -> Unit) {
     composable("tool/teleprompter") { TeleprompterToolScreen(back) }
     composable("tool/random_group") { RandomGroupToolScreen(back) }
     composable("tool/whiteboard") { WhiteboardToolScreen(back) }
-    composable("tool/file_transfer") { PlaceholderToolScreen("传输助手", back) }
+    composable("tool/file_transfer") { FileTransferToolScreen(back) }
     composable("tool/batch_rename") { BatchRenameToolScreen(back) }
-    composable("tool/zip") { PlaceholderToolScreen("压缩解压", back) }
+    composable("tool/zip") { ZipToolScreen(back) }
 }
