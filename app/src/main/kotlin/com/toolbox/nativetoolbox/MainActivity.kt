@@ -50,6 +50,7 @@ import com.toolbox.nativetoolbox.ui.liquid.LiquidBottomTabs
 import com.toolbox.nativetoolbox.ui.liquid.LiquidTab
 import com.toolbox.nativetoolbox.ui.liquid.LiquidTopBar
 import com.toolbox.nativetoolbox.ui.liquid.LocalRootBackdrop
+import com.toolbox.nativetoolbox.ui.settings.PredictSettingsScreen
 import com.toolbox.nativetoolbox.ui.settings.SettingsScreen
 import com.toolbox.nativetoolbox.ui.share.ShareScreen
 import com.toolbox.nativetoolbox.ui.theme.AstroKitTheme
@@ -211,7 +212,15 @@ private fun AppRoot(
                             onOpenToolFromRecommend = { openTool(it, fromRecommend = true) },
                         )
                     }
-                    composable("settings") { SettingsScreen(settings) }
+                    composable("settings") {
+                        SettingsScreen(
+                            settings = settings,
+                            onOpenPredict = { navController.navigate("predict_settings") }
+                        )
+                    }
+                    composable("predict_settings") {
+                        PredictSettingsScreen(onBack = { navController.popBackStack() })
+                    }
                     composable("share") {
                         ShareScreen(onOpenTool = { route ->
                             navController.navigate(route) {
@@ -241,9 +250,12 @@ private fun AppRoot(
 
             // 悬浮玻璃顶栏:必须在 layerBackdrop 录制层之外渲染,
             // 否则玻璃会画到包含自己的层 → RenderThread 无限递归闪退
-            if (currentRoute != null && currentRoute.startsWith("tool/")) {
+            if (currentRoute != null &&
+                (currentRoute.startsWith("tool/") || currentRoute == "predict_settings")
+            ) {
                 LiquidTopBar(
-                    title = toolTitles[currentRoute] ?: "",
+                    title = toolTitles[currentRoute]
+                        ?: if (currentRoute == "predict_settings") "预测与隐私" else "",
                     onBack = { navController.popBackStack() },
                     modifier = Modifier.align(Alignment.TopCenter)
                 )

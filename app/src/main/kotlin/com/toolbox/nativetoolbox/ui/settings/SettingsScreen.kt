@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.SystemUpdate
@@ -40,7 +41,7 @@ import com.toolbox.nativetoolbox.ui.theme.ThemeMode
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(settings: SettingsStore) {
+fun SettingsScreen(settings: SettingsStore, onOpenPredict: () -> Unit = {}) {
     val palette = LocalIosPalette.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -97,6 +98,19 @@ fun SettingsScreen(settings: SettingsStore) {
                 CheckRow("深色", themeMode == ThemeMode.Dark) {
                     scope.launch { settings.setThemeMode(ThemeMode.Dark) }
                 }
+            }
+        }
+
+        item { SectionHeader("此刻与数据") }
+        item {
+            GroupedCard {
+                NavRow(
+                    "预测与隐私",
+                    icon = Icons.Rounded.AutoAwesome,
+                    iconTint = palette.purple,
+                    value = "看看它学到了什么",
+                    onClick = onOpenPredict
+                )
             }
         }
 

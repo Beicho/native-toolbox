@@ -21,6 +21,20 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            // CI 通过环境变量注入(keystore 存 GitHub Secrets,不进版本库)。
+            // 本地没有这些变量时回退 debug 签名,便于开发。
+            val storePath = System.getenv("RELEASE_STORE_FILE")
+            if (storePath != null && file(storePath).exists()) {
+                storeFile = file(storePath)
+                storePassword = System.getenv("RELEASE_STORE_PASSWORD")
+                keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+                keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
     // ABI 分包:一个 APK 塞所有架构的 native 库是包体大头。
     // 2026 年了,arm64 覆盖绝大多数设备;仍保留 v7a 兼容老机器。
     splits {
@@ -40,7 +54,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            // 有正式 keystore 就用,否则回退 debug(仅本地开发)
+            signingConfig = if (System.getenv("RELEASE_STORE_FILE") != null)
+                signingConfigs.getByName("release")
+            else signingConfigs.getByName("debug")
         }
     }
 
