@@ -12,11 +12,11 @@ fun NavGraphBuilder.networkToolsGraph(back: () -> Unit) {
     composable("tool/ssl_cert") { SslCertToolScreen(back) }
     composable("tool/site_check") { SiteCheckToolScreen(back) }
     composable("tool/tcp_ping") { TcpPingToolScreen(back) }
-    composable("tool/speed_test") { PlaceholderToolScreen("网络测速", back) }
-    composable("tool/short_url") { PlaceholderToolScreen("短链生成", back) }
+    composable("tool/speed_test") { SpeedTestToolScreen(back) }
+    composable("tool/short_url") { ShortUrlToolScreen(back) }
     composable("tool/unshort_url") { UnshortUrlToolScreen(back) }
     composable("tool/temp_mail") { TempMailToolScreen(back) }
-    composable("tool/phone_share") { PlaceholderToolScreen("手机网盘", back) }
-    composable("tool/file_download") { PlaceholderToolScreen("文件下载器", back) }
-    composable("tool/wol") { PlaceholderToolScreen("网络唤醒", back) }
+    composable("tool/phone_share") { PhoneShareToolScreen(back) }
+    composable("tool/file_download") { FileDownloadToolScreen(back) }
+    composable("tool/wol") { WolToolScreen(back) }
 }
