@@ -38,31 +38,60 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toolbox.nativetoolbox.data.HomeCardData
+import com.toolbox.nativetoolbox.data.predict.PredictEngine
 import com.toolbox.nativetoolbox.data.prefs.UsageStore
 import com.toolbox.nativetoolbox.ui.components.IconTile
 import com.toolbox.nativetoolbox.ui.components.IosTextField
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
+import java.util.Calendar
 
-/** 首页:动态卡片 + 搜索 + 常用置顶 + 分类工具宫格 */
+/**
+ * 首页。信息层级从上到下:
+ *   问候 → 【此刻】(预测大脑) → 【今天】(活数据卡片) → 搜索 → 常用 → 全部工具
+ *
+ * @param refreshKey 每次导航回主页时 +1,用来重新拉活数据和预测结果
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(usageStore: UsageStore, onOpenTool: (String) -> Unit) {
+fun HomeScreen(
+    usageStore: UsageStore,
+    refreshKey: Int = 0,
+    onOpenTool: (String) -> Unit,
+    onOpenToolFromRecommend: (String) -> Unit = onOpenTool,
+) {
     val palette = LocalIosPalette.current
     val context = LocalContext.current
     val categories = remember { toolCategories() }
     val allTools = remember { categories.flatMap { it.tools } }
+    val byRoute = remember { allTools.associateBy { it.route } }
+    val onlineRoutes = remember { allTools.filter { it.requiresNetwork }.map { it.route }.toSet() }
     var query by remember { mutableStateOf("") }
     val usage by usageStore.usageCounts.collectAsState(initial = emptyMap())
 
+    // 预测结果:每次回主页重算(一次 < 5ms,不必缓存)
+    var suggestions by remember { mutableStateOf<List<PredictEngine.Suggestion>>(emptyList()) }
     // 动态卡片数据
     var countdowns by remember { mutableStateOf<List<HomeCardData.CountdownItem>>(emptyList()) }
     var todos by remember { mutableStateOf<List<HomeCardData.TodoItem>>(emptyList()) }
     var onThisDay by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(refreshKey) {
+        suggestions = if (PredictEngine.enabled) {
+            PredictEngine.suggest(allTools.map { it.route }, limit = 3, onlineRoutes = onlineRoutes)
+        } else emptyList()
         countdowns = HomeCardData.getUpcomingCountdowns(context)
         todos = HomeCardData.getTodos(context)
         onThisDay = HomeCardData.getOnThisDay(context)
+    }
+
+    val greeting = remember(refreshKey) {
+        when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+            in 5..10 -> "早上好"
+            in 11..13 -> "中午好"
+            in 14..17 -> "下午好"
+            in 18..22 -> "晚上好"
+            else -> "夜深了"
+        }
     }
 
     val frequent = remember(usage) {
@@ -70,7 +99,7 @@ fun HomeScreen(usageStore: UsageStore, onOpenTool: (String) -> Unit) {
             .filter { it.value > 0 }
             .sortedByDescending { it.value }
             .take(4)
-            .mapNotNull { entry -> allTools.find { it.route == entry.key } }
+            .mapNotNull { entry -> byRoute[entry.key] }
     }
 
     val filtered = if (query.isBlank()) null else allTools.filter {
@@ -96,29 +125,42 @@ fun HomeScreen(usageStore: UsageStore, onOpenTool: (String) -> Unit) {
                     .statusBarsPadding()
                     .padding(start = 20.dp, end = 20.dp, top = 12.dp)
             ) {
-                Text(
-                    "Astro Kit",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = palette.label
-                )
+                Text(greeting, style = MaterialTheme.typography.displayLarge, color = palette.label)
                 Text(
                     "星辰之匣 · ${allTools.size} 个工具",
                     style = MaterialTheme.typography.bodyMedium,
                     color = palette.secondaryLabel
                 )
-                Spacer(Modifier.height(12.dp))
-                IosTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    placeholder = "搜索工具…"
+            }
+        }
+
+        // 【此刻】—— 预测大脑的门面
+        if (query.isBlank()) {
+            item {
+                NowSection(
+                    suggestions = suggestions,
+                    toolTitle = { byRoute[it]?.title },
+                    toolIcon = { byRoute[it]?.icon },
+                    toolTint = { byRoute[it]?.tint?.invoke(palette) },
+                    onOpen = onOpenToolFromRecommend,
+                    onMute = { route ->
+                        PredictEngine.mute(route)
+                        suggestions = suggestions.filterNot { it.route == route }
+                    }
                 )
             }
         }
 
-        // 动态卡片区
+        // 【今天】—— 活数据卡片
         if (liveCards.isNotEmpty() && query.isBlank()) {
             item {
                 Spacer(Modifier.height(20.dp))
+                Text(
+                    "今天",
+                    Modifier.padding(start = 20.dp, bottom = 10.dp),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = palette.label
+                )
                 val pagerState = rememberPagerState(pageCount = { liveCards.size })
                 HorizontalPager(
                     state = pagerState,
@@ -150,6 +192,12 @@ fun HomeScreen(usageStore: UsageStore, onOpenTool: (String) -> Unit) {
                         }
                     }
                 }
+            }
+        }
+
+        item {
+            Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp)) {
+                IosTextField(value = query, onValueChange = { query = it }, placeholder = "搜索工具…")
             }
         }
 
@@ -198,7 +246,7 @@ private fun CountdownCard(item: HomeCardData.CountdownItem, onOpenTool: (String)
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
-            .clickable { onOpenTool("countdown_day") }
+            .clickable { onOpenTool("tool/countdown_day") }
             .padding(20.dp)
     ) {
         Text("倒数日", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel, letterSpacing = 0.5.sp)
@@ -229,7 +277,7 @@ private fun TodoCard(items: List<HomeCardData.TodoItem>, onOpenTool: (String) ->
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
-            .clickable { onOpenTool("todo") }
+            .clickable { onOpenTool("tool/notes") }
             .padding(20.dp)
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -270,7 +318,7 @@ private fun OnThisDayCard(event: String, onOpenTool: (String) -> Unit) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(palette.cardBackground)
-            .clickable { onOpenTool("onthisday") }
+            .clickable { onOpenTool("tool/history_today") }
             .padding(20.dp)
     ) {
         Text("历史上的今天", style = MaterialTheme.typography.labelSmall, color = palette.tertiaryLabel, letterSpacing = 0.5.sp)

@@ -93,11 +93,15 @@ class MainActivity : ComponentActivity() {
             pendingRoute = route
             return
         }
-        if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
-            val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-            if (!text.isNullOrBlank()) {
-                ShareBus.post(text)
-                pendingRoute = "share"
+        if (intent.action == Intent.ACTION_SEND) {
+            // 分享进来的 MIME 是「当下意图」的最强信号:图片 → 压缩/抠图/水印
+            SignalCollector.noteShareIntent(intent.type)
+            if (intent.type == "text/plain") {
+                val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+                if (!text.isNullOrBlank()) {
+                    ShareBus.post(text)
+                    pendingRoute = "share"
+                }
             }
         }
     }
@@ -120,9 +124,19 @@ private fun AppRoot(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val tabIndex = topLevelRoutes.indexOf(currentRoute)
+
+    // 每次回到主页 +1,触发活数据与预测结果重算
+    var homeRefreshKey by remember { mutableStateOf(0) }
+
+    // 路由变化:离开工具页时结算这次使用(时长/是否产出),回主页时刷新预测
+    LaunchedEffect(currentRoute) {
+        PredictEngine.flushPending()
+        if (currentRoute == "home") homeRefreshKey++
+    }
     val toolTitles = remember { toolCategories().flatMap { it.tools }.associate { it.route to it.title } }
 
-    fun openTool(route: String) {
+    fun openTool(route: String, fromRecommend: Boolean = false) {
+        PredictEngine.onToolOpen(route, fromRecommend)
         navController.navigate(route)
         scope.launch { usageStore.recordUse(route) }
     }
@@ -185,7 +199,12 @@ private fun AppRoot(
                     startDestination = "home"
                 ) {
                     composable("home") {
-                        HomeScreen(usageStore = usageStore, onOpenTool = { openTool(it) })
+                        HomeScreen(
+                            usageStore = usageStore,
+                            refreshKey = homeRefreshKey,
+                            onOpenTool = { openTool(it) },
+                            onOpenToolFromRecommend = { openTool(it, fromRecommend = true) },
+                        )
                     }
                     composable("settings") { SettingsScreen(settings) }
                     composable("share") {
