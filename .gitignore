@@ -20,3 +20,4 @@ out/
 captures/
 output.json
 *.hprof
+app/build/
