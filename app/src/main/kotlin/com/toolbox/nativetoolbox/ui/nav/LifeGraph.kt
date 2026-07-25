@@ -20,7 +20,7 @@ fun NavGraphBuilder.lifeToolsGraph(back: () -> Unit) {
     composable("tool/phone_location") { PlaceholderToolScreen("归属地查询", back) }
     composable("tool/garbage") { GarbageToolScreen(back) }
     composable("tool/mirror") { MirrorToolScreen(back) }
-    composable("tool/magnifier") { PlaceholderToolScreen("放大镜", back) }
+    composable("tool/magnifier") { MagnifierToolScreen(back) }
     composable("tool/ruler") { PlaceholderToolScreen("屏幕测量", back) }
     composable("tool/big_clock") { BigClockToolScreen(back) }
     composable("tool/emergency_card") { EmergencyCardToolScreen(back) }
