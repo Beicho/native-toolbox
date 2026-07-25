@@ -8,7 +8,7 @@ import com.toolbox.nativetoolbox.ui.tools.*
 fun NavGraphBuilder.funToolsGraph(back: () -> Unit) {
     composable("tool/banner") { BannerToolScreen(back) }
     composable("tool/decider") { DeciderToolScreen(back) }
-    composable("tool/fidget") { PlaceholderToolScreen("解压玩具", back) }
+    composable("tool/fidget") { FidgetToolScreen(back) }
     composable("tool/party_games") { PlaceholderToolScreen("聚会游戏盒", back) }
     composable("tool/wooden_fish") { WoodenFishToolScreen(back) }
     composable("tool/fireworks") { PlaceholderToolScreen("口袋烟花", back) }
@@ -16,6 +16,6 @@ fun NavGraphBuilder.funToolsGraph(back: () -> Unit) {
     composable("tool/hitokoto") { HitokotoToolScreen(back) }
     composable("tool/reaction_test") { ReactionTestToolScreen(back) }
     composable("tool/classic_games") { ClassicGamesToolScreen(back) }
-    composable("tool/typing_test") { PlaceholderToolScreen("打字测速", back) }
+    composable("tool/typing_test") { TypingTestToolScreen(back) }
     composable("tool/math_training") { MathTrainingToolScreen(back) }
 }
