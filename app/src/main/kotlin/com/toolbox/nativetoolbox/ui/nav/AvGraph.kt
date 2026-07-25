@@ -13,12 +13,12 @@ fun NavGraphBuilder.avToolsGraph(back: () -> Unit) {
     composable("tool/audio_extract") { PlaceholderToolScreen("音频提取", back) }
     composable("tool/voice_change") { PlaceholderToolScreen("变声与倒放", back) }
     composable("tool/ab_player") { PlaceholderToolScreen("AB 循环播放器", back) }
-    composable("tool/tts") { PlaceholderToolScreen("文字朗读", back) }
+    composable("tool/tts") { TtsToolScreen(back) }
     composable("tool/video_compress") { PlaceholderToolScreen("视频压缩", back) }
     composable("tool/video_to_gif") { PlaceholderToolScreen("视频转 GIF", back) }
-    composable("tool/video_frame") { PlaceholderToolScreen("视频截帧", back) }
-    composable("tool/video_info") { PlaceholderToolScreen("视频信息", back) }
-    composable("tool/metronome") { PlaceholderToolScreen("节拍器", back) }
+    composable("tool/video_frame") { VideoFrameToolScreen(back) }
+    composable("tool/video_info") { VideoInfoToolScreen(back) }
+    composable("tool/metronome") { MetronomeToolScreen(back) }
     composable("tool/tuner") { PlaceholderToolScreen("调音器", back) }
     composable("tool/white_noise") { PlaceholderToolScreen("白噪音", back) }
     composable("tool/earphone_test") { PlaceholderToolScreen("耳机测试", back) }
