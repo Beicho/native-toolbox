@@ -20,7 +20,7 @@ fun NavGraphBuilder.devToolsGraph(back: () -> Unit) {
     composable("tool/http_ref") { HttpRefToolScreen(back) }
     composable("tool/ua_parse") { UaParseToolScreen(back) }
     composable("tool/sql_format") { SqlFormatToolScreen(back) }
-    composable("tool/config_convert") { PlaceholderToolScreen("配置互转", back) }
+    composable("tool/config_convert") { ConfigConvertToolScreen(back) }
     composable("tool/markdown_preview") { PlaceholderToolScreen("Markdown 预览", back) }
     composable("tool/html_preview") { PlaceholderToolScreen("HTML 预览", back) }
     composable("tool/css_gen") { PlaceholderToolScreen("CSS 样式生成", back) }

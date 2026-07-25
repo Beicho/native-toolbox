@@ -19,6 +19,6 @@ fun NavGraphBuilder.officeToolsGraph(back: () -> Unit) {
     composable("tool/random_group") { RandomGroupToolScreen(back) }
     composable("tool/whiteboard") { WhiteboardToolScreen(back) }
     composable("tool/file_transfer") { PlaceholderToolScreen("传输助手", back) }
-    composable("tool/batch_rename") { PlaceholderToolScreen("批量重命名", back) }
+    composable("tool/batch_rename") { BatchRenameToolScreen(back) }
     composable("tool/zip") { PlaceholderToolScreen("压缩解压", back) }
 }
