@@ -42,7 +42,7 @@ fun XxxToolScreen(onBack: () -> Unit) {
 | `GroupedCard` | `(modifier, content: @Composable ColumnScope.()->Unit)` | iOS 分组卡片容器 |
 | `RowDivider` | `(startIndent=16.dp)` | 分隔线 |
 | `IconTile` | `(icon: ImageVector, tint: Color, size=30.dp)` | 图标块 |
-| `NavRow` / `ToggleRow` / `CheckRow` | 见 GroupedList.kt | 列表行 |
+| `NavRow` / `ToggleRow` / `CheckRow` | 见 GroupedList.kt | 列表行。**ToggleRow 回调必须具名传:`ToggleRow("x", v, onCheckedChange = {...})`,尾随 lambda 会绑到别的参数编译失败** |
 | `CardPadding` | `(content: @Composable ColumnScope.()->Unit)` | 卡片内 16dp 留白列 |
 | `rememberCopy()` | `(): (String)->Unit` | 复制到剪贴板 |
 

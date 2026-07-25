@@ -215,9 +215,9 @@ fun RandomNumToolScreen(onBack: () -> Unit) {
         item {
             if (mode == 0) {
                 GroupedCard {
-                    ToggleRow("结果去重", unique) { unique = it }
+                    ToggleRow("结果去重", unique, onCheckedChange = { unique = it })
                     RowDivider()
-                    ToggleRow("从小到大排序", sorted) { sorted = it }
+                    ToggleRow("从小到大排序", sorted, onCheckedChange = { sorted = it })
                 }
             }
         }

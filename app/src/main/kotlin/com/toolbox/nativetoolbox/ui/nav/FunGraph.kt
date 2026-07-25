@@ -9,10 +9,10 @@ fun NavGraphBuilder.funToolsGraph(back: () -> Unit) {
     composable("tool/banner") { BannerToolScreen(back) }
     composable("tool/decider") { DeciderToolScreen(back) }
     composable("tool/fidget") { FidgetToolScreen(back) }
-    composable("tool/party_games") { PlaceholderToolScreen("聚会游戏盒", back) }
+    composable("tool/party_games") { PartyGamesToolScreen(back) }
     composable("tool/wooden_fish") { WoodenFishToolScreen(back) }
-    composable("tool/fireworks") { PlaceholderToolScreen("口袋烟花", back) }
-    composable("tool/tarot") { PlaceholderToolScreen("塔罗抽牌", back) }
+    composable("tool/fireworks") { FireworksToolScreen(back) }
+    composable("tool/tarot") { TarotToolScreen(back) }
     composable("tool/hitokoto") { HitokotoToolScreen(back) }
     composable("tool/reaction_test") { ReactionTestToolScreen(back) }
     composable("tool/classic_games") { ClassicGamesToolScreen(back) }
