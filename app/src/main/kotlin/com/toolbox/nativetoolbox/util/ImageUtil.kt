@@ -70,6 +70,7 @@ object ImageUtil {
             ) ?: return Result.failure(Exception("无法创建文件"))
             context.contentResolver.openOutputStream(uri)?.use { it.write(bytes) }
                 ?: return Result.failure(Exception("无法写入文件"))
+            com.toolbox.nativetoolbox.data.predict.PredictEngine.onProduced()
             Result.success("Pictures/AstroKit/$fileName")
         } catch (e: Exception) {
             Result.failure(e)

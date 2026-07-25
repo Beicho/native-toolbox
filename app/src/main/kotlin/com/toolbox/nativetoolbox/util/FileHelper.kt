@@ -22,11 +22,16 @@ object FileHelper {
         content: ByteArray
     ): Result<String> {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val r = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 saveViaMediaStore(context, fileName, content)
             } else {
                 saveViaFile(context, fileName, content)
             }
+            // 存出了东西 = 这次使用真的有产出,给预测引擎一个强正信号
+            if (r.isSuccess) {
+                com.toolbox.nativetoolbox.data.predict.PredictEngine.onProduced()
+            }
+            r
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
+import android.annotation.SuppressLint
+import android.location.LocationManager
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.toolbox.nativetoolbox.net.AstroApi
 import com.toolbox.nativetoolbox.ui.components.CardPadding
@@ -81,9 +84,11 @@ private fun aqiLevel(aqi: Int): String = when {
 private fun temp(value: Double): String =
     if (value.isNaN()) "—" else Math.round(value).toString() + "°"
 
+@SuppressLint("MissingPermission")
 @Composable
 fun WeatherToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     var lat by rememberSaveable { mutableStateOf("39.9042") }
@@ -161,11 +166,34 @@ fun WeatherToolScreen(onBack: () -> Unit) {
                     SolidButton(onClick = { load() }, enabled = !loading) {
                         Text(if (loading) "获取中…" else "查天气")
                     }
-                    Text(
-                        "这个功能需要联网。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
+                    // 手填经纬度太反人类,给个一键定位
+                    SolidButton(
+                        onClick = {
+                            val granted = androidx.core.content.ContextCompat.checkSelfPermission(
+                                context, android.Manifest.permission.ACCESS_COARSE_LOCATION
+                            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            if (!granted) {
+                                status = "需要定位权限才能自动填。也可以直接点上面的城市。"
+                                return@SolidButton
+                            }
+                            val loc = runCatching {
+                                val lm = context.getSystemService(android.content.Context.LOCATION_SERVICE) as LocationManager
+                                lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                                    ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                            }.getOrNull()
+                            if (loc == null) {
+                                status = "暂时拿不到位置。到窗边等几秒,或直接选城市。"
+                            } else {
+                                lat = "%.4f".format(loc.latitude)
+                                lon = "%.4f".format(loc.longitude)
+                                cityName = "当前位置"
+                                status = ""
+                                load()
+                            }
+                        },
+                        filled = false,
+                        enabled = !loading
+                    ) { Text("用我当前的位置") }
                 }
             }
         }
