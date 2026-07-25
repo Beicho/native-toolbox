@@ -221,7 +221,7 @@ fun PerformanceToolScreen(onBack: () -> Unit) {
                                         Modifier
                                             .align(androidx.compose.ui.Alignment.BottomCenter)
                                             .fillMaxWidth()
-                                            .height((60 * value / maxValue).dp.coerceAtLeast(2.dp))
+                                            .height((60 * value / maxValue).toInt().dp.coerceAtLeast(2.dp))
                                             .background(palette.accent.copy(alpha = 0.6f))
                                     )
                                 }

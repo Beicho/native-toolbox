@@ -15,7 +15,7 @@ fun NavGraphBuilder.deviceToolsGraph(back: () -> Unit) {
     composable("tool/performance") { PerformanceToolScreen(back) }
     composable("tool/hardware_test") { PlaceholderToolScreen("硬件体检", back) }
     composable("tool/storage_clean") { PlaceholderToolScreen("存储清理", back) }
-    composable("tool/wifi_analyze") { PlaceholderToolScreen("WiFi 分析", back) }
+    composable("tool/wifi_analyze") { WifiAnalyzeToolScreen(back) }
     composable("tool/bluetooth_scan") { PlaceholderToolScreen("蓝牙雷达", back) }
     composable("tool/nfc_tool") { PlaceholderToolScreen("NFC 读写", back) }
     composable("tool/gps_speed") { PlaceholderToolScreen("GPS 速度表", back) }
