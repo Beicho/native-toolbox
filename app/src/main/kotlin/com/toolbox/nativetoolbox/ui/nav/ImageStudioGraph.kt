@@ -11,10 +11,10 @@ fun NavGraphBuilder.imageStudioToolsGraph(back: () -> Unit) {
     composable("tool/watermark") { WatermarkToolScreen(back) }
     composable("tool/gridcut") { GridCutToolScreen(back) }
     composable("tool/stitch") { StitchToolScreen(back) }
-    composable("tool/gif_make") { PlaceholderToolScreen("GIF 制作", back) }
+    composable("tool/gif_make") { GifMakeToolScreen(back) }
     composable("tool/barcode") { BarcodeToolScreen(back) }
     composable("tool/ascii_art") { AsciiArtToolScreen(back) }
-    composable("tool/meme_maker") { PlaceholderToolScreen("表情包制作", back) }
-    composable("tool/checkin_watermark") { PlaceholderToolScreen("打卡水印", back) }
+    composable("tool/meme_maker") { MemeMakerToolScreen(back) }
+    composable("tool/checkin_watermark") { CheckinWatermarkToolScreen(back) }
     composable("tool/color_scheme") { ColorSchemeToolScreen(back) }
 }
