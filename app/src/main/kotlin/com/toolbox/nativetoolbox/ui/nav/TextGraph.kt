@@ -21,6 +21,6 @@ fun NavGraphBuilder.textToolsGraph(back: () -> Unit) {
     composable("tool/text_format") { TextFormatToolScreen(back) }
     composable("tool/emoji_lib") { EmojiLibToolScreen(back) }
     composable("tool/mask_sensitive") { MaskSensitiveToolScreen(back) }
-    composable("tool/clipboard_shelf") { PlaceholderToolScreen("剪贴板暂存架", back) }
-    composable("tool/text_template") { PlaceholderToolScreen("文本模板", back) }
+    composable("tool/clipboard_shelf") { ClipboardShelfToolScreen(back) }
+    composable("tool/text_template") { TextTemplateToolScreen(back) }
 }
