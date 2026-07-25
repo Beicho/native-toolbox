@@ -100,7 +100,7 @@ fun EncodingScreen(onBack: () -> Unit, viewModel: EncodingViewModel = viewModel(
             }
         }
 
-        item { SectionHeader("文件列表 · ${uiState.files.size} 个(输出到 下载/综合工具包)") }
+        item { SectionHeader("文件列表 · ${uiState.files.size} 个(输出到 下载/AstroKit)") }
         item {
             GroupedCard {
                 if (uiState.files.isEmpty()) {

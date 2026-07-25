@@ -9,7 +9,7 @@ fun NavGraphBuilder.imageEditToolsGraph(back: () -> Unit) {
     composable("tool/imagecompress") { ImageCompressToolScreen(back) }
     composable("tool/imageconvert") { ImageConvertToolScreen(back) }
     composable("tool/pickcolor") { PickColorToolScreen(back) }
-    composable("tool/image_crop") { PlaceholderToolScreen("裁剪旋转", back) }
+    composable("tool/image_crop") { ImageCropToolScreen(back) }
     composable("tool/image_filter") { PlaceholderToolScreen("滤镜调色", back) }
     composable("tool/image_mosaic") { PlaceholderToolScreen("打码涂抹", back) }
     composable("tool/image_border") { PlaceholderToolScreen("圆角边框", back) }

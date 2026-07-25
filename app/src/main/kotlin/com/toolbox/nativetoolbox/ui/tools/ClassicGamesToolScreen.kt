@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -84,12 +85,15 @@ private fun TicTacToe(palette: com.toolbox.nativetoolbox.ui.theme.IosPalette) {
     val full = board.none { it.isEmpty() }
     var settled by remember { mutableStateOf(false) }
 
-    if ((winner != null || full) && !settled) {
-        settled = true
-        when (winner) {
-            "X" -> playerWins += 1
-            "O" -> computerWins += 1
-            else -> draws += 1
+    // 结算必须放在副作用里：在组合期改状态会触发无限重组，界面直接卡死退出
+    LaunchedEffect(winner, full) {
+        if ((winner != null || full) && !settled) {
+            settled = true
+            when (winner) {
+                "X" -> playerWins += 1
+                "O" -> computerWins += 1
+                else -> draws += 1
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -108,9 +109,12 @@ fun TypingTestToolScreen(onBack: () -> Unit) {
     val wpm = if (minutes <= 0) 0 else Math.round(correctChars / unit / minutes).toInt()
     val finished = typed.length >= target.length
 
-    if (finished && running) {
-        running = false
-        if (wpm > bestWpm) bestWpm = wpm
+    // 同上：打完一段的结算放副作用里，不能在组合期写状态
+    LaunchedEffect(finished) {
+        if (finished && running) {
+            running = false
+            if (wpm > bestWpm) bestWpm = wpm
+        }
     }
 
     fun start(newText: String) {

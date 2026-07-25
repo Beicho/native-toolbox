@@ -38,9 +38,21 @@ jobs:
         chmod +x gradlew
         ./gradlew assembleDebug --stacktrace
 
+    # debug 包不做代码压缩也不裁资源，体积会到 70MB 以上，装机用的应该是 release 包。
+    # release 开了 R8 + 资源裁剪，能把没用到的图标资源全部剔掉。
+    - name: Build Release APK
+      run: ./gradlew assembleRelease --stacktrace
+
+    - name: Show APK sizes
+      run: |
+        echo "各产物体积："
+        ls -lh app/build/outputs/apk/debug/*.apk app/build/outputs/apk/release/*.apk 2>/dev/null | awk '{print $5, $9}'
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: native-toolbox-debug
-        path: app/build/outputs/apk/debug/*.apk
+        name: astrokit-apk
+        path: |
+          app/build/outputs/apk/release/*.apk
+          app/build/outputs/apk/debug/*.apk
         retention-days: 7

@@ -11,7 +11,7 @@ import java.io.OutputStream
 
 object FileHelper {
 
-    private const val APP_FOLDER = "综合工具包"
+    private const val APP_FOLDER = "AstroKit"
 
     /**
      * 保存文件到公共下载目录（Android 10+ 使用 MediaStore）
