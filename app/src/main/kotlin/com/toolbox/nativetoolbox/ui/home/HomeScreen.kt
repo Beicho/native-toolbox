@@ -45,6 +45,7 @@ import com.toolbox.nativetoolbox.ui.components.IconTile
 import com.toolbox.nativetoolbox.ui.components.IosTextField
 import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
+import com.toolbox.nativetoolbox.util.PinyinInitials
 import java.util.Calendar
 
 /**
@@ -67,6 +68,8 @@ fun HomeScreen(
     val allTools = remember { categories.flatMap { it.tools } }
     val byRoute = remember { allTools.associateBy { it.route } }
     val onlineRoutes = remember { allTools.filter { it.requiresNetwork }.map { it.route }.toSet() }
+    // 拼音首字母索引:jsq → 计算器。200 条启动时算一次
+    val initialsIndex = remember { allTools.associate { it.route to PinyinInitials.of(it.title) } }
     var query by remember { mutableStateOf("") }
     val usage by usageStore.usageCounts.collectAsState(initial = emptyMap())
 
@@ -106,9 +109,16 @@ fun HomeScreen(
             .mapNotNull { entry -> byRoute[entry.key] }
     }
 
-    val filtered = if (query.isBlank()) null else allTools.filter {
-        it.title.contains(query.trim(), ignoreCase = true) ||
-            it.subtitle.contains(query.trim(), ignoreCase = true)
+    val filtered = if (query.isBlank()) null else run {
+        val q = query.trim()
+        val qLower = q.lowercase()
+        allTools.filter {
+            it.title.contains(q, ignoreCase = true) ||
+                it.subtitle.contains(q, ignoreCase = true) ||
+                // 拼音首字母:纯字母查询时启用(jsq → 计算器)
+                (qLower.all { c -> c in 'a'..'z' } &&
+                    (initialsIndex[it.route]?.contains(qLower) == true))
+        }
     }
 
     val liveCards = buildList {
