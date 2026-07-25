@@ -72,10 +72,10 @@ fun TextFormatToolScreen(onBack: () -> Unit) {
         item { SectionHeader("排版规则") }
         item {
             GroupedCard {
-                ToggleRow("中英之间加空格", addSpace) { addSpace = it }
-                ToggleRow("半角标点转中文", fixPunct) { fixPunct = it }
-                ToggleRow("压缩多余空行", squeeze) { squeeze = it }
-                ToggleRow("去掉每行开头缩进", unindent) { unindent = it }
+                ToggleRow("中英之间加空格", addSpace, onCheckedChange = { addSpace = it })
+                ToggleRow("半角标点转中文", fixPunct, onCheckedChange = { fixPunct = it })
+                ToggleRow("压缩多余空行", squeeze, onCheckedChange = { squeeze = it })
+                ToggleRow("去掉每行开头缩进", unindent, onCheckedChange = { unindent = it })
             }
         }
         item { SectionHeader("整理后") }

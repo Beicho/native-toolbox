@@ -89,11 +89,11 @@ fun MaskSensitiveToolScreen(onBack: () -> Unit) {
         item { SectionHeader("要打码的类型") }
         item {
             GroupedCard {
-                ToggleRow("手机号", phone) { phone = it }
-                ToggleRow("身份证号", idCard) { idCard = it }
-                ToggleRow("邮箱", email) { email = it }
-                ToggleRow("银行卡号", bank) { bank = it }
-                ToggleRow("IP 地址", ip) { ip = it }
+                ToggleRow("手机号", phone, onCheckedChange = { phone = it })
+                ToggleRow("身份证号", idCard, onCheckedChange = { idCard = it })
+                ToggleRow("邮箱", email, onCheckedChange = { email = it })
+                ToggleRow("银行卡号", bank, onCheckedChange = { bank = it })
+                ToggleRow("IP 地址", ip, onCheckedChange = { ip = it })
             }
         }
         item { SectionHeader(if (total > 0) "已打码 $total 处" else "打码结果") }
