@@ -12,15 +12,15 @@ fun NavGraphBuilder.textToolsGraph(back: () -> Unit) {
     composable("tool/encoding") { EncodingScreen(back) }
     composable("tool/cn_convert") { PlaceholderToolScreen("繁简转换", back) }
     composable("tool/pinyin") { PlaceholderToolScreen("拼音标注", back) }
-    composable("tool/translate") { PlaceholderToolScreen("翻译与词典", back) }
-    composable("tool/morse") { PlaceholderToolScreen("摩斯电码", back) }
-    composable("tool/fullwidth") { PlaceholderToolScreen("全角半角", back) }
-    composable("tool/fancy_text") { PlaceholderToolScreen("花式文字", back) }
-    composable("tool/zero_width") { PlaceholderToolScreen("零宽隐写", back) }
-    composable("tool/vertical_text") { PlaceholderToolScreen("竖排古风", back) }
-    composable("tool/text_format") { PlaceholderToolScreen("文案排版", back) }
+    composable("tool/translate") { TranslateToolScreen(back) }
+    composable("tool/morse") { MorseToolScreen(back) }
+    composable("tool/fullwidth") { FullWidthToolScreen(back) }
+    composable("tool/fancy_text") { FancyTextToolScreen(back) }
+    composable("tool/zero_width") { ZeroWidthToolScreen(back) }
+    composable("tool/vertical_text") { VerticalTextToolScreen(back) }
+    composable("tool/text_format") { TextFormatToolScreen(back) }
     composable("tool/emoji_lib") { PlaceholderToolScreen("表情符号库", back) }
-    composable("tool/mask_sensitive") { PlaceholderToolScreen("敏感信息打码", back) }
+    composable("tool/mask_sensitive") { MaskSensitiveToolScreen(back) }
     composable("tool/clipboard_shelf") { PlaceholderToolScreen("剪贴板暂存架", back) }
     composable("tool/text_template") { PlaceholderToolScreen("文本模板", back) }
 }
