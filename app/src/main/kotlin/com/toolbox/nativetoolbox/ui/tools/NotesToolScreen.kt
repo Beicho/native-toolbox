@@ -1,198 +1,246 @@
 package com.toolbox.nativetoolbox.ui.tools
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.toolbox.nativetoolbox.ui.components.rememberPrefString
-import com.toolbox.nativetoolbox.ui.components.rememberToolPrefs
+import androidx.compose.ui.unit.sp
+import com.toolbox.nativetoolbox.data.store.AstroStore
 import com.toolbox.nativetoolbox.ui.components.CardPadding
-import com.toolbox.nativetoolbox.ui.components.CheckRow
 import com.toolbox.nativetoolbox.ui.components.GroupedCard
+import com.toolbox.nativetoolbox.ui.components.IosTextArea
 import com.toolbox.nativetoolbox.ui.components.IosTextField
-import com.toolbox.nativetoolbox.ui.components.OutputCard
+import com.toolbox.nativetoolbox.ui.components.RowDivider
 import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SegmentedPicker
 import com.toolbox.nativetoolbox.ui.components.SolidButton
-import com.toolbox.nativetoolbox.ui.components.StatCell
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 
-/** 清单项在单字符串里的编码：完成标记 + 内容，行间用换行分隔 */
-private const val DONE_MARK = "[x] "
-private const val TODO_MARK = "[ ] "
-
-private class Task(val text: String, val done: Boolean)
-
-private fun parseTasks(raw: String): List<Task> = raw.lines().mapNotNull { line ->
-    val trimmed = line.trim()
-    if (trimmed.isEmpty()) return@mapNotNull null
-    when {
-        trimmed.startsWith(DONE_MARK) -> Task(trimmed.removePrefix(DONE_MARK), true)
-        trimmed.startsWith(TODO_MARK) -> Task(trimmed.removePrefix(TODO_MARK), false)
-        else -> Task(trimmed, false)
-    }
-}
-
-private fun serialize(tasks: List<Task>): String =
-    tasks.joinToString("\n") { (if (it.done) DONE_MARK else TODO_MARK) + it.text }
-
+/**
+ * 便签 + 待办。数据走 AstroStore —— 待办与主页卡片是同一份,
+ * 主页打的勾这里立刻能看见,反过来也一样。
+ */
 @Composable
 fun NotesToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
+    var mode by rememberSaveable { mutableStateOf(0) } // 0 待办 1 便签
+    var version by remember { mutableStateOf(0) }
+    var todoInput by rememberSaveable { mutableStateOf("") }
+    var noteInput by rememberSaveable { mutableStateOf("") }
+    var pendingDelete by remember { mutableStateOf<String?>(null) }
 
-    var mode by rememberSaveable { mutableStateOf(0) }
-    val toolPrefs = rememberToolPrefs("notes")
-    var note by rememberPrefString(toolPrefs, "note", "")
-    var listRaw by rememberPrefString(toolPrefs, "listRaw", "")
-    var newTask by rememberSaveable { mutableStateOf("") }
-
-    val tasks = parseTasks(listRaw)
-    val doneCount = tasks.count { it.done }
-
-    fun toggle(index: Int) {
-        val updated = tasks.mapIndexed { i, t -> if (i == index) Task(t.text, !t.done) else t }
-        listRaw = serialize(updated)
+    val todos = remember(version) {
+        AstroStore.all(AstroStore.Collection.TODO)
+            .sortedWith(compareBy({ it.bool("done") }, { -it.createdAt }))
     }
+    val notes = remember(version) { AstroStore.all(AstroStore.Collection.NOTES) }
 
-    fun add() {
-        val text = newTask.trim()
-        if (text.isEmpty()) return
-        listRaw = serialize(tasks + Task(text, false))
-        newTask = ""
+    /** 删除按钮:第一次点变红问「确定?」,再点才真删 */
+    @Composable
+    fun deleteChip(id: String, collection: AstroStore.Collection) {
+        val confirming = pendingDelete == id
+        Box(
+            Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(if (confirming) palette.red else palette.sunkenBackground)
+                .clickable {
+                    if (confirming) {
+                        AstroStore.remove(collection, id)
+                        pendingDelete = null
+                        version++
+                    } else pendingDelete = id
+                }
+                .padding(horizontal = 10.dp, vertical = 6.dp)
+        ) {
+            Text(
+                if (confirming) "确定?" else "删",
+                style = MaterialTheme.typography.labelSmall,
+                color = if (confirming) Color.White else palette.secondaryLabel
+            )
+        }
     }
 
     ToolScaffold {
-        item { SectionHeader("类型") }
         item {
             GroupedCard {
                 CardPadding {
-                    SegmentedPicker(
-                        options = listOf("便签", "待办清单"),
-                        selectedIndex = mode,
-                        onSelected = { mode = it }
-                    )
-                    Text(
-                        "内容只留在这个页面，退出会清空。要长期保存请复制到系统备忘录。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
+                    SegmentedPicker(listOf("待办", "便签"), mode, { mode = it; pendingDelete = null }, Modifier.fillMaxWidth())
                 }
             }
         }
+
         if (mode == 0) {
-            item { SectionHeader("便签") }
             item {
                 GroupedCard {
                     CardPadding {
-                        IosTextField(
-                            value = note,
-                            onValueChange = { note = it },
-                            placeholder = "随手记点东西",
-                            singleLine = false,
-                            minLines = 8
-                        )
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            StatCell("字符", note.length.toString(), Modifier.weight(1f))
-                            StatCell(
-                                "行数",
-                                if (note.isEmpty()) "0" else note.lines().size.toString(),
-                                Modifier.weight(1f)
-                            )
-                            StatCell(
-                                "词数",
-                                note.split(Regex("\\s+")).count { it.isNotBlank() }.toString(),
-                                Modifier.weight(1f)
-                            )
-                        }
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            SolidButton(
-                                onClick = { note = "" },
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                            IosTextField(
+                                value = todoInput,
+                                onValueChange = { todoInput = it },
                                 modifier = Modifier.weight(1f),
-                                filled = false,
-                                enabled = note.isNotBlank()
-                            ) { Text("清空") }
+                                placeholder = "要做什么"
+                            )
+                            SolidButton(
+                                onClick = {
+                                    if (todoInput.isNotBlank()) {
+                                        AstroStore.add(AstroStore.Collection.TODO) {
+                                            put("text", todoInput.trim())
+                                            put("done", false)
+                                        }
+                                        todoInput = ""
+                                        version++
+                                    }
+                                },
+                                modifier = Modifier.width(64.dp),
+                                enabled = todoInput.isNotBlank()
+                            ) { Text("加") }
                         }
                     }
                 }
             }
-            if (note.isNotBlank()) {
-                item { SectionHeader("复制") }
-                item { GroupedCard { CardPadding { OutputCard(text = note, label = "便签内容") } } }
+            if (todos.isEmpty()) {
+                item {
+                    Text(
+                        "没有待办。加一条,它也会出现在主页卡片上。",
+                        Modifier.fillMaxWidth().padding(24.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.tertiaryLabel,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                val doneCount = todos.count { it.bool("done") }
+                item { SectionHeader("清单($doneCount/${todos.size})") }
+                item {
+                    GroupedCard {
+                        todos.forEachIndexed { index, r ->
+                            val done = r.bool("done")
+                            Row(
+                                Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 9.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    Modifier
+                                        .size(22.dp)
+                                        .clip(CircleShape)
+                                        .background(if (done) palette.green else palette.sunkenBackground)
+                                        .clickable {
+                                            AstroStore.update(AstroStore.Collection.TODO, r.id) { put("done", !done) }
+                                            version++
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    if (done) Text("✓", fontSize = 13.sp, color = Color.White)
+                                }
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    r.str("text"),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = if (done) palette.tertiaryLabel else palette.label,
+                                    textDecoration = if (done) TextDecoration.LineThrough else null,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                deleteChip(r.id, AstroStore.Collection.TODO)
+                            }
+                            if (index != todos.lastIndex) RowDivider()
+                        }
+                    }
+                }
+                if (doneCount > 0) {
+                    item {
+                        Spacer(Modifier.height(4.dp))
+                        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+                            SolidButton(
+                                onClick = {
+                                    todos.filter { it.bool("done") }.forEach {
+                                        AstroStore.remove(AstroStore.Collection.TODO, it.id)
+                                    }
+                                    version++
+                                },
+                                Modifier.fillMaxWidth(),
+                                filled = false
+                            ) { Text("清掉 $doneCount 条已完成") }
+                        }
+                    }
+                }
             }
         } else {
-            item { SectionHeader("进度") }
             item {
                 GroupedCard {
                     CardPadding {
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            StatCell("总数", tasks.size.toString(), Modifier.weight(1f))
-                            StatCell("已完成", doneCount.toString(), Modifier.weight(1f))
-                            StatCell(
-                                "完成度",
-                                if (tasks.isEmpty()) "—" else String.format("%.0f%%", doneCount * 100.0 / tasks.size),
-                                Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-            }
-            item { SectionHeader("添加") }
-            item {
-                GroupedCard {
-                    CardPadding {
-                        IosTextField(
-                            value = newTask,
-                            onValueChange = { newTask = it },
-                            placeholder = "要做什么"
+                        IosTextArea(
+                            value = noteInput,
+                            onValueChange = { noteInput = it },
+                            placeholder = "随手记点什么…",
+                            minHeight = 90.dp
                         )
-                        SolidButton(onClick = { add() }, enabled = newTask.isNotBlank()) { Text("加一条") }
+                        SolidButton(
+                            onClick = {
+                                if (noteInput.isNotBlank()) {
+                                    AstroStore.add(AstroStore.Collection.NOTES) { put("text", noteInput.trim()) }
+                                    noteInput = ""
+                                    version++
+                                }
+                            },
+                            enabled = noteInput.isNotBlank()
+                        ) { Text("存下") }
                     }
                 }
             }
-            if (tasks.isNotEmpty()) {
-                item { SectionHeader("清单（点一下打勾）") }
+            if (notes.isEmpty()) {
                 item {
-                    GroupedCard {
-                        tasks.forEachIndexed { index, task ->
-                            CheckRow(task.text, task.done) { toggle(index) }
-                        }
-                    }
+                    Text(
+                        "还没有便签",
+                        Modifier.fillMaxWidth().padding(24.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.tertiaryLabel,
+                        textAlign = TextAlign.Center
+                    )
                 }
+            } else {
+                item { SectionHeader("便签(${notes.size})") }
                 item {
                     GroupedCard {
-                        CardPadding {
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                SolidButton(
-                                    onClick = { listRaw = serialize(tasks.filter { !it.done }) },
-                                    modifier = Modifier.weight(1f),
-                                    filled = false,
-                                    enabled = doneCount > 0
-                                ) { Text("清掉已完成") }
-                                SolidButton(
-                                    onClick = { listRaw = "" },
-                                    modifier = Modifier.weight(1f),
-                                    filled = false
-                                ) { Text("全部清空") }
+                        notes.forEachIndexed { index, r ->
+                            Row(
+                                Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Text(
+                                    r.str("text"),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = palette.label,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                deleteChip(r.id, AstroStore.Collection.NOTES)
                             }
-                        }
-                    }
-                }
-                item { SectionHeader("导出") }
-                item {
-                    GroupedCard {
-                        CardPadding {
-                            OutputCard(
-                                text = tasks.joinToString("\n") { (if (it.done) "✓ " else "○ ") + it.text },
-                                label = "清单"
-                            )
+                            if (index != notes.lastIndex) RowDivider()
                         }
                     }
                 }
