@@ -30,7 +30,7 @@ import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 private const val SHELF_SEP = "\u0002"
 
 /** 变量占位符：{{name}}，同名只需填一次 */
-private val placeholderRe = Regex("\\{\\{\\s*([^}\\s]+)\\s*}}")
+private val placeholderRe = runCatching { Regex("\\{\\{\\s*([^}\\s]+)\\s*\\}\\}") }.getOrElse { Regex("") }
 
 @Composable
 fun TextTemplateToolScreen(onBack: () -> Unit) {
