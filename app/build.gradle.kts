@@ -110,6 +110,10 @@ dependencies {
     // EXIF 读写
     implementation("androidx.exifinterface:exifinterface:1.4.1")
 
+    // 桌面小组件:预测结果直接出现在桌面,用户不用打开 App
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.1")
+
     // 人像分割(智能抠图/证件照换底),模型打包在 APK 内,离线可用
     implementation("com.google.mlkit:segmentation-selfie:16.0.0-beta6")
     // OCR 中文识别(模型打包离线)

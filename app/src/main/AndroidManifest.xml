@@ -100,6 +100,60 @@
         <receiver
             android:name=".util.ReminderReceiver"
             android:exported="false" />
+
+        <!-- 「此刻」桌面小组件:预测结果直接出现在桌面 -->
+        <receiver
+            android:name=".widget.NowWidgetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/now_widget_info" />
+        </receiver>
+
+        <!-- 快捷设置磁贴:下拉通知栏直接用 -->
+        <service
+            android:name=".widget.FlashlightTile"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="手电筒"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".widget.WhiteNoiseTile"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="白噪音"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".widget.ScanTile"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="扫码"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".widget.BookkeepingTile"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="记一笔"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
