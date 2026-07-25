@@ -119,7 +119,7 @@ fun SettingsScreen(settings: SettingsStore) {
                 )
                 RowDivider(startIndent = 58.dp)
                 NavRow(
-                    "开源仓库",
+                    "项目主页",
                     icon = Icons.Rounded.Code,
                     iconTint = palette.gray,
                     onClick = {
@@ -130,7 +130,7 @@ fun SettingsScreen(settings: SettingsStore) {
                 )
                 RowDivider(startIndent = 58.dp)
                 NavRow(
-                    "Liquid Glass by Kyant0/AndroidLiquidGlass",
+                    "鸣谢",
                     icon = Icons.Rounded.Star,
                     iconTint = palette.yellow,
                     onClick = {
@@ -145,7 +145,7 @@ fun SettingsScreen(settings: SettingsStore) {
         item {
             Column(Modifier.padding(horizontal = 32.dp, vertical = 16.dp)) {
                 Text(
-                    "Astro Kit 星辰之匣 · Jetpack Compose 原生打造",
+                    "星辰之匣 · 200 个小工具,好用的都在这",
                     style = MaterialTheme.typography.labelMedium,
                     color = palette.tertiaryLabel
                 )

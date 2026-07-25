@@ -76,9 +76,9 @@ fun toolCategories(): List<ToolCategory> = listOf(
         ToolDef("tool/short_url", "短链生成", "长链转短链", Icons.Rounded.Link, tint = { it.red }, requiresNetwork = true),
         ToolDef("tool/unshort_url", "短链还原", "展开跳转链防钓鱼", Icons.Rounded.OpenInNew, tint = { it.orange }, requiresNetwork = true),
         ToolDef("tool/temp_mail", "临时邮箱", "一次性邮箱收验证码", Icons.Rounded.Email, tint = { it.green }, requiresNetwork = true),
-        ToolDef("tool/phone_share", "手机网盘", "局域网 HTTP 文件互传", Icons.Rounded.Folder) { it.indigo },
+        ToolDef("tool/phone_share", "手机网盘", "电脑浏览器直传手机文件", Icons.Rounded.Folder) { it.indigo },
         ToolDef("tool/file_download", "文件下载器", "多线程断点续传", Icons.Rounded.Download) { it.accent },
-        ToolDef("tool/wol", "网络唤醒", "WOL 魔术包唤醒电脑", Icons.Rounded.PowerSettingsNew) { it.teal }
+        ToolDef("tool/wol", "网络唤醒", "躺在床上远程开电脑", Icons.Rounded.PowerSettingsNew) { it.teal }
     )),
 
     // 6.4 文本（16）
@@ -104,7 +104,7 @@ fun toolCategories(): List<ToolCategory> = listOf(
     // 6.5 加密与隐私（9）
     ToolCategory("加密与隐私", listOf(
         ToolDef("tool/random", "密码工具", "随机密码 · 强度体检", Icons.Rounded.Password) { it.indigo },
-        ToolDef("tool/exif", "EXIF 隐私", "查看抹除照片元数据", Icons.Rounded.PrivacyTip) { it.red },
+        ToolDef("tool/exif", "照片隐私", "发图前抹掉拍摄位置等信息", Icons.Rounded.PrivacyTip) { it.red },
         ToolDef("tool/totp", "TOTP 验证器", "两步验证码生成", Icons.Rounded.Security) { it.orange },
         ToolDef("tool/password_vault", "密码保险箱", "加密存储账号密码", Icons.Rounded.Lock) { it.green },
         ToolDef("tool/encrypt_capsule", "加密胶囊", "口令加密文本文件", Icons.Rounded.EnhancedEncryption) { it.indigo },
@@ -203,7 +203,7 @@ fun toolCategories(): List<ToolCategory> = listOf(
         ToolDef("tool/storage_clean", "存储清理", "大文件重复文件", Icons.Rounded.CleaningServices) { it.purple },
         ToolDef("tool/wifi_analyze", "WiFi 分析", "信号强度信道", Icons.Rounded.Wifi, tint = { it.pink }, permissions = listOf("android.permission.ACCESS_FINE_LOCATION")),
         ToolDef("tool/bluetooth_scan", "蓝牙雷达", "周边设备扫描", Icons.Rounded.Bluetooth) { it.red },
-        ToolDef("tool/nfc_tool", "NFC 读写", "读卡 UID · 写 NDEF", Icons.Rounded.Nfc, tint = { it.orange }, permissions = listOf("android.permission.NFC")),
+        ToolDef("tool/nfc_tool", "NFC 读写", "贴一贴读卡片 · 写便签进标签", Icons.Rounded.Nfc, tint = { it.orange }, permissions = listOf("android.permission.NFC")),
         ToolDef("tool/gps_speed", "GPS 速度表", "卫星数 HUD 速度", Icons.Rounded.Speed, tint = { it.green }, permissions = listOf("android.permission.ACCESS_FINE_LOCATION")),
         ToolDef("tool/decibel_meter", "分贝仪", "环境噪音测量", Icons.Rounded.GraphicEq, tint = { it.indigo }, permissions = listOf("android.permission.RECORD_AUDIO")),
         ToolDef("tool/flashlight", "手电筒", "常亮 SOS 爆闪", Icons.Rounded.FlashlightOn) { it.accent },
