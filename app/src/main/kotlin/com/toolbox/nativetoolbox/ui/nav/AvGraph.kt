@@ -6,7 +6,7 @@ import com.toolbox.nativetoolbox.ui.tools.*
 
 /** 音频视频分类路由(16 个)。并行实现时只改本文件,与其他分类零冲突。 */
 fun NavGraphBuilder.avToolsGraph(back: () -> Unit) {
-    composable("tool/recorder") { PlaceholderToolScreen("录音机", back) }
+    composable("tool/recorder") { RecorderToolScreen(back) }
     composable("tool/audio_edit") { PlaceholderToolScreen("音频剪辑", back) }
     composable("tool/audio_convert") { PlaceholderToolScreen("音频格式转换", back) }
     composable("tool/ringtone_make") { PlaceholderToolScreen("铃声制作", back) }
@@ -19,7 +19,7 @@ fun NavGraphBuilder.avToolsGraph(back: () -> Unit) {
     composable("tool/video_frame") { VideoFrameToolScreen(back) }
     composable("tool/video_info") { VideoInfoToolScreen(back) }
     composable("tool/metronome") { MetronomeToolScreen(back) }
-    composable("tool/tuner") { PlaceholderToolScreen("调音器", back) }
-    composable("tool/white_noise") { PlaceholderToolScreen("白噪音", back) }
-    composable("tool/earphone_test") { PlaceholderToolScreen("耳机测试", back) }
+    composable("tool/tuner") { TunerToolScreen(back) }
+    composable("tool/white_noise") { WhiteNoiseToolScreen(back) }
+    composable("tool/earphone_test") { EarphoneTestToolScreen(back) }
 }
