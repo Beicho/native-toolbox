@@ -42,6 +42,32 @@ private val commonCurrencies = listOf(
     "THB" to "泰铢"
 )
 
+/** 全部支持的货币中文名。后端返回 160 种汇率,这里覆盖常见的几十种,
+ *  没收录中文名的直接显示代码,不影响换算。 */
+private val currencyNames = mapOf(
+    "CNY" to "人民币", "USD" to "美元", "EUR" to "欧元", "JPY" to "日元",
+    "HKD" to "港币", "GBP" to "英镑", "KRW" to "韩元", "AUD" to "澳元",
+    "CAD" to "加元", "SGD" to "新加坡元", "TWD" to "新台币", "THB" to "泰铢",
+    "MYR" to "马来西亚林吉特", "VND" to "越南盾", "PHP" to "菲律宾比索",
+    "IDR" to "印尼卢比", "INR" to "印度卢比", "RUB" to "俄罗斯卢布",
+    "CHF" to "瑞士法郎", "SEK" to "瑞典克朗", "NOK" to "挪威克朗",
+    "DKK" to "丹麦克朗", "NZD" to "新西兰元", "MOP" to "澳门元",
+    "BRL" to "巴西雷亚尔", "MXN" to "墨西哥比索", "ZAR" to "南非兰特",
+    "TRY" to "土耳其里拉", "AED" to "阿联酋迪拉姆", "SAR" to "沙特里亚尔",
+    "EGP" to "埃及镑", "ILS" to "以色列新谢克尔", "PLN" to "波兰兹罗提",
+    "CZK" to "捷克克朗", "HUF" to "匈牙利福林", "RON" to "罗马尼亚列伊",
+    "UAH" to "乌克兰格里夫纳", "KZT" to "哈萨克坚戈", "PKR" to "巴基斯坦卢比",
+    "BDT" to "孟加拉塔卡", "LKR" to "斯里兰卡卢比", "NPR" to "尼泊尔卢比",
+    "MMK" to "缅甸元", "KHR" to "柬埔寨瑞尔", "LAK" to "老挝基普",
+    "MNT" to "蒙古图格里克", "ARS" to "阿根廷比索", "CLP" to "智利比索",
+    "COP" to "哥伦比亚比索", "PEN" to "秘鲁索尔", "NGN" to "尼日利亚奈拉",
+    "KES" to "肯尼亚先令", "GHS" to "加纳塞地", "MAD" to "摩洛哥迪拉姆",
+    "XAU" to "黄金(盎司)",
+)
+
+private fun currencyLabel(code: String): String =
+    currencyNames[code]?.let { "$code  $it" } ?: code
+
 private fun fmt(value: Double): String {
     if (value.isNaN() || value.isInfinite()) return "—"
     return when {
@@ -199,6 +225,25 @@ fun ExchangeToolScreen(onBack: () -> Unit) {
                             copyable = false
                         )
                         if (index != list.lastIndex) RowDivider()
+                    }
+                }
+            }
+
+            // 后端返回 160 种货币,常用之外的也列出来 —— 出国时用得上
+            item { SectionHeader("全部货币（1 " + from.uppercase() + " 可换）") }
+            item {
+                GroupedCard {
+                    val commonCodes = commonCurrencies.map { it.first }.toSet()
+                    val others = rates.keys().asSequence()
+                        .filterNot { commonCodes.contains(it) || it == from.uppercase() }
+                        .sortedWith(compareBy({ currencyNames[it] == null }, { it }))
+                        .toList()
+                    others.forEachIndexed { index, code ->
+                        val r = rates.optDouble(code, Double.NaN)
+                        if (!r.isNaN()) {
+                            KeyValueRow(currencyLabel(code), fmt(r), copyable = false)
+                            if (index != others.lastIndex) RowDivider()
+                        }
                     }
                 }
             }

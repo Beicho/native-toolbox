@@ -26,21 +26,21 @@ import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+// 键名与后端 timing 对象一致
 private val timingLabels = listOf(
     "dns" to "域名解析",
     "connect" to "建立连接",
-    "tls" to "加密握手",
-    "ttfb" to "首字节返回",
+    "http" to "服务器响应",
     "total" to "总耗时"
 )
 
+// 键名与后端 security.detail 一致,值是该项的得分(0 = 未设置)
 private val headerLabels = listOf(
-    "strict-transport-security" to "强制 HTTPS",
-    "content-security-policy" to "内容安全策略",
-    "x-content-type-options" to "禁止类型嗅探",
-    "x-frame-options" to "防嵌套点击劫持",
-    "referrer-policy" to "来源信息控制",
-    "permissions-policy" to "浏览器权限限制"
+    "hsts" to "强制 HTTPS",
+    "csp" to "内容安全策略",
+    "xcto" to "禁止类型嗅探",
+    "xfo" to "防嵌套点击劫持",
+    "referrer" to "来源信息控制"
 )
 
 private fun ms(value: Int): String = if (value <= 0) "—" else value.toString() + " ms"
@@ -80,10 +80,11 @@ fun SiteCheckToolScreen(onBack: () -> Unit) {
     }
 
     val json = raw?.let { runCatching { JSONObject(it) }.getOrNull() }
-    val httpCode = json?.optInt("status", json.optInt("httpCode", 0)) ?: 0
-    val score = json?.optInt("securityScore", json.optInt("score", -1)) ?: -1
-    val timings = json?.optJSONObject("timings") ?: json
-    val headers = json?.optJSONObject("securityHeaders") ?: json?.optJSONObject("headers")
+    val httpCode = json?.optInt("statusCode", 0) ?: 0
+    val score = json?.optJSONObject("security")?.optInt("score", -1) ?: -1
+    val timings = json?.optJSONObject("timing")
+    val security = json?.optJSONObject("security")
+    val headers = security?.optJSONObject("detail")
 
     ToolScaffold {
         item { SectionHeader("网站体检") }
@@ -130,6 +131,9 @@ fun SiteCheckToolScreen(onBack: () -> Unit) {
                                 Modifier.weight(1f)
                             )
                         }
+                        json.optString("ip").takeIf { it.isNotBlank() }?.let {
+                            Text("服务器 IP:$it", style = MaterialTheme.typography.bodySmall, color = palette.secondaryLabel)
+                        }
                         if (httpCode in 200..299) {
                             Text("网站可以正常访问。", style = MaterialTheme.typography.bodySmall, color = palette.green)
                         } else if (httpCode > 0) {
@@ -157,11 +161,13 @@ fun SiteCheckToolScreen(onBack: () -> Unit) {
             item {
                 GroupedCard {
                     headerLabels.forEachIndexed { index, (key, label) ->
-                        val present = headers?.let { h ->
-                            val v = h.optString(key)
-                            v.isNotBlank() && v != "null" && v != "false"
-                        } ?: false
-                        KeyValueRow(label, if (present) "已启用" else "未设置", copyable = false)
+                        // 后端返回的是该项得分,0 表示没设置
+                        val points = headers?.optInt(key, 0) ?: 0
+                        KeyValueRow(
+                            label,
+                            if (points > 0) "已启用" else "未设置",
+                            copyable = false
+                        )
                         if (index != headerLabels.lastIndex) RowDivider()
                     }
                 }

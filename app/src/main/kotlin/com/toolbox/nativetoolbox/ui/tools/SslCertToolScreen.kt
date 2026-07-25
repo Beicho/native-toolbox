@@ -141,25 +141,58 @@ fun SslCertToolScreen(onBack: () -> Unit) {
                     }
                 }
             }
+            // 证书详情在 chain 数组里,chain[0] 是站点证书(之前误读顶层字段导致全空)
+            val chain = json.optJSONArray("chain")
+            val leaf = chain?.optJSONObject(0)
+
+            item { SectionHeader("连接情况") }
+            item {
+                GroupedCard {
+                    KeyValueRow("域名", json.optString("host"))
+                    RowDivider()
+                    KeyValueRow(
+                        "证书可信",
+                        if (json.optBoolean("trusted")) "是,浏览器不会报警" else "否,可能是自签或已过期",
+                        copyable = false
+                    )
+                    RowDivider()
+                    KeyValueRow("握手耗时", json.optInt("handshakeMs").let { if (it > 0) "$it ms" else "—" }, copyable = false)
+                    if (chain != null) {
+                        RowDivider()
+                        KeyValueRow("证书链", "${chain.length()} 级", copyable = false)
+                    }
+                }
+            }
+
+            if (leaf != null) {
             item { SectionHeader("证书信息") }
             item {
                 GroupedCard {
-                    KeyValueRow("域名", firstNonBlank(json, "host", "subject", "commonName"))
+                    KeyValueRow("颁发给", leaf.optString("subject"))
                     RowDivider()
-                    KeyValueRow("颁发给", firstNonBlank(json, "subject", "commonName"))
+                    KeyValueRow("颁发机构", leaf.optString("issuerOrg").ifBlank { leaf.optString("issuer") })
                     RowDivider()
-                    KeyValueRow("颁发机构", firstNonBlank(json, "issuer", "issuerOrg"))
+                    KeyValueRow("生效时间", leaf.optString("validFrom"))
                     RowDivider()
-                    KeyValueRow("生效时间", firstNonBlank(json, "validFrom", "notBefore"))
+                    KeyValueRow("到期时间", leaf.optString("validTo"))
                     RowDivider()
-                    KeyValueRow("到期时间", firstNonBlank(json, "validTo", "notAfter"))
+                    KeyValueRow(
+                        "剩余天数",
+                        leaf.optInt("daysLeft", -1).let {
+                            when {
+                                it < 0 -> "已过期"
+                                it == 0 -> "今天到期"
+                                it <= 14 -> "$it 天(快到期了)"
+                                else -> "$it 天"
+                            }
+                        },
+                        copyable = false
+                    )
                     RowDivider()
-                    KeyValueRow("签名算法", firstNonBlank(json, "signatureAlgorithm", "sigAlg"))
-                    RowDivider()
-                    KeyValueRow("序列号", firstNonBlank(json, "serialNumber", "serial"))
+                    KeyValueRow("签名算法", leaf.optString("sigAlg"))
                 }
             }
-            val sans = json.optJSONArray("dnsNames") ?: json.optJSONArray("san")
+            val sans = leaf.optJSONArray("san") ?: json.optJSONArray("dnsNames")
             if (sans != null && sans.length() > 0) {
                 item { SectionHeader("覆盖的域名 " + sans.length() + " 个") }
                 item {
@@ -172,6 +205,7 @@ fun SslCertToolScreen(onBack: () -> Unit) {
                     }
                 }
             }
+            } // if (leaf != null)
         }
     }
 }

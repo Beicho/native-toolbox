@@ -118,6 +118,24 @@ fun IpQueryToolScreen(onBack: () -> Unit) {
                     KeyValueRow("时区", pick(json, "timezone"))
                     RowDivider()
                     KeyValueRow("经纬度", listOf(pick(json, "lat"), pick(json, "lon")).filter { it.isNotBlank() }.joinToString(", "))
+                    pick(json, "zip").takeIf { it.isNotBlank() }?.let {
+                        RowDivider()
+                        KeyValueRow("邮编", it)
+                    }
+                    pick(json, "reverse").takeIf { it.isNotBlank() }?.let {
+                        RowDivider()
+                        KeyValueRow("反向解析", it)
+                    }
+                    // 后端返回了这三个安全标记,对判断「这个 IP 是什么来路」很有用
+                    val flags = buildList {
+                        if (json.optBoolean("mobile")) add("移动网络")
+                        if (json.optBoolean("proxy")) add("代理/VPN")
+                        if (json.optBoolean("hosting")) add("机房 IP")
+                    }
+                    if (flags.isNotEmpty()) {
+                        RowDivider()
+                        KeyValueRow("类型", flags.joinToString(" · "), copyable = false)
+                    }
                 }
             }
         }
