@@ -9,7 +9,7 @@ fun NavGraphBuilder.lifeToolsGraph(back: () -> Unit) {
     composable("tool/weather") { WeatherToolScreen(back) }
     composable("tool/history_today") { PlaceholderToolScreen("历史上的今天", back) }
     composable("tool/holiday") { HolidayToolScreen(back) }
-    composable("tool/lunar") { PlaceholderToolScreen("农历黄历", back) }
+    composable("tool/lunar") { LunarToolScreen(back) }
     composable("tool/astronomy") { PlaceholderToolScreen("天文时刻", back) }
     composable("tool/countdown_day") { CountdownDayToolScreen(back) }
     composable("tool/health_remind") { PlaceholderToolScreen("健康提醒", back) }

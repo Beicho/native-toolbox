@@ -13,7 +13,7 @@ fun NavGraphBuilder.deviceToolsGraph(back: () -> Unit) {
     composable("tool/compass") { CompassToolScreen(back) }
     composable("tool/battery_info") { BatteryInfoToolScreen(back) }
     composable("tool/performance") { PerformanceToolScreen(back) }
-    composable("tool/hardware_test") { PlaceholderToolScreen("硬件体检", back) }
+    composable("tool/hardware_test") { HardwareTestToolScreen(back) }
     composable("tool/storage_clean") { StorageCleanToolScreen(back) }
     composable("tool/wifi_analyze") { WifiAnalyzeToolScreen(back) }
     composable("tool/bluetooth_scan") { PlaceholderToolScreen("蓝牙雷达", back) }
