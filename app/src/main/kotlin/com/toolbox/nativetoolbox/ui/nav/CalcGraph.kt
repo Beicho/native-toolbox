@@ -15,13 +15,13 @@ fun NavGraphBuilder.calcToolsGraph(back: () -> Unit) {
     composable("tool/tax") { TaxToolScreen(back) }
     composable("tool/amount_upper") { AmountUpperToolScreen(back) }
     composable("tool/percent") { PercentToolScreen(back) }
-    composable("tool/combo_calc") { PlaceholderToolScreen("凑单计算", back) }
+    composable("tool/combo_calc") { ComboCalcToolScreen(back) }
     composable("tool/price_compare") { PriceCompareToolScreen(back) }
     composable("tool/cost_split") { CostSplitToolScreen(back) }
     composable("tool/relative_name") { RelativeNameToolScreen(back) }
     composable("tool/health_calc") { HealthCalcToolScreen(back) }
     composable("tool/timezone") { TimezoneToolScreen(back) }
-    composable("tool/random_num") { PlaceholderToolScreen("随机数", back) }
+    composable("tool/random_num") { RandomNumToolScreen(back) }
     composable("tool/statistics") { StatisticsToolScreen(back) }
     composable("tool/geometry") { GeometryToolScreen(back) }
     composable("tool/fuel_calc") { FuelCalcToolScreen(back) }
