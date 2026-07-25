@@ -15,5 +15,5 @@ fun NavGraphBuilder.devProToolsGraph(back: () -> Unit) {
     composable("tool/log_analyze") { LogAnalyzeToolScreen(back) }
     composable("tool/code_screenshot") { CodeScreenshotToolScreen(back) }
     composable("tool/http_test") { HttpTestToolScreen(back) }
-    composable("tool/websocket_test") { PlaceholderToolScreen("WebSocket 测试", back) }
+    composable("tool/websocket_test") { WebsocketTestToolScreen(back) }
 }
