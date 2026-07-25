@@ -10,6 +10,9 @@
     <!-- 以下敏感权限全部在对应工具页首次使用时申请,拒绝不影响其他功能 -->
     <!-- 相机:扫码 / 证件照 / 文档扫描 / 镜子 / 放大镜 / 指尖心率 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 相似图片清理:扫描相册 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <!-- 麦克风:录音机 / 分贝仪 / 调音器 / 语音转文字 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 位置:WiFi 分析(系统要求) / 指南针海拔 / 停车助手 / 天气(可选) -->

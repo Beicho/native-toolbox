@@ -110,6 +110,9 @@ dependencies {
     // EXIF 读写
     implementation("androidx.exifinterface:exifinterface:1.4.1")
 
+    // 人像分割(智能抠图/证件照换底),模型打包在 APK 内,离线可用
+    implementation("com.google.mlkit:segmentation-selfie:16.0.0-beta6")
+
     // Core
     implementation("androidx.core:core-ktx:1.16.0")
 

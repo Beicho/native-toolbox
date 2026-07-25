@@ -14,8 +14,8 @@ fun NavGraphBuilder.imageEditToolsGraph(back: () -> Unit) {
     composable("tool/image_mosaic") { ImageMosaicToolScreen(back) }
     composable("tool/image_border") { ImageBorderToolScreen(back) }
     composable("tool/image_annotate") { ImageAnnotateToolScreen(back) }
-    composable("tool/image_matting") { PlaceholderToolScreen("智能抠图", back) }
-    composable("tool/id_photo") { PlaceholderToolScreen("证件照制作", back) }
+    composable("tool/image_matting") { ImageMattingToolScreen(back) }
+    composable("tool/id_photo") { IdPhotoToolScreen(back) }
     composable("tool/image_compare") { ImageCompareToolScreen(back) }
-    composable("tool/similar_clean") { PlaceholderToolScreen("相似图片清理", back) }
+    composable("tool/similar_clean") { SimilarCleanToolScreen(back) }
 }
