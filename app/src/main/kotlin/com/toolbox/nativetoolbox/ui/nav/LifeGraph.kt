@@ -11,19 +11,19 @@ fun NavGraphBuilder.lifeToolsGraph(back: () -> Unit) {
     composable("tool/holiday") { HolidayToolScreen(back) }
     composable("tool/lunar") { PlaceholderToolScreen("农历黄历", back) }
     composable("tool/astronomy") { PlaceholderToolScreen("天文时刻", back) }
-    composable("tool/countdown_day") { PlaceholderToolScreen("倒数日", back) }
+    composable("tool/countdown_day") { CountdownDayToolScreen(back) }
     composable("tool/health_remind") { PlaceholderToolScreen("健康提醒", back) }
     composable("tool/health_record") { PlaceholderToolScreen("健康记录", back) }
     composable("tool/period") { PlaceholderToolScreen("经期记录", back) }
     composable("tool/bookkeeping") { PlaceholderToolScreen("极简记账", back) }
     composable("tool/parking") { PlaceholderToolScreen("停车助手", back) }
     composable("tool/phone_location") { PlaceholderToolScreen("归属地查询", back) }
-    composable("tool/garbage") { PlaceholderToolScreen("垃圾分类", back) }
+    composable("tool/garbage") { GarbageToolScreen(back) }
     composable("tool/mirror") { PlaceholderToolScreen("镜子", back) }
     composable("tool/magnifier") { PlaceholderToolScreen("放大镜", back) }
     composable("tool/ruler") { PlaceholderToolScreen("屏幕测量", back) }
     composable("tool/big_clock") { BigClockToolScreen(back) }
-    composable("tool/emergency_card") { PlaceholderToolScreen("急救信息卡", back) }
+    composable("tool/emergency_card") { EmergencyCardToolScreen(back) }
     composable("tool/move_car") { PlaceholderToolScreen("挪车码", back) }
     composable("tool/heart_rate") { PlaceholderToolScreen("指尖心率", back) }
     composable("tool/breath") { BreathToolScreen(back) }
