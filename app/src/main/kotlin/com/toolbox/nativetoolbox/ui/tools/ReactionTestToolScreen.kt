@@ -190,32 +190,5 @@ fun ReactionTestToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("参考") }
-        item {
-            GroupedCard {
-                val refs = listOf(
-                    "180 毫秒以内" to "职业电竞选手区间",
-                    "200 到 250" to "反应很快",
-                    "250 到 300" to "健康成年人常见",
-                    "300 到 400" to "偏慢，可能累了",
-                    "400 以上" to "疲劳或注意力分散"
-                )
-                refs.forEachIndexed { index, (range, desc) ->
-                    KeyValueRow(range, desc, copyable = false)
-                    if (index != refs.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "屏幕本身有几十毫秒延迟，不同手机测出来会有差别，同一台机器上比较才有意义。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

@@ -438,16 +438,5 @@ fun ClassicGamesToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "全部离线本地运行，不联网、不记录、无广告。切换游戏会重置当前局面。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

@@ -236,17 +236,5 @@ fun PerformanceToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "全部读自系统公开接口，不需要权限。现代 Android 不允许应用读取全局 CPU 占用率，" +
-                            "所以这里只显示内存和硬件规格。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

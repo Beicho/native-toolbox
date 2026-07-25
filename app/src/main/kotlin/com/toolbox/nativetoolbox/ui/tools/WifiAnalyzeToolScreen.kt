@@ -248,33 +248,5 @@ fun WifiAnalyzeToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("信号强度参考") }
-        item {
-            GroupedCard {
-                val refs = listOf(
-                    "-50 dBm 以上" to "极好，紧挨路由器",
-                    "-50 到 -60" to "很好，同一房间",
-                    "-60 到 -70" to "一般，隔一道墙",
-                    "-70 到 -80" to "偏弱，网页会卡",
-                    "-80 以下" to "很弱，基本用不了"
-                )
-                refs.forEachIndexed { index, (k, v) ->
-                    KeyValueRow(k, v, copyable = false)
-                    if (index != refs.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "2.4 GHz 穿墙好但容易拥挤，5 GHz 快但覆盖近。信道拥挤会明显掉速，可以在路由器后台换到 1、6、11 这些不重叠的信道。\n\n" +
-                            "扫描周围所有 Wi-Fi 需要定位权限，这个工具只读当前已连接的网络，不申请定位。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

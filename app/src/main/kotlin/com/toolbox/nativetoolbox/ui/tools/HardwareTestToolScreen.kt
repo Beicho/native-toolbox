@@ -142,16 +142,5 @@ fun HardwareTestToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "显示「没有」不一定是坏了，多数是这个型号本身就没配。环境温度计和湿度计绝大部分手机都没有。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

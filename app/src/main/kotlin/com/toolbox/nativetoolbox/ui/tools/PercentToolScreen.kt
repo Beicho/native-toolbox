@@ -94,16 +94,5 @@ fun PercentToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "两个输入框都填上才会出结果。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

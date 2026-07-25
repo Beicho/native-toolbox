@@ -220,16 +220,5 @@ fun FidgetToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "纯解压用，没有声音、不联网、不记录。开会摸鱼或者需要静下来的时候点两下。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

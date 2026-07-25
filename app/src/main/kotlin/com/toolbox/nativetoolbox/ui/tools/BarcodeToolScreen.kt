@@ -226,25 +226,5 @@ fun BarcodeToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("各码制说明") }
-        item {
-            GroupedCard {
-                kinds.forEachIndexed { index, k ->
-                    KeyValueRow(k.name, k.hint, copyable = false)
-                    if (index != kinds.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "全部在本地生成，不联网。要做正式商品条码需要向编码中心申请厂商识别码，自己编的号只能内部用。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

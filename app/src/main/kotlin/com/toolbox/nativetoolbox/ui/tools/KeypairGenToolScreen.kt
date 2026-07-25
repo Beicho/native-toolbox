@@ -140,19 +140,5 @@ fun KeypairGenToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("说明") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "密钥在手机本地用系统安全随机源生成，不联网、不上传、不留存。" +
-                            "离开页面后就丢失，需要的话先复制保存。\n\n" +
-                            "输出的是标准 PEM 格式（PKCS#8 私钥 / X.509 公钥），可直接用于服务端配置和大多数开发库。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.secondaryLabel
-                    )
-                }
-            }
-        }
     }
 }

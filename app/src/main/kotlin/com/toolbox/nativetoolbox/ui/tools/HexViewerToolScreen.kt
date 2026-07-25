@@ -177,16 +177,5 @@ fun HexViewerToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "会按魔数识别常见文件类型。转储最多显示前 2048 字节，全部在本地计算。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

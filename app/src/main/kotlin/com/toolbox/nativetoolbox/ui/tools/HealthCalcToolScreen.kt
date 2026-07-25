@@ -91,32 +91,5 @@ fun HealthCalcToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("参考数据") }
-        item {
-            GroupedCard {
-                KeyValueRow("理想体重区间", if (idealMin.isNaN()) "" else "${num(idealMin)} ~ ${num(idealMax)} kg")
-                RowDivider()
-                KeyValueRow("基础代谢 BMR", if (bmr.isNaN()) "" else "${num(bmr, 0)} 千卡/天")
-                RowDivider()
-                KeyValueRow("每日消耗 TDEE", if (tdee.isNaN()) "" else "${num(tdee, 0)} 千卡/天")
-                RowDivider()
-                KeyValueRow("减脂建议摄入", if (tdee.isNaN()) "" else "${num(tdee - 500, 0)} 千卡/天")
-                RowDivider()
-                KeyValueRow("增肌建议摄入", if (tdee.isNaN()) "" else "${num(tdee + 300, 0)} 千卡/天")
-                RowDivider()
-                KeyValueRow("每日饮水建议", if (waterMl.isNaN()) "" else "${num(waterMl, 0)} 毫升")
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "以上都是通用公式估算，不能替代体检和医生建议。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

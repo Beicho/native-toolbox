@@ -241,22 +241,5 @@ fun LunarToolScreen(onBack: () -> Unit) {
                 )
             }
         }
-        item { SectionHeader("二十四节气") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        solarTerms.joinToString("　") { it.first },
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = palette.label
-                    )
-                    Text(
-                        "节气日期用的是常年近似值，个别年份可能差一天。农历换算基于公开历表，覆盖 1900 到 2039 年。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

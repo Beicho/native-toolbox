@@ -195,16 +195,5 @@ fun WoodenFishToolScreen(onBack: () -> Unit) {
                 )
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "纯粹图个安静，没有声音只有震动，随时可以关掉震动。完全离线，不记录任何数据。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

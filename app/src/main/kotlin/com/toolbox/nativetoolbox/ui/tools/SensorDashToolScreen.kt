@@ -165,26 +165,6 @@ fun SensorDashToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("精度") }
-        item {
-            GroupedCard {
-                val withAccuracy = available.filter { readings.value.containsKey(it.first) }
-                if (withAccuracy.isEmpty()) {
-                    CardPadding {
-                        Text("等待数据…", style = MaterialTheme.typography.bodySmall, color = palette.tertiaryLabel)
-                    }
-                } else {
-                    withAccuracy.forEachIndexed { index, (type, name, _) ->
-                        KeyValueRow(
-                            name,
-                            accuracyText(readings.value[type]?.accuracy ?: -1),
-                            copyable = false
-                        )
-                        if (index != withAccuracy.lastIndex) RowDivider()
-                    }
-                }
-            }
-        }
         if (missing.isNotEmpty()) {
             item { SectionHeader("这台设备没有的传感器") }
             item {
@@ -196,18 +176,6 @@ fun SensorDashToolScreen(onBack: () -> Unit) {
                             color = palette.secondaryLabel
                         )
                     }
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "数据直接来自系统传感器接口，不需要任何权限（计步器在部分系统上需要身体活动权限才有数值）。" +
-                            "全部实时显示，不记录不上传。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
                 }
             }
         }

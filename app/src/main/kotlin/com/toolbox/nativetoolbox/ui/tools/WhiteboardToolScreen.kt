@@ -210,26 +210,5 @@ fun WhiteboardToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("状态") }
-        item {
-            GroupedCard {
-                KeyValueRow("笔画数", strokes.size.toString(), copyable = false)
-                RowDivider()
-                KeyValueRow("当前工具", if (eraser) "橡皮" else "画笔", copyable = false)
-                RowDivider()
-                KeyValueRow("笔宽", penWidthLabels[widthIndex], copyable = false)
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "手指直接在白色区域画。内容不保存，退出即清空。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

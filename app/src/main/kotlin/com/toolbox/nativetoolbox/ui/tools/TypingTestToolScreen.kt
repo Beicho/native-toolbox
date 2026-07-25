@@ -213,25 +213,5 @@ fun TypingTestToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("参考水平") }
-        item {
-            GroupedCard {
-                val refs = if (categoryIndex == 0) listOf(
-                    "20 WPM 以下" to "刚开始练",
-                    "30 到 40" to "日常够用",
-                    "50 到 70" to "熟练打字员",
-                    "80 以上" to "很快了"
-                ) else listOf(
-                    "30 字/分以下" to "刚开始练",
-                    "50 到 80" to "日常够用",
-                    "100 到 150" to "熟练",
-                    "150 以上" to "很快了"
-                )
-                refs.forEachIndexed { index, (k, v) ->
-                    KeyValueRow(k, v, copyable = false)
-                    if (index != refs.lastIndex) RowDivider()
-                }
-            }
-        }
     }
 }

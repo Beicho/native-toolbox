@@ -129,35 +129,5 @@ fun GarbageToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("容易搞错的") }
-        item {
-            GroupedCard {
-                val tricky = listOf(
-                    "大骨头" to "其他垃圾（太硬，不易腐烂）",
-                    "鸡骨鱼刺" to "厨余垃圾（细小易腐）",
-                    "卫生纸" to "其他垃圾（遇水降解，不可回收）",
-                    "污损纸张" to "其他垃圾（油污破坏纸浆）",
-                    "药品包装" to "有害垃圾（跟着药品一起）",
-                    "榴莲壳椰子壳" to "其他垃圾（太硬）",
-                    "坚果壳" to "厨余垃圾（较软）",
-                    "充电宝" to "可回收物（含锂电池，最好交回收点）"
-                )
-                tricky.forEachIndexed { index, (name, answer) ->
-                    KeyValueRow(name, answer, copyable = false)
-                    if (index != tricky.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "各城市标准略有差异，这里用的是全国通行的四分类口径。以当地环卫部门公布的规则为准。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

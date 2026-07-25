@@ -123,17 +123,5 @@ fun BigClockToolScreen(onBack: () -> Unit) {
                 )
             }
         }
-        item { SectionHeader("时间来源") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "显示的是手机系统时间，完全离线。如果和实际时间有偏差，去系统设置里打开自动校准。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

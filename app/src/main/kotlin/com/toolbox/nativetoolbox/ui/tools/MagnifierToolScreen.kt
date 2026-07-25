@@ -90,16 +90,6 @@ fun MagnifierToolScreen(onBack: () -> Unit) {
                 ToggleRow("屏幕常亮", keepAwake, onCheckedChange = { keepAwake = it })
             }
         }
-        item { SectionHeader("说明") }
-        item {
-            GroupedCard {
-                KeyValueRow("画面处理", "只实时预览，不拍照不保存", copyable = false)
-                RowDivider()
-                KeyValueRow("联网", "完全不需要", copyable = false)
-                RowDivider()
-                KeyValueRow("退出后", "摄像头和补光立即关闭", copyable = false)
-            }
-        }
     }
 }
 

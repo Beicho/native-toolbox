@@ -207,16 +207,5 @@ fun Json2CodeToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "类型按样例值推断：整数出 Long、小数出 Double、null 出可空的通用类型。嵌套对象会拆成独立的类。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

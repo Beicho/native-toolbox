@@ -249,16 +249,5 @@ fun TotpToolScreen(onBack: () -> Unit) {
                 KeyValueRow("算法", algorithm.removePrefix("Hmac"), copyable = false)
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "密钥只在本机内存里用于计算，不会保存也不会上传。关掉页面就没了，请自行保管好密钥。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

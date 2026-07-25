@@ -205,17 +205,5 @@ fun AppPermissionsToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "点任意一个应用会跳到系统的应用详情页，在那里可以直接收回权限。\n\n" +
-                            "这里只读取系统公开的权限授予状态，不修改任何设置，也不联网上报。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

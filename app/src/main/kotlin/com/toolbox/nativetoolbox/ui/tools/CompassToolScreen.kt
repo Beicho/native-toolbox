@@ -236,30 +236,5 @@ fun CompassToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("八方位对照") }
-        item {
-            GroupedCard {
-                val dirs = listOf(
-                    "北" to "0°", "东北" to "45°", "东" to "90°", "东南" to "135°",
-                    "南" to "180°", "西南" to "225°", "西" to "270°", "西北" to "315°"
-                )
-                dirs.forEachIndexed { index, (name, angle) ->
-                    KeyValueRow(name, angle, copyable = false)
-                    if (index != dirs.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "指的是磁北，和地图上的真北有几度偏差。精度显示「低」或「差」时，把手机拿起来画几个 8 字可以校准。" +
-                            "附近有磁铁、金属或强电流会明显干扰。全程离线，不需要定位权限。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

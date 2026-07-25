@@ -146,37 +146,6 @@ fun ScreenOnToolScreen(onBack: () -> Unit) {
                 )
             }
         }
-        item { SectionHeader("状态") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        StatCell("常亮", if (enabled) "开" else "关", Modifier.weight(1f))
-                        StatCell("时长", durationLabels[durationIndex], Modifier.weight(1f))
-                        StatCell("亮度", if (maxBrightness && enabled) "最亮" else "跟随系统", Modifier.weight(1f))
-                    }
-                }
-                KeyValueRow("需要权限", "不需要", copyable = false)
-                RowDivider()
-                KeyValueRow("离开页面", "自动恢复系统设置", copyable = false)
-            }
-        }
-        item { SectionHeader("什么时候用得上") }
-        item {
-            GroupedCard {
-                val cases = listOf(
-                    "看菜谱做饭" to "手上有油不方便点屏幕",
-                    "对着屏幕抄东西" to "抄一半黑屏最烦",
-                    "当台钟或倒计时" to "配合大字时钟一起用",
-                    "给别人看内容" to "递过去的时候不会黑屏",
-                    "视频通话挂机" to "不想被自动锁屏打断"
-                )
-                cases.forEachIndexed { index, (k, v) ->
-                    KeyValueRow(k, v, copyable = false)
-                    if (index != cases.lastIndex) RowDivider()
-                }
-            }
-        }
         item {
             GroupedCard {
                 CardPadding {

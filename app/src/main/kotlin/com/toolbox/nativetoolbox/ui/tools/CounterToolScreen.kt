@@ -157,16 +157,5 @@ fun CounterToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "适合数人数、数货、计圈数。归零并记录会把当前数字存进下面的列表，最多留 10 条。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

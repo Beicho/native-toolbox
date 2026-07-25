@@ -296,34 +296,5 @@ fun ColorSchemeToolScreen(onBack: () -> Unit) {
                 )
             }
         }
-        item { SectionHeader("导出") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    OutputCard(
-                        text = buildString {
-                            appendLine("/* " + schemeNames[schemeIndex] + "配色 */")
-                            appendLine(":root {")
-                            scheme.forEachIndexed { index, (name, color) ->
-                                appendLine("  --color-" + (index + 1) + ": " + hexOf(color) + "; /* " + name + " */")
-                            }
-                            append("}")
-                        },
-                        label = "CSS 变量"
-                    )
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "对比度按 WCAG 标准算，正文要 4.5 以上，大标题 3 以上才算无障碍达标。全部本地计算。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

@@ -204,34 +204,5 @@ fun StorageCleanToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("腾空间的建议") }
-        item {
-            GroupedCard {
-                val tips = listOf(
-                    "微信和 QQ 缓存" to "在各自的设置里清理，通常是最大头",
-                    "短视频应用" to "缓存能占好几个 GB，定期清",
-                    "相册重复照片" to "系统相册通常有「相似照片」入口",
-                    "下载文件夹" to "装完的安装包和临时文件都可以删",
-                    "不常用应用" to "卸载比清缓存省得多",
-                    "云备份后删本地" to "老照片传上云再删"
-                )
-                tips.forEachIndexed { index, (k, v) ->
-                    KeyValueRow(k, v, copyable = false)
-                    if (index != tips.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "Android 从 11 起限制应用访问其他应用的数据，任何号称能一键深度清理全机的工具都做不到，" +
-                            "要清别的应用只能去它自己的设置里。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

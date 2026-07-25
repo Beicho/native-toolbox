@@ -223,33 +223,5 @@ fun RelativeNameToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("常见例子") }
-        item {
-            GroupedCard {
-                val examples = listOf(
-                    "爸爸的哥哥" to "伯父",
-                    "妈妈的姐姐" to "姨妈",
-                    "爸爸的姐姐的儿子" to "表哥或表弟",
-                    "老婆的弟弟" to "小舅子",
-                    "姐姐的女儿" to "外甥女",
-                    "女儿的儿子" to "外孙"
-                )
-                examples.forEachIndexed { index, (q, a) ->
-                    KeyValueRow(q, a, copyable = false)
-                    if (index != examples.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "各地叫法有差异，这里用的是普通话通用称呼。堂表兄弟姐妹的哥弟姐妹之分要看实际年龄。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

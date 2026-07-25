@@ -73,17 +73,6 @@ fun MirrorToolScreen(onBack: () -> Unit) {
                 ToggleRow("屏幕常亮", keepAwake, onCheckedChange = { keepAwake = it })
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "画面只在本机实时显示，不拍照、不录像、不保存、不上传任何内容。退出页面摄像头立即释放。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }
 

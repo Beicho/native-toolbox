@@ -179,16 +179,5 @@ fun SvgToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "压缩只做安全的文本级优化：去注释、去元数据、压空白、小数保留三位。不改变图形结构，不做路径重写。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

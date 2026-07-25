@@ -187,16 +187,5 @@ fun TeleprompterToolScreen(onBack: () -> Unit) {
                 )
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "预计时长按每分钟 220 字估算，实际语速因人而异。滚动过程中可以随时手动上下拖动。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

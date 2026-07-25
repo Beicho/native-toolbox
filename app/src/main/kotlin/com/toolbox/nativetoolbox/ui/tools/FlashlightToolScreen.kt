@@ -200,26 +200,5 @@ fun FlashlightToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("说明") }
-        item {
-            GroupedCard {
-                KeyValueRow("需要权限", "不需要", copyable = false)
-                RowDivider()
-                KeyValueRow("闪光灯", if (available) "可用" else "不可用", copyable = false)
-                RowDivider()
-                KeyValueRow("离开页面", "自动关灯", copyable = false)
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "直接调用系统手电筒开关，不打开相机、不需要相机权限。退出页面会自动熄灭。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

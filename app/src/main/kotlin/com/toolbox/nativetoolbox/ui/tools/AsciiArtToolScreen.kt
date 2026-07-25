@@ -226,25 +226,5 @@ fun AsciiArtToolScreen(onBack: () -> Unit) {
             item { SectionHeader("复制") }
             item { GroupedCard { CardPadding { OutputCard(text = art, label = "字符画") } } }
         }
-        item { SectionHeader("字符集说明") }
-        item {
-            GroupedCard {
-                rampSets.forEachIndexed { index, (name, ramp) ->
-                    KeyValueRow(name, ramp.take(20) + if (ramp.length > 20) "…" else "", copyable = false)
-                    if (index != rampSets.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "图片只在本机内存里处理，不保存、不上传。选图用的是系统相册选择器，不需要存储权限。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

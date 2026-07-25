@@ -216,18 +216,6 @@ fun PasswordVaultToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("这个方案的特点") }
-        item {
-            GroupedCard {
-                KeyValueRow("存不存密码", "完全不存，也不上传", copyable = false)
-                RowDivider()
-                KeyValueRow("换手机", "输入同样的主密码和站点名就能算出来", copyable = false)
-                RowDivider()
-                KeyValueRow("算法", "SHA-256 迭代 " + ROUNDS + " 轮", copyable = false)
-                RowDivider()
-                KeyValueRow("改密码", "把序号加 1 就得到全新密码", copyable = false)
-            }
-        }
         item {
             GroupedCard {
                 CardPadding {

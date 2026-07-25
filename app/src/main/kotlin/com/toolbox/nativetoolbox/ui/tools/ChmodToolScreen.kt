@@ -102,14 +102,5 @@ fun ChmodToolScreen(onBack: () -> Unit) {
         item { GroupedCard { CardPadding { triad("group", group) { group = it } } } }
         item { SectionHeader("其他人") }
         item { GroupedCard { CardPadding { triad("other", other) { other = it } } } }
-        item { SectionHeader("常用权限") }
-        item {
-            GroupedCard {
-                commonModes.forEachIndexed { index, (code, desc) ->
-                    KeyValueRow(code, desc, copyable = false)
-                    if (index != commonModes.lastIndex) RowDivider()
-                }
-            }
-        }
     }
 }

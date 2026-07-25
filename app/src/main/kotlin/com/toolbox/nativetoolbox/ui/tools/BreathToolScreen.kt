@@ -213,16 +213,5 @@ fun BreathToolScreen(onBack: () -> Unit) {
                 KeyValueRow("一轮时长", (pattern.inhale + pattern.hold1 + pattern.exhale + pattern.hold2).toString() + " 秒", copyable = false)
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "练习时如果头晕就停下来正常呼吸。有呼吸系统疾病或孕期请先咨询医生。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

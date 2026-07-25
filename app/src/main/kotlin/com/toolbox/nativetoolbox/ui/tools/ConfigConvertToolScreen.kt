@@ -257,16 +257,5 @@ fun ConfigConvertToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "转 .env 和 properties 时嵌套结构会被拍平成点号路径。YAML 支持嵌套映射、列表和标量，不支持锚点别名。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

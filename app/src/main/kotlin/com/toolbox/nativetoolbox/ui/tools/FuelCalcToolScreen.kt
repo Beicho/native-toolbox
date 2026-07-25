@@ -143,16 +143,5 @@ fun FuelCalcToolScreen(onBack: () -> Unit) {
                 KeyValueRow("加满 50 升可跑", if (range.isNaN()) "" else fmt(range, 0) + " 公里", copyable = false)
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "实际油耗受路况、载重、空调和驾驶习惯影响，市区通常比高速高 30% 以上。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

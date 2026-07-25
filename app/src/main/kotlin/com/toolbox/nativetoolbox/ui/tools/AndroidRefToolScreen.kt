@@ -125,19 +125,6 @@ fun AndroidRefToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("各密度切图尺寸") }
-        item {
-            GroupedCard {
-                densityBuckets.forEachIndexed { index, (name, dpi, factor) ->
-                    KeyValueRow(
-                        name + "　" + dpi + " dpi",
-                        if (dp > 0) Math.round(dp * factor).toString() + " px" else "—",
-                        copyable = false
-                    )
-                    if (index != densityBuckets.lastIndex) RowDivider()
-                }
-            }
-        }
         item { SectionHeader("速查") }
         item {
             GroupedCard {

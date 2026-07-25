@@ -172,35 +172,5 @@ fun BatteryInfoToolScreen(onBack: () -> Unit) {
                 KeyValueRow("电池类型", snapshot.technology.ifBlank { "未知" }, copyable = false)
             }
         }
-        item { SectionHeader("说明") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "数据每两秒刷新一次，全部来自系统电池接口，不需要任何权限。\n\n" +
-                            "部分厂商的系统不上报电流和容量，显示「系统未提供」是正常的。" +
-                            "电流为正表示正在充入，为负表示正在耗电。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.secondaryLabel
-                    )
-                }
-            }
-        }
-        item { SectionHeader("保养建议") }
-        item {
-            GroupedCard {
-                val tips = listOf(
-                    "日常电量" to "保持在 20% 到 80% 之间最养电池",
-                    "避免高温" to "40℃ 以上会明显加速老化",
-                    "快充" to "偶尔用没问题，长期慢充更温和",
-                    "长期存放" to "留 50% 左右电量，别放空",
-                    "边充边玩" to "发热叠加，尽量避免"
-                )
-                tips.forEachIndexed { index, (k, v) ->
-                    KeyValueRow(k, v, copyable = false)
-                    if (index != tips.lastIndex) RowDivider()
-                }
-            }
-        }
     }
 }

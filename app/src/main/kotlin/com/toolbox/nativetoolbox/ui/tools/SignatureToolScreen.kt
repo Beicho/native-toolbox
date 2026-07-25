@@ -115,41 +115,5 @@ fun SignatureToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item { SectionHeader("状态") }
-        item {
-            GroupedCard {
-                KeyValueRow("笔画数", strokes.size.toString(), copyable = false)
-                RowDivider()
-                KeyValueRow("采样点", totalPoints.toString(), copyable = false)
-                RowDivider()
-                KeyValueRow("墨色", inkColors[colorIndex].second, copyable = false)
-                RowDivider()
-                KeyValueRow("笔宽", inkWidthLabels[widthIndex], copyable = false)
-            }
-        }
-        item { SectionHeader("怎么用") }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "签好后用系统截图功能截取白色区域，就得到一张签名图。\n\n" +
-                            "签名笔迹只在屏幕上，不保存文件、不上传。退出页面即清除。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.secondaryLabel
-                    )
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "电子签名的法律效力取决于签署场景和相关约定，重要文件请走正规电子签约平台。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

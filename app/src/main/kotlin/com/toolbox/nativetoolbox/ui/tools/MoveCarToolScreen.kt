@@ -197,16 +197,6 @@ fun MoveCarToolScreen(onBack: () -> Unit) {
         }
         item { SectionHeader("打印文案") }
         item { GroupedCard { CardPadding { OutputCard(text = printable, label = "复制后排版打印") } } }
-        item { SectionHeader("隐私提醒") }
-        item {
-            GroupedCard {
-                KeyValueRow("你的号码", if (phone.isBlank()) "未填" else maskedPhone, copyable = false)
-                RowDivider()
-                KeyValueRow("二维码里", if (mode == 0) "含完整号码（用于拨号）" else "含完整号码", copyable = false)
-                RowDivider()
-                KeyValueRow("数据去向", "只在本机生成，不上传", copyable = false)
-            }
-        }
         item {
             GroupedCard {
                 CardPadding {

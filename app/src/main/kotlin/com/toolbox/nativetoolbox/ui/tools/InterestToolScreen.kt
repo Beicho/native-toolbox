@@ -188,16 +188,5 @@ fun InterestToolScreen(onBack: () -> Unit) {
                 }
             }
         }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "这里算的是理想复利模型，不含手续费、税费和利率变动。实际理财收益会浮动，别把结果当承诺。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }

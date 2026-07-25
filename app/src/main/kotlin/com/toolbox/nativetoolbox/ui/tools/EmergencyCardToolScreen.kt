@@ -200,25 +200,5 @@ fun EmergencyCardToolScreen(onBack: () -> Unit) {
         }
         item { SectionHeader("生成的卡片") }
         item { GroupedCard { CardPadding { OutputCard(text = card, label = "复制后保存") } } }
-        item { SectionHeader("急救电话") }
-        item {
-            GroupedCard {
-                emergencyNumbers.forEachIndexed { index, (number, desc) ->
-                    KeyValueRow(number, desc)
-                    if (index != emergencyNumbers.lastIndex) RowDivider()
-                }
-            }
-        }
-        item {
-            GroupedCard {
-                CardPadding {
-                    Text(
-                        "这些内容只留在当前页面，退出就清空，不会保存也不会上传。请复制到你自己的地方保存。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.tertiaryLabel
-                    )
-                }
-            }
-        }
     }
 }
