@@ -9,7 +9,7 @@ fun NavGraphBuilder.officeToolsGraph(back: () -> Unit) {
     composable("tool/ocr") { PlaceholderToolScreen("OCR 识字", back) }
     composable("tool/doc_scan") { PlaceholderToolScreen("文档扫描", back) }
     composable("tool/pdf_tools") { PlaceholderToolScreen("PDF 工具箱", back) }
-    composable("tool/signature") { PlaceholderToolScreen("电子签名", back) }
+    composable("tool/signature") { SignatureToolScreen(back) }
     composable("tool/speech_to_text") { PlaceholderToolScreen("语音转文字", back) }
     composable("tool/pomodoro") { PomodoroToolScreen(back) }
     composable("tool/notes") { NotesToolScreen(back) }
@@ -17,7 +17,7 @@ fun NavGraphBuilder.officeToolsGraph(back: () -> Unit) {
     composable("tool/counter") { CounterToolScreen(back) }
     composable("tool/teleprompter") { TeleprompterToolScreen(back) }
     composable("tool/random_group") { RandomGroupToolScreen(back) }
-    composable("tool/whiteboard") { PlaceholderToolScreen("白板画板", back) }
+    composable("tool/whiteboard") { WhiteboardToolScreen(back) }
     composable("tool/file_transfer") { PlaceholderToolScreen("传输助手", back) }
     composable("tool/batch_rename") { PlaceholderToolScreen("批量重命名", back) }
     composable("tool/zip") { PlaceholderToolScreen("压缩解压", back) }
