@@ -141,7 +141,7 @@ private fun fullDeck(): List<TarotCard> {
         for (r in ranks) {
             val key = suit + r
             val (up, rev) = MINOR_MEANING[key] ?: Pair("", "")
-            val display = if (r == "1") "$suit王牌" else "$suit$r"
+            val display = if (r == "1") "${suit}王牌" else "$suit$r"
             minor.add(TarotCard(display, emoji, up, rev))
         }
     }

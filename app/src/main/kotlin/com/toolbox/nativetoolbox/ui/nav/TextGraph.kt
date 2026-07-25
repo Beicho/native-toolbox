@@ -10,8 +10,8 @@ fun NavGraphBuilder.textToolsGraph(back: () -> Unit) {
     composable("tool/textprocess") { TextProcessToolScreen(back) }
     composable("tool/textstats") { TextStatsToolScreen(back) }
     composable("tool/encoding") { EncodingScreen(back) }
-    composable("tool/cn_convert") { PlaceholderToolScreen("繁简转换", back) }
-    composable("tool/pinyin") { PlaceholderToolScreen("拼音标注", back) }
+    composable("tool/cn_convert") { CnConvertToolScreen(back) }
+    composable("tool/pinyin") { PinyinToolScreen(back) }
     composable("tool/translate") { TranslateToolScreen(back) }
     composable("tool/morse") { MorseToolScreen(back) }
     composable("tool/fullwidth") { FullWidthToolScreen(back) }
