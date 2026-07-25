@@ -46,17 +46,17 @@ import java.util.Locale
  * 传输助手:像给自己发消息一样,把文字和文件存进时间线,随时复制/转发。
  * 文件复制进 App 私有目录,清相册也不丢。
  */
-private data class Item(val time: Long, val text: String, val fileName: String?, val filePath: String?)
+private data class TransferItem(val time: Long, val text: String, val fileName: String?, val filePath: String?)
 
-private fun loadItems(prefs: android.content.SharedPreferences): List<Item> = runCatching {
+private fun loadItems(prefs: android.content.SharedPreferences): List<TransferItem> = runCatching {
     val arr = JSONArray(prefs.getString("items", "[]"))
     (0 until arr.length()).map { i ->
         val o = arr.getJSONObject(i)
-        Item(o.getLong("t"), o.optString("x"), o.optString("f").ifBlank { null }, o.optString("p").ifBlank { null })
+        TransferItem(o.getLong("t"), o.optString("x"), o.optString("f").ifBlank { null }, o.optString("p").ifBlank { null })
     }
 }.getOrDefault(emptyList())
 
-private fun saveItems(prefs: android.content.SharedPreferences, list: List<Item>) {
+private fun saveItems(prefs: android.content.SharedPreferences, list: List<TransferItem>) {
     val arr = JSONArray()
     list.takeLast(200).forEach {
         arr.put(JSONObject().put("t", it.time).put("x", it.text).put("f", it.fileName ?: "").put("p", it.filePath ?: ""))
@@ -93,7 +93,7 @@ fun FileTransferToolScreen(onBack: () -> Unit) {
                 } != null
             }.getOrDefault(false)
             if (copied) {
-                items = items + Item(System.currentTimeMillis(), "", name, dst.absolutePath)
+                items = items + TransferItem(System.currentTimeMillis(), "", name, dst.absolutePath)
                 ok++
             }
         }
@@ -103,7 +103,7 @@ fun FileTransferToolScreen(onBack: () -> Unit) {
 
     fun addText() {
         if (input.isBlank()) return
-        items = items + Item(System.currentTimeMillis(), input.trim(), null, null)
+        items = items + TransferItem(System.currentTimeMillis(), input.trim(), null, null)
         saveItems(prefs, items)
         input = ""
     }

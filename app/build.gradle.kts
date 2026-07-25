@@ -112,6 +112,8 @@ dependencies {
 
     // 人像分割(智能抠图/证件照换底),模型打包在 APK 内,离线可用
     implementation("com.google.mlkit:segmentation-selfie:16.0.0-beta6")
+    // OCR 中文识别(模型打包离线)
+    implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
 
     // Core
     implementation("androidx.core:core-ktx:1.16.0")
