@@ -12,7 +12,7 @@ fun NavGraphBuilder.imageStudioToolsGraph(back: () -> Unit) {
     composable("tool/gridcut") { GridCutToolScreen(back) }
     composable("tool/stitch") { StitchToolScreen(back) }
     composable("tool/gif_make") { PlaceholderToolScreen("GIF 制作", back) }
-    composable("tool/barcode") { PlaceholderToolScreen("条形码", back) }
+    composable("tool/barcode") { BarcodeToolScreen(back) }
     composable("tool/ascii_art") { PlaceholderToolScreen("艺术化转换", back) }
     composable("tool/meme_maker") { PlaceholderToolScreen("表情包制作", back) }
     composable("tool/checkin_watermark") { PlaceholderToolScreen("打卡水印", back) }
