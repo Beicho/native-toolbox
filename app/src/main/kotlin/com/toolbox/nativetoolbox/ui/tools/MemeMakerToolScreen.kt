@@ -38,9 +38,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /** 经典梗图排版:图片上下加粗白字黑边;或者下方白底黑字字幕条 */
-private fun renderMeme(src: Bitmap, top: String, bottom: String, style: Int): Bitmap {
+private fun renderMeme(src: Bitmap, top: String, bottom: String, layout: Int): Bitmap {
     val w = src.width
-    return if (style == 0) {
+    return if (layout == 0) {
         // 白字黑边压在图上
         val out = src.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(out)

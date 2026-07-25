@@ -7,10 +7,10 @@ import com.toolbox.nativetoolbox.ui.tools.*
 /** 生活日常分类路由(22 个)。并行实现时只改本文件,与其他分类零冲突。 */
 fun NavGraphBuilder.lifeToolsGraph(back: () -> Unit) {
     composable("tool/weather") { WeatherToolScreen(back) }
-    composable("tool/history_today") { PlaceholderToolScreen("历史上的今天", back) }
+    composable("tool/history_today") { HistoryTodayToolScreen(back) }
     composable("tool/holiday") { HolidayToolScreen(back) }
     composable("tool/lunar") { LunarToolScreen(back) }
-    composable("tool/astronomy") { PlaceholderToolScreen("天文时刻", back) }
+    composable("tool/astronomy") { AstronomyToolScreen(back) }
     composable("tool/countdown_day") { CountdownDayToolScreen(back) }
     composable("tool/health_remind") { PlaceholderToolScreen("健康提醒", back) }
     composable("tool/health_record") { PlaceholderToolScreen("健康记录", back) }
