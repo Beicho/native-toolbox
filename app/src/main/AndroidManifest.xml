@@ -94,6 +94,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <receiver
+            android:name=".util.ReminderReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>
