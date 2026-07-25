@@ -153,7 +153,7 @@ fun TextTemplateToolScreen(onBack: () -> Unit) {
                         enabled = templateName.isNotBlank() && template.isNotBlank()
                     ) { Text("存起来") }
                     Text(
-                        "只存在当前页面，退出会清空。要长期保存请复制到备忘录。",
+                        "存好的模板会一直留着,下次进来还在。",
                         style = MaterialTheme.typography.bodySmall,
                         color = palette.tertiaryLabel
                     )
@@ -220,7 +220,7 @@ fun ClipboardShelfToolScreen(onBack: () -> Unit) {
                         Text("放进暂存架")
                     }
                     Text(
-                        "手机剪贴板一次只能存一条，这里可以同时放 30 条，随时取用。",
+                        "手机剪贴板一次只能存一条,这里能同时放 30 条,退出也不丢。",
                         style = MaterialTheme.typography.bodySmall,
                         color = palette.tertiaryLabel
                     )
