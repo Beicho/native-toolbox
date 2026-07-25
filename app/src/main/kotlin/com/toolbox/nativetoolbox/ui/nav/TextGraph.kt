@@ -2,6 +2,7 @@ package com.toolbox.nativetoolbox.ui.nav
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.toolbox.nativetoolbox.ui.encoding.EncodingScreen
 import com.toolbox.nativetoolbox.ui.tools.*
 
 /** 文本分类路由(16 个)。并行实现时只改本文件,与其他分类零冲突。 */
