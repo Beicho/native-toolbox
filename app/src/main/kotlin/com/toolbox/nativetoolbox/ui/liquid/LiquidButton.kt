@@ -30,9 +30,9 @@ import androidx.compose.ui.util.lerp
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
-import com.kyant.backdrop.effects.vibrancy
 import com.kyant.backdrop.highlight.Highlight
 import com.kyant.backdrop.isRenderEffectSupported
+import com.kyant.backdrop.isRuntimeShaderSupported
 import com.kyant.backdrop.shadow.Shadow
 import com.kyant.shapes.Capsule
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
@@ -69,9 +69,8 @@ fun LiquidButton(
                 backdrop = backdrop,
                 shape = { Capsule() },
                 effects = {
-                    vibrancy()
                     blur(2f.dp.toPx())
-                    lens(
+                    if (isRuntimeShaderSupported()) lens(
                         12f.dp.toPx() * (1f + pressProgress.value),
                         24f.dp.toPx() * (1f + 0.5f * pressProgress.value)
                     )
@@ -134,9 +133,8 @@ fun LiquidIconButton(
                 backdrop = backdrop,
                 shape = { Capsule() },
                 effects = {
-                    vibrancy()
                     blur(2f.dp.toPx())
-                    lens(10f.dp.toPx(), 20f.dp.toPx())
+                    if (isRuntimeShaderSupported()) lens(10f.dp.toPx(), 20f.dp.toPx())
                 },
                 highlight = { Highlight.Default },
                 shadow = { Shadow(radius = 10.dp, color = Color.Black.copy(alpha = 0.08f)) },

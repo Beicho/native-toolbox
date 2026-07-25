@@ -13,9 +13,9 @@ import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
-import com.kyant.backdrop.effects.vibrancy
 import com.kyant.backdrop.highlight.Highlight
 import com.kyant.backdrop.isRenderEffectSupported
+import com.kyant.backdrop.isRuntimeShaderSupported
 import com.kyant.backdrop.shadow.Shadow
 import com.kyant.shapes.Capsule
 
@@ -29,7 +29,8 @@ val LocalRootBackdrop = staticCompositionLocalOf<LayerBackdrop> {
 
 /**
  * 标准 Liquid Glass 面板(Apple Regular 变体感觉):
- * vibrancy + blur + lens 折射;Android 12 以下自动退化为半透明磨砂底。
+ * blur 在 API 31+ 生效,以下退化为半透明磨砂底;lens 折射需 RuntimeShader(API 33+),
+ * 低版本静默跳过。不用 vibrancy —— 它属于 ColorFilter,深色模式下会让玻璃发灰。
  */
 fun Modifier.liquidPanel(
     backdrop: Backdrop,
@@ -48,9 +49,8 @@ fun Modifier.liquidPanel(
         backdrop = backdrop,
         shape = shape,
         effects = {
-            vibrancy()
             blur(blurRadiusPx)
-            lens(lensHeightPx, lensAmountPx)
+            if (isRuntimeShaderSupported()) lens(lensHeightPx, lensAmountPx)
         },
         shadow = if (withShadow) {
             { Shadow(radius = 16.dp, color = Color.Black.copy(alpha = 0.08f)) }
