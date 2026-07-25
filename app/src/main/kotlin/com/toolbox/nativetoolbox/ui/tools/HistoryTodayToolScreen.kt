@@ -37,6 +37,7 @@ private data class HistEvent(val year: Int, val text: String)
 @Composable
 fun HistoryTodayToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
+    val context = androidx.compose.ui.platform.LocalContext.current
     var events by remember { mutableStateOf<List<HistEvent>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf("") }
@@ -67,6 +68,16 @@ fun HistoryTodayToolScreen(onBack: () -> Unit) {
                     list.add(HistEvent(o.optInt("y"), CnConvert.toSimplified(o.optString("t"))))
                 }
                 events = list.sortedByDescending { it.year }
+                // 给主页「历史上的今天」卡片留一条缓存(否则那张卡永远不出现)
+                events.firstOrNull()?.let { top ->
+                    val todayIso = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                        .format(java.util.Calendar.getInstance().time)
+                    context.getSharedPreferences("onthisday", android.content.Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("events", "${top.year} 年:${top.text}")
+                        .putString("date", todayIso)
+                        .apply()
+                }
             }.onFailure { error = "数据格式异常" }
         }.onFailure { error = it.message ?: "加载失败" }
         loading = false

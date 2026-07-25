@@ -100,6 +100,10 @@ object HomeCardData {
 
     fun getOnThisDay(context: Context): String? {
         val prefs = context.getSharedPreferences("onthisday", Context.MODE_PRIVATE)
+        // 缓存要是今天写的才算数 —— 显示昨天的「历史上的今天」很滑稽
+        val cachedDate = prefs.getString("date", "")
+        val today = iso.format(Calendar.getInstance().time)
+        if (cachedDate != today) return null
         return prefs.getString("events", "")?.lines()?.firstOrNull()?.takeIf { it.isNotBlank() }
     }
 }
