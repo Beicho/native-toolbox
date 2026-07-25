@@ -16,14 +16,14 @@ sleep 2
 
 crashcheck() {
   local c
-  c=$(adb logcat -d | grep -cE "FATAL EXCEPTION|Fatal signal" || true)
+  c=$(adb logcat -d </dev/null | grep -cE "FATAL EXCEPTION|Fatal signal" || true)
   if [ "$c" -gt 0 ]; then
     echo "!!! CRASH at $1 !!!"
-    adb logcat -d | grep -B2 -A18 -E "FATAL EXCEPTION|Fatal signal" | head -50
+    adb logcat -d </dev/null | grep -B2 -A18 -E "FATAL EXCEPTION|Fatal signal" | head -50
     FAILED=1
     FAILED_ROUTES="$FAILED_ROUTES $1"
-    adb logcat -c
-    adb shell am force-stop $PKG
+    adb logcat -c </dev/null
+    adb shell am force-stop $PKG </dev/null
     return 1
   fi
   return 0
@@ -55,7 +55,8 @@ while IFS= read -r route; do
   [ -z "$route" ] && continue
   total=$((total+1))
   tag=$(echo "$route" | tr '/' '_')
-  adb shell am start -n $PKG/.MainActivity --es route "$route" > /dev/null 2>&1
+  # </dev/null 必须加:adb 会吞掉循环的 stdin,否则只跑第一行就结束
+  adb shell am start -n $PKG/.MainActivity --es route "$route" </dev/null > /dev/null 2>&1
   sleep 2.5
   if crashcheck "$tag"; then
     passed=$((passed+1))
