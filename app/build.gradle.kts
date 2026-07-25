@@ -41,7 +41,9 @@ android {
         abi {
             isEnable = true
             reset()
-            include("arm64-v8a", "armeabi-v7a")
+            // x86_64 必须留:CI 模拟器是 x86_64,universal 包缺它会让
+            // ML Kit 等 native 库在模拟器上加载失败。发布只发 arm 系,x86_64 单包不发。
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
             isUniversalApk = true
         }
     }
