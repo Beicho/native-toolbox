@@ -16,9 +16,9 @@ fun NavGraphBuilder.calcToolsGraph(back: () -> Unit) {
     composable("tool/amount_upper") { AmountUpperToolScreen(back) }
     composable("tool/percent") { PercentToolScreen(back) }
     composable("tool/combo_calc") { PlaceholderToolScreen("凑单计算", back) }
-    composable("tool/price_compare") { PlaceholderToolScreen("比价计算", back) }
+    composable("tool/price_compare") { PriceCompareToolScreen(back) }
     composable("tool/cost_split") { CostSplitToolScreen(back) }
-    composable("tool/relative_name") { PlaceholderToolScreen("亲戚称呼", back) }
+    composable("tool/relative_name") { RelativeNameToolScreen(back) }
     composable("tool/health_calc") { HealthCalcToolScreen(back) }
     composable("tool/timezone") { TimezoneToolScreen(back) }
     composable("tool/random_num") { PlaceholderToolScreen("随机数", back) }
@@ -26,5 +26,5 @@ fun NavGraphBuilder.calcToolsGraph(back: () -> Unit) {
     composable("tool/geometry") { GeometryToolScreen(back) }
     composable("tool/fuel_calc") { FuelCalcToolScreen(back) }
     composable("tool/pace_calc") { PaceCalcToolScreen(back) }
-    composable("tool/decoration") { PlaceholderToolScreen("装修计算", back) }
+    composable("tool/decoration") { DecorationToolScreen(back) }
 }
