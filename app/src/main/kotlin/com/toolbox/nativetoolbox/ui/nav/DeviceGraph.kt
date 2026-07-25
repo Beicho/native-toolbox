@@ -11,7 +11,7 @@ fun NavGraphBuilder.deviceToolsGraph(back: () -> Unit) {
     composable("tool/screentest") { ScreenTestToolScreen(back) }
     composable("tool/sensor_dash") { PlaceholderToolScreen("传感器仪表盘", back) }
     composable("tool/compass") { PlaceholderToolScreen("指南针", back) }
-    composable("tool/battery_info") { PlaceholderToolScreen("电池信息", back) }
+    composable("tool/battery_info") { BatteryInfoToolScreen(back) }
     composable("tool/performance") { PlaceholderToolScreen("性能监控", back) }
     composable("tool/hardware_test") { PlaceholderToolScreen("硬件体检", back) }
     composable("tool/storage_clean") { PlaceholderToolScreen("存储清理", back) }
@@ -20,7 +20,7 @@ fun NavGraphBuilder.deviceToolsGraph(back: () -> Unit) {
     composable("tool/nfc_tool") { PlaceholderToolScreen("NFC 读写", back) }
     composable("tool/gps_speed") { PlaceholderToolScreen("GPS 速度表", back) }
     composable("tool/decibel_meter") { PlaceholderToolScreen("分贝仪", back) }
-    composable("tool/flashlight") { PlaceholderToolScreen("手电筒", back) }
+    composable("tool/flashlight") { FlashlightToolScreen(back) }
     composable("tool/screen_on") { PlaceholderToolScreen("屏幕常亮", back) }
     composable("tool/screen_time") { PlaceholderToolScreen("屏幕时间", back) }
 }
