@@ -1,69 +1,23 @@
 package com.toolbox.nativetoolbox.util
 
 import android.graphics.Bitmap
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.segmentation.Segmentation
-import com.google.mlkit.vision.segmentation.SegmentationMask
-import com.google.mlkit.vision.segmentation.selfie.SelfieSegmenterOptions
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 
 /**
- * 人像分割(ML Kit,模型随 APK 离线运行)。
- * 返回带透明背景的抠图,或按给定背景色合成。
+ * 抠图入口。
+ *
+ * 原来用 ML Kit selfie-segmentation,但它带 mediapipe 一共 22MB ——
+ * 只为一个工具让所有用户多下 22MB 不划算。改用 SmartCutout(纯算法,零依赖)。
+ * 对纯色/渐变背景效果够用,复杂背景诚实告知用户。
  */
 object Matting {
 
-    /** 返回 alpha 蒙版应用后的透明底人像,失败返回 null */
-    suspend fun cutout(src: Bitmap, threshold: Float = 0.55f, feather: Boolean = true): Bitmap? {
-        val segmenter = Segmentation.getClient(
-            SelfieSegmenterOptions.Builder()
-                .setDetectorMode(SelfieSegmenterOptions.SINGLE_IMAGE_MODE)
-                .build()
-        )
-        val mask = suspendCancellableCoroutine<SegmentationMask?> { cont ->
-            segmenter.process(InputImage.fromBitmap(src, 0))
-                .addOnSuccessListener { cont.resume(it) }
-                .addOnFailureListener { cont.resume(null) }
-        } ?: run { segmenter.close(); return null }
+    /** 返回带透明通道的抠图结果;失败返回 null */
+    suspend fun cutout(src: Bitmap, threshold: Float = 0.55f, feather: Boolean = true): Bitmap? =
+        runCatching {
+            // threshold 0..1 映射到颜色容差 12..55
+            val tolerance = (12 + threshold * 43).toInt()
+            SmartCutout.cutout(src, tolerance = tolerance, featherPx = if (feather) 2 else 0)
+        }.getOrNull()
 
-        val mw = mask.width
-        val mh = mask.height
-        val buf = mask.buffer
-        buf.rewind()
-        val conf = FloatArray(mw * mh)
-        for (i in conf.indices) conf[i] = buf.float
-
-        val out = Bitmap.createBitmap(src.width, src.height, Bitmap.Config.ARGB_8888)
-        val pixels = IntArray(src.width * src.height)
-        src.getPixels(pixels, 0, src.width, 0, 0, src.width, src.height)
-        // 蒙版尺寸与原图一致(SINGLE_IMAGE_MODE 下 ML Kit 返回原尺寸)
-        for (y in 0 until src.height) {
-            val my = y * mh / src.height
-            for (x in 0 until src.width) {
-                val mx = x * mw / src.width
-                val c = conf[my * mw + mx]
-                val i = y * src.width + x
-                val a = when {
-                    c >= threshold + 0.15f -> 255
-                    c <= threshold - 0.15f -> 0
-                    feather -> (((c - (threshold - 0.15f)) / 0.30f) * 255).toInt().coerceIn(0, 255)
-                    else -> if (c >= threshold) 255 else 0
-                }
-                pixels[i] = (a shl 24) or (pixels[i] and 0x00FFFFFF)
-            }
-        }
-        out.setPixels(pixels, 0, src.width, 0, 0, src.width, src.height)
-        segmenter.close()
-        return out
-    }
-
-    /** 透明底人像 + 纯色背景合成 */
-    fun compose(cut: Bitmap, bg: Int): Bitmap {
-        val out = Bitmap.createBitmap(cut.width, cut.height, Bitmap.Config.ARGB_8888)
-        val canvas = android.graphics.Canvas(out)
-        canvas.drawColor(bg)
-        canvas.drawBitmap(cut, 0f, 0f, null)
-        return out
-    }
+    fun compose(cut: Bitmap, bg: Int): Bitmap = SmartCutout.compose(cut, bg)
 }

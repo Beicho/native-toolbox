@@ -90,7 +90,10 @@ class MainActivity : ComponentActivity() {
 
     private fun handleIntent(intent: Intent?) {
         if (intent == null) return
+        // 快捷方式 / 小组件 / Glance ActionParameters 都落到 "route" extra
         val route = intent.getStringExtra("route")
+            ?: intent.extras?.keySet()?.firstOrNull { it.endsWith("route") }
+                ?.let { intent.getStringExtra(it) }
         if (route != null) {
             pendingRoute = route
             return

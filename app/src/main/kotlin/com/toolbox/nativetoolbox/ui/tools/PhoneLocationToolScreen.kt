@@ -36,10 +36,14 @@ private object PhoneDb {
     private var indexOffset = 0
     private var total = 0
 
+    fun isReady(): Boolean = data != null
+
     @Synchronized
     fun ensureLoaded(context: android.content.Context) {
         if (data != null) return
-        val d = context.assets.open("phone.dat").readBytes()
+        val stream = com.toolbox.nativetoolbox.util.AssetProvisioner
+            .openStream(com.toolbox.nativetoolbox.util.AssetProvisioner.Asset.PHONE_DB) ?: return
+        val d = stream.use { it.readBytes() }
         data = d
         indexOffset = readIntLE(d, 4)
         total = (d.size - indexOffset) / 9
@@ -191,6 +195,13 @@ private fun idLookup(text: String): List<Pair<String, String>> {
 
 @Composable
 fun PhoneLocationToolScreen(onBack: () -> Unit) {
+    com.toolbox.nativetoolbox.ui.components.AssetGate(
+        com.toolbox.nativetoolbox.util.AssetProvisioner.Asset.PHONE_DB
+    ) { PhoneLocationContent() }
+}
+
+@Composable
+private fun PhoneLocationContent() {
     val palette = LocalIosPalette.current
     val context = LocalContext.current
     var mode by rememberSaveable { mutableStateOf(0) }

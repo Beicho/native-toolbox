@@ -18,11 +18,15 @@ object PinyinUtil {
         '车' to "chē", '种' to "chóng", '重' to "chóng", '召' to "shào", '覃' to "qín",
     )
 
+    /** 字库是否已就绪(下发到本地或还打包在 assets) */
+    fun isReady(): Boolean = table != null
+
     @Synchronized
     fun ensureLoaded(context: Context) {
         if (table != null) return
+        val stream = AssetProvisioner.openStream(AssetProvisioner.Asset.PINYIN) ?: return
         val m = HashMap<Char, List<String>>(30000)
-        context.assets.open("pinyin.tsv").bufferedReader().forEachLine { line ->
+        stream.bufferedReader().forEachLine { line ->
             val tab = line.indexOf('\t')
             if (tab > 0) {
                 val ch = line[0]

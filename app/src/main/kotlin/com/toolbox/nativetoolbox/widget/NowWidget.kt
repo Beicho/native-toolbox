@@ -8,7 +8,9 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
-import androidx.glance.action.actionStartActivity
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -29,6 +31,9 @@ import androidx.glance.text.TextStyle
 import com.toolbox.nativetoolbox.MainActivity
 import com.toolbox.nativetoolbox.data.predict.PredictEngine
 import com.toolbox.nativetoolbox.ui.home.toolCategories
+
+/** 小组件点击时传给 MainActivity 的目标路由 */
+val RouteKey = ActionParameters.Key<String>("route")
 
 /**
  * 「此刻」桌面小组件 —— 预测大脑最强的出口。
@@ -92,13 +97,8 @@ class NowWidget : GlanceAppWidget() {
                         GlanceModifier
                             .fillMaxWidth()
                             .clickable(
-                                actionStartActivity(
-                                    Intent(context, MainActivity::class.java).apply {
-                                        putExtra("route", route)
-                                        putExtra("from_widget", true)
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                                            Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                    }
+                                actionStartActivity<MainActivity>(
+                                    actionParametersOf(RouteKey to route)
                                 )
                             )
                             .padding(vertical = 6.dp),

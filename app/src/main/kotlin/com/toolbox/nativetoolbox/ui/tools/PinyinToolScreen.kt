@@ -37,6 +37,14 @@ import com.toolbox.nativetoolbox.util.PinyinUtil
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PinyinToolScreen(onBack: () -> Unit) {
+    com.toolbox.nativetoolbox.ui.components.AssetGate(
+        com.toolbox.nativetoolbox.util.AssetProvisioner.Asset.PINYIN
+    ) { PinyinContent() }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun PinyinContent() {
     val palette = LocalIosPalette.current
     val context = LocalContext.current
     var input by rememberSaveable { mutableStateOf("") }

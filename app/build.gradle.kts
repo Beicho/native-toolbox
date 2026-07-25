@@ -21,6 +21,17 @@ android {
         }
     }
 
+    // ABI 分包:一个 APK 塞所有架构的 native 库是包体大头。
+    // 2026 年了,arm64 覆盖绝大多数设备;仍保留 v7a 兼容老机器。
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a")
+            isUniversalApk = true
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -114,8 +125,8 @@ dependencies {
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.glance:glance-material3:1.1.1")
 
-    // 人像分割(智能抠图/证件照换底),模型打包在 APK 内,离线可用
-    implementation("com.google.mlkit:segmentation-selfie:16.0.0-beta6")
+    // 抠图改用自研 SmartCutout(纯算法零依赖)——
+    // ML Kit selfie-segmentation 带 mediapipe 共 22MB,只为一个工具不划算
     // OCR 中文识别(模型打包离线)
     implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
 
