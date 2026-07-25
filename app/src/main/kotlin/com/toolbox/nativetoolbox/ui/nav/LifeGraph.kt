@@ -13,19 +13,19 @@ fun NavGraphBuilder.lifeToolsGraph(back: () -> Unit) {
     composable("tool/astronomy") { AstronomyToolScreen(back) }
     composable("tool/countdown_day") { CountdownDayToolScreen(back) }
     composable("tool/health_remind") { PlaceholderToolScreen("健康提醒", back) }
-    composable("tool/health_record") { PlaceholderToolScreen("健康记录", back) }
-    composable("tool/period") { PlaceholderToolScreen("经期记录", back) }
+    composable("tool/health_record") { HealthRecordToolScreen(back) }
+    composable("tool/period") { PeriodToolScreen(back) }
     composable("tool/bookkeeping") { BookkeepingToolScreen(back) }
     composable("tool/parking") { PlaceholderToolScreen("停车助手", back) }
     composable("tool/phone_location") { PlaceholderToolScreen("归属地查询", back) }
     composable("tool/garbage") { GarbageToolScreen(back) }
     composable("tool/mirror") { MirrorToolScreen(back) }
     composable("tool/magnifier") { MagnifierToolScreen(back) }
-    composable("tool/ruler") { PlaceholderToolScreen("屏幕测量", back) }
+    composable("tool/ruler") { RulerToolScreen(back) }
     composable("tool/big_clock") { BigClockToolScreen(back) }
     composable("tool/emergency_card") { EmergencyCardToolScreen(back) }
     composable("tool/move_car") { MoveCarToolScreen(back) }
     composable("tool/heart_rate") { PlaceholderToolScreen("指尖心率", back) }
     composable("tool/breath") { BreathToolScreen(back) }
-    composable("tool/vision_test") { PlaceholderToolScreen("视力与色觉", back) }
+    composable("tool/vision_test") { VisionTestToolScreen(back) }
 }
