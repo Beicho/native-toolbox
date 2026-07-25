@@ -11,6 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.toolbox.nativetoolbox.ui.components.rememberPrefString
+import com.toolbox.nativetoolbox.ui.components.rememberToolPrefs
 import com.toolbox.nativetoolbox.ui.components.CardPadding
 import com.toolbox.nativetoolbox.ui.components.GroupedCard
 import com.toolbox.nativetoolbox.ui.components.IosTextArea
@@ -35,9 +37,10 @@ fun TextTemplateToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
     val copy = rememberCopy()
 
-    var template by rememberSaveable { mutableStateOf("") }
-    var valuesRaw by rememberSaveable { mutableStateOf("") }
-    var savedTemplates by rememberSaveable { mutableStateOf("") }
+    val toolPrefs = rememberToolPrefs("texttemplate")
+    var template by rememberPrefString(toolPrefs, "template", "")
+    var valuesRaw by rememberPrefString(toolPrefs, "valuesRaw", "")
+    var savedTemplates by rememberPrefString(toolPrefs, "savedTemplates", "")
     var templateName by rememberSaveable { mutableStateOf("") }
 
     val placeholders = placeholderRe.findAll(template).map { it.groupValues[1] }.distinct().toList()
@@ -189,7 +192,8 @@ fun ClipboardShelfToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
     val copy = rememberCopy()
 
-    var shelf by rememberSaveable { mutableStateOf("") }
+    val toolPrefs = rememberToolPrefs("clipshelf")
+    var shelf by rememberPrefString(toolPrefs, "shelf", "")
     var input by rememberSaveable { mutableStateOf("") }
 
     val items = shelf.split(SHELF_SEP).filter { it.isNotBlank() }

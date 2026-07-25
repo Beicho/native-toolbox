@@ -11,6 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.toolbox.nativetoolbox.ui.components.rememberPrefString
+import com.toolbox.nativetoolbox.ui.components.rememberToolPrefs
 import com.toolbox.nativetoolbox.ui.components.CardPadding
 import com.toolbox.nativetoolbox.ui.components.GroupedCard
 import com.toolbox.nativetoolbox.ui.components.IosTextArea
@@ -60,7 +62,8 @@ private fun money(v: Double): String = String.format("%.2f", v)
 fun BookkeepingToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
 
-    var raw by rememberSaveable { mutableStateOf("") }
+    val toolPrefs = rememberToolPrefs("bookkeeping")
+    var raw by rememberPrefString(toolPrefs, "raw", "")
     var amountInput by rememberSaveable { mutableStateOf("") }
     var categoryIndex by rememberSaveable { mutableStateOf(0) }
     var noteInput by rememberSaveable { mutableStateOf("") }

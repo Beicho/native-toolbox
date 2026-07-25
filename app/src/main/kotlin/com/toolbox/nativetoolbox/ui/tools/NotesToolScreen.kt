@@ -11,6 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.toolbox.nativetoolbox.ui.components.rememberPrefString
+import com.toolbox.nativetoolbox.ui.components.rememberToolPrefs
 import com.toolbox.nativetoolbox.ui.components.CardPadding
 import com.toolbox.nativetoolbox.ui.components.CheckRow
 import com.toolbox.nativetoolbox.ui.components.GroupedCard
@@ -47,8 +49,9 @@ fun NotesToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
 
     var mode by rememberSaveable { mutableStateOf(0) }
-    var note by rememberSaveable { mutableStateOf("") }
-    var listRaw by rememberSaveable { mutableStateOf("") }
+    val toolPrefs = rememberToolPrefs("notes")
+    var note by rememberPrefString(toolPrefs, "note", "")
+    var listRaw by rememberPrefString(toolPrefs, "listRaw", "")
     var newTask by rememberSaveable { mutableStateOf("") }
 
     val tasks = parseTasks(listRaw)

@@ -11,6 +11,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.toolbox.nativetoolbox.ui.components.rememberPrefInt
+import com.toolbox.nativetoolbox.ui.components.rememberPrefString
+import com.toolbox.nativetoolbox.ui.components.rememberToolPrefs
 import com.toolbox.nativetoolbox.ui.components.CardPadding
 import com.toolbox.nativetoolbox.ui.components.GroupedCard
 import com.toolbox.nativetoolbox.ui.components.IosTextArea
@@ -39,17 +42,18 @@ private val emergencyNumbers = listOf(
 fun EmergencyCardToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
 
-    var name by rememberSaveable { mutableStateOf("") }
-    var age by rememberSaveable { mutableStateOf("") }
-    var bloodIndex by rememberSaveable { mutableStateOf(0) }
-    var rhIndex by rememberSaveable { mutableStateOf(0) }
-    var allergy by rememberSaveable { mutableStateOf("") }
-    var disease by rememberSaveable { mutableStateOf("") }
-    var medicine by rememberSaveable { mutableStateOf("") }
-    var contact1Name by rememberSaveable { mutableStateOf("") }
-    var contact1Phone by rememberSaveable { mutableStateOf("") }
-    var contact2Name by rememberSaveable { mutableStateOf("") }
-    var contact2Phone by rememberSaveable { mutableStateOf("") }
+    val toolPrefs = rememberToolPrefs("emergency")
+    var name by rememberPrefString(toolPrefs, "name", "")
+    var age by rememberPrefString(toolPrefs, "age", "")
+    var bloodIndex by rememberPrefInt(toolPrefs, "bloodIndex", 0)
+    var rhIndex by rememberPrefInt(toolPrefs, "rhIndex", 0)
+    var allergy by rememberPrefString(toolPrefs, "allergy", "")
+    var disease by rememberPrefString(toolPrefs, "disease", "")
+    var medicine by rememberPrefString(toolPrefs, "medicine", "")
+    var contact1Name by rememberPrefString(toolPrefs, "contact1Name", "")
+    var contact1Phone by rememberPrefString(toolPrefs, "contact1Phone", "")
+    var contact2Name by rememberPrefString(toolPrefs, "contact2Name", "")
+    var contact2Phone by rememberPrefString(toolPrefs, "contact2Phone", "")
     var note by rememberSaveable { mutableStateOf("") }
 
     val bloodText = if (bloodIndex == 0) "未填写" else

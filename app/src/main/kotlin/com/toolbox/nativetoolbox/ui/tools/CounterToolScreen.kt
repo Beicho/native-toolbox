@@ -18,6 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.toolbox.nativetoolbox.ui.components.rememberPrefInt
+import com.toolbox.nativetoolbox.ui.components.rememberPrefString
+import com.toolbox.nativetoolbox.ui.components.rememberToolPrefs
 import com.toolbox.nativetoolbox.ui.components.CardPadding
 import com.toolbox.nativetoolbox.ui.components.GroupedCard
 import com.toolbox.nativetoolbox.ui.components.IosTextField
@@ -48,11 +51,12 @@ fun CounterToolScreen(onBack: () -> Unit) {
     val palette = LocalIosPalette.current
     val context = LocalContext.current
 
-    var count by rememberSaveable { mutableStateOf(0) }
-    var stepText by rememberSaveable { mutableStateOf("1") }
-    var targetText by rememberSaveable { mutableStateOf("") }
+    val toolPrefs = rememberToolPrefs("counter")
+    var count by rememberPrefInt(toolPrefs, "count", 0)
+    var stepText by rememberPrefString(toolPrefs, "stepText", "1")
+    var targetText by rememberPrefString(toolPrefs, "targetText", "")
     var hapticOn by rememberSaveable { mutableStateOf(true) }
-    var history by rememberSaveable { mutableStateOf("") }
+    var history by rememberPrefString(toolPrefs, "history", "")
 
     val step = stepText.trim().toIntOrNull()?.takeIf { it != 0 } ?: 1
     val target = targetText.trim().toIntOrNull()
