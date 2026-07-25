@@ -98,6 +98,12 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.7")
 
+    // 相机（镜子/放大镜/文档扫描/扫码取景）
+    implementation("androidx.camera:camera-core:1.4.2")
+    implementation("androidx.camera:camera-camera2:1.4.2")
+    implementation("androidx.camera:camera-lifecycle:1.4.2")
+    implementation("androidx.camera:camera-view:1.4.2")
+
     // 二维码
     implementation("com.google.zxing:core:3.5.3")
 
