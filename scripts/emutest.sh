@@ -1,80 +1,83 @@
 #!/bin/bash
-# Astro Kit v0.3.0 模拟器全流程自测
-export ANDROID_HOME=$HOME/android-sdk
-ADB=$ANDROID_HOME/platform-tools/adb
-PKG=com.toolbox.nativetoolbox
+# Astro Kit 模拟器全量自测:遍历全部 200 个工具路由,任何一个闪退即失败。
+# 路由清单由 CI 从 ToolRegistry.kt 现场生成(scripts/gen-routes.sh),不会漏新工具。
+set -o pipefail
 
-if ! pgrep -f qemu > /dev/null; then
-  nohup $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -gpu swiftshader_indirect -no-boot-anim -no-snapshot > /tmp/emu.log 2>&1 &
+ADB=${ADB:-adb}
+PKG=com.toolbox.nativetoolbox
+APK=${APK:-app/build/outputs/apk/debug/app-debug.apk}
+ROUTES_FILE=${ROUTES_FILE:-/tmp/routes.txt}
+FAILED=0
+
+# ABI 分包后 debug 目录可能有多个 apk,选 universal 或第一个
+if [ ! -f "$APK" ]; then
+  APK=$(ls app/build/outputs/apk/debug/*universal*.apk 2>/dev/null | head -1)
+  [ -z "$APK" ] && APK=$(ls app/build/outputs/apk/debug/*.apk 2>/dev/null | head -1)
 fi
-for i in $(seq 1 72); do
-  $ADB shell getprop sys.boot_completed 2>/dev/null | grep -q 1 && break
-  sleep 5
-done
-$ADB shell getprop sys.boot_completed 2>/dev/null | grep -q 1 || { echo BOOT_TIMEOUT; exit 1; }
+echo "APK: $APK"
+
+$ADB install -r "$APK" 2>&1 | tail -1
+$ADB shell settings put global hide_error_dialogs 1
+$ADB shell am force-stop $PKG
+$ADB logcat -c
 
 crashcheck() {
   local c
   c=$($ADB logcat -d | grep -cE "FATAL EXCEPTION|Fatal signal")
   if [ "$c" -gt 0 ]; then
     echo "!!! CRASH at $1 !!!"
-    $ADB logcat -d | grep -B2 -A18 -E "FATAL EXCEPTION|Fatal signal" | head -40
-    exit 1
+    $ADB logcat -d | grep -B2 -A20 -E "FATAL EXCEPTION|Fatal signal" | head -50
+    FAILED=1
+    # 记下来但继续跑,一次跑出所有崩溃点
+    $ADB logcat -c
+    $ADB shell am force-stop $PKG
+    return 1
   fi
-  echo "OK_$1"
+  return 0
 }
 
-opentool() { # $1 route  $2 tag
-  $ADB shell am start -n $PKG/.MainActivity --es route "$1" > /dev/null 2>&1
-  sleep 3
-  crashcheck "$2"
-  $ADB exec-out screencap -p > /tmp/t_$2.png
-}
-
-$ADB install -r /workspaces/native-toolbox/app/build/outputs/apk/debug/app-debug.apk 2>&1 | tail -1
-$ADB shell am force-stop $PKG
-$ADB logcat -c
+# 冷启动
 $ADB shell am start -n $PKG/.MainActivity > /dev/null
-sleep 7
-crashcheck "launch"
+sleep 8
+crashcheck "cold_launch" && echo "OK cold_launch"
 $ADB exec-out screencap -p > /tmp/t_home.png
 
-# 深链遍历新工具(同时验证快捷方式路径)
-opentool tool/jwt jwt
-opentool tool/diff diff
-opentool tool/cron cron
-opentool tool/unit unit
-opentool tool/datecalc datecalc
-opentool tool/deviceinfo deviceinfo
-opentool tool/level level
-opentool tool/screentest screentest
-opentool tool/banner banner
-opentool tool/decider decider
-opentool tool/wifiqr wifiqr
-opentool tool/exif exif
-opentool tool/pickcolor pickcolor
-opentool tool/watermark watermark
-opentool tool/gridcut gridcut
-opentool tool/stitch stitch
-opentool tool/filehash filehash
+# 主页滚到底再滚回来(动态卡片 + 全部分类)
+$ADB shell input swipe 540 1800 540 400 300; sleep 1
+$ADB shell input swipe 540 1800 540 400 300; sleep 1
+$ADB shell input swipe 540 400 540 1800 300; sleep 1
+crashcheck "home_scroll" && echo "OK home_scroll"
 
-# 分享接入
-$ADB shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "hello_share_test" -n $PKG/.MainActivity > /dev/null 2>&1
+# 全量遍历路由
+total=0; passed=0
+while IFS= read -r route; do
+  [ -z "$route" ] && continue
+  total=$((total+1))
+  tag=$(echo "$route" | tr '/' '_')
+  $ADB shell am start -n $PKG/.MainActivity --es route "$route" > /dev/null 2>&1
+  sleep 2.2
+  if crashcheck "$tag"; then
+    passed=$((passed+1))
+  else
+    echo "FAILED_ROUTE: $route"
+  fi
+done < "$ROUTES_FILE"
+echo "ROUTES: $passed/$total passed"
+
+# 分享文本进入
+$ADB shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "hello_share" -n $PKG/.MainActivity > /dev/null 2>&1
 sleep 3
-crashcheck "share"
-$ADB exec-out screencap -p > /tmp/t_share.png
+crashcheck "share_text" && echo "OK share_text"
 
-# 首页滚动到底(看新分类)
-$ADB shell am start -n $PKG/.MainActivity --es route home > /dev/null 2>&1
-sleep 2
-$ADB shell input swipe 540 1900 540 500 400
-sleep 1
-$ADB shell input swipe 540 1900 540 500 400
-sleep 1
-$ADB shell input swipe 540 1900 540 500 400
-sleep 1
-$ADB exec-out screencap -p > /tmp/t_homebottom.png
-crashcheck "scroll"
+# 设置页 + 预测隐私页
+$ADB shell am start -n $PKG/.MainActivity > /dev/null 2>&1; sleep 2
+$ADB shell am start -n $PKG/.MainActivity --es route predict_settings > /dev/null 2>&1
+sleep 2.5
+crashcheck "predict_settings" && echo "OK predict_settings"
+$ADB exec-out screencap -p > /tmp/t_predict.png
 
-echo ALL_PASS
-ls /tmp/t_*.png | wc -l
+if [ "$FAILED" -ne 0 ]; then
+  echo "EMUTEST FAILED"
+  exit 1
+fi
+echo "EMUTEST ALL GREEN ($passed/$total routes)"
