@@ -210,7 +210,7 @@ private fun CountdownCard(item: HomeCardData.CountdownItem, onOpenTool: (String)
                 "${item.daysLeft}",
                 style = MaterialTheme.typography.displayLarge.copy(fontSize = 56.sp, lineHeight = 56.sp),
                 fontWeight = FontWeight.Bold,
-                color = palette.blue
+                color = palette.accent
             )
             Spacer(Modifier.width(6.dp))
             Text("天", style = MaterialTheme.typography.titleMedium, color = palette.secondaryLabel, modifier = Modifier.padding(bottom = 6.dp))
