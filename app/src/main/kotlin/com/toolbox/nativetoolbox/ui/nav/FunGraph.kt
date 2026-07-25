@@ -10,12 +10,12 @@ fun NavGraphBuilder.funToolsGraph(back: () -> Unit) {
     composable("tool/decider") { DeciderToolScreen(back) }
     composable("tool/fidget") { PlaceholderToolScreen("解压玩具", back) }
     composable("tool/party_games") { PlaceholderToolScreen("聚会游戏盒", back) }
-    composable("tool/wooden_fish") { PlaceholderToolScreen("电子木鱼", back) }
+    composable("tool/wooden_fish") { WoodenFishToolScreen(back) }
     composable("tool/fireworks") { PlaceholderToolScreen("口袋烟花", back) }
     composable("tool/tarot") { PlaceholderToolScreen("塔罗抽牌", back) }
-    composable("tool/hitokoto") { PlaceholderToolScreen("每日一言", back) }
-    composable("tool/reaction_test") { PlaceholderToolScreen("反应测试", back) }
+    composable("tool/hitokoto") { HitokotoToolScreen(back) }
+    composable("tool/reaction_test") { ReactionTestToolScreen(back) }
     composable("tool/classic_games") { PlaceholderToolScreen("经典小游戏", back) }
     composable("tool/typing_test") { PlaceholderToolScreen("打字测速", back) }
-    composable("tool/math_training") { PlaceholderToolScreen("速算训练", back) }
+    composable("tool/math_training") { MathTrainingToolScreen(back) }
 }
