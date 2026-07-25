@@ -9,10 +9,10 @@ fun NavGraphBuilder.securityToolsGraph(back: () -> Unit) {
     composable("tool/random") { RandomToolScreen(back) }
     composable("tool/exif") { ExifToolScreen(back) }
     composable("tool/totp") { TotpToolScreen(back) }
-    composable("tool/password_vault") { PlaceholderToolScreen("密码保险箱", back) }
+    composable("tool/password_vault") { PasswordVaultToolScreen(back) }
     composable("tool/encrypt_capsule") { EncryptCapsuleToolScreen(back) }
     composable("tool/keypair_gen") { KeypairGenToolScreen(back) }
     composable("tool/image_steg") { PlaceholderToolScreen("图片隐写", back) }
-    composable("tool/app_permissions") { PlaceholderToolScreen("应用权限透视", back) }
+    composable("tool/app_permissions") { AppPermissionsToolScreen(back) }
     composable("tool/private_album") { PlaceholderToolScreen("私密相册", back) }
 }
