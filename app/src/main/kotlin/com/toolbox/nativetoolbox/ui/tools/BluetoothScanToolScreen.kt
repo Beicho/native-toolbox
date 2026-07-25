@@ -138,6 +138,27 @@ private fun ScannerContent() {
                 if (i != sorted.lastIndex) RowDivider()
             }
         }
+    } else if (!scanning && devices.isEmpty() && error.isEmpty()) {
+        // 扫过一轮但一个都没有 —— 空白屏什么都不说是最差的体验
+        GroupedCard {
+            CardPadding {
+                Text(
+                    "还没搜到设备",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = palette.label
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    "检查这几件事:\n" +
+                        "· 蓝牙开了吗\n" +
+                        "· 要找的设备是不是没开、或者已经连到别的手机了\n" +
+                        "· 蓝牙耳机要按住配对键进入配对模式才会被搜到",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = palette.secondaryLabel
+                )
+            }
+        }
     } else if (scanning) {
         Text(
             "正在搜索…耳机、手环、电视都会出现在这里",
