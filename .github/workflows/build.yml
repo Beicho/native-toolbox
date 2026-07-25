@@ -64,6 +64,15 @@ jobs:
         echo "各产物体积："
         ls -lh app/build/outputs/apk/debug/*.apk app/build/outputs/apk/release/*.apk 2>/dev/null | awk '{print $5, $9}'
 
+    - name: Report APK sizes
+      run: |
+        echo "### APK 体积" >> $GITHUB_STEP_SUMMARY
+        for f in app/build/outputs/apk/release/*.apk app/build/outputs/apk/debug/*.apk; do
+          [ -f "$f" ] || continue
+          echo "- \`$(basename "$f")\` — $(du -h "$f" | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "APK_SIZE $(basename "$f") $(du -h "$f" | cut -f1)"
+        done
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
