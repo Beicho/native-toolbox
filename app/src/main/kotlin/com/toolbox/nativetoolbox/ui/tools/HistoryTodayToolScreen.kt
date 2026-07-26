@@ -26,7 +26,6 @@ import com.toolbox.nativetoolbox.ui.components.SectionHeader
 import com.toolbox.nativetoolbox.ui.components.SolidButton
 import com.toolbox.nativetoolbox.ui.components.ToolScaffold
 import com.toolbox.nativetoolbox.ui.theme.LocalIosPalette
-import com.toolbox.nativetoolbox.util.CnConvert
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -64,8 +63,8 @@ fun HistoryTodayToolScreen(onBack: () -> Unit) {
                 val list = ArrayList<HistEvent>(arr.length())
                 for (i in 0 until arr.length()) {
                     val o = arr.getJSONObject(i)
-                    // 维基数据是繁体,就地转简体
-                    list.add(HistEvent(o.optInt("y"), CnConvert.toSimplified(o.optString("t"))))
+                    // 后端数据已是简体,直接使用
+                    list.add(HistEvent(o.optInt("y"), o.optString("t")))
                 }
                 events = list.sortedByDescending { it.year }
                 // 给主页「历史上的今天」卡片留一条缓存(否则那张卡永远不出现)
