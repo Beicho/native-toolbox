@@ -344,10 +344,10 @@ isRuntimeShaderSupported()  // API 33+  ← lens 折射真正依赖这个
 | 补 | 拼音首字母搜索(jsq→计算器,GB2312 分界表法,JVM 验证) | 构建绿 |
 | 补 | 手机互传(HTTP 局域网文件共享,双向传输,二维码扫码访问) | 构建绿 |
 | 测 | emutest 升级为全量 200 路由遍历(之前只测 23 个) | 198/200 绿 |
+| 修 | 正则转义修复(TextTemplate/ClipboardShelf ExceptionInInitializerError,}} 未转义) | ✅ 200/200 全绿 |
 
 ## 还欠 ⏳
 
-- 全量模拟器测试结果(200 路由遍历,跑批中)
-- release.yml 发版流程用新签名出正式版
+- release.yml 发版流程用新签名出正式版(emutest 已全绿,可发版)
 - 空状态批量补完(蓝牙已做,WiFi 分析等长尾)
 - 系统全局搜索(AppSearch)

@@ -17,9 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -105,9 +104,12 @@ fun HomeScreen(
         usage.entries
             .filter { it.value > 0 }
             .sortedByDescending { it.value }
-            .take(4)
+            .take(8)  // 前 8 个常用工具,2x2 大卡片
             .mapNotNull { entry -> byRoute[entry.key] }
     }
+
+    // 分类折叠状态
+    var expandedCategories by remember { mutableStateOf(setOf<String>()) }
 
     val filtered = if (query.isBlank()) null else run {
         val q = query.trim()
@@ -134,6 +136,7 @@ fun HomeScreen(
             .background(palette.groupedBackground),
         contentPadding = PaddingValues(bottom = 120.dp)
     ) {
+        // 顶部问候 + 搜索框(固定区域,不随内容滚动)
         item {
             Column(
                 Modifier
@@ -146,6 +149,8 @@ fun HomeScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = palette.secondaryLabel
                 )
+                Spacer(Modifier.height(16.dp))
+                IosTextField(value = query, onValueChange = { query = it }, placeholder = "搜索工具…")
             }
         }
 
@@ -166,7 +171,7 @@ fun HomeScreen(
             }
         }
 
-        // 【今天】—— 活数据卡片
+        // 【今天】—— 活数据卡片(改为横向滚动,不是 Pager)
         if (liveCards.isNotEmpty() && query.isBlank()) {
             item {
                 Spacer(Modifier.height(20.dp))
@@ -176,50 +181,33 @@ fun HomeScreen(
                     style = MaterialTheme.typography.headlineMedium,
                     color = palette.label
                 )
-                val pagerState = rememberPagerState(pageCount = { liveCards.size })
-                HorizontalPager(
-                    state = pagerState,
+                // 横向滚动 Row,每个卡片宽度 280dp
+                androidx.compose.foundation.lazy.LazyRow(
                     contentPadding = PaddingValues(horizontal = 20.dp),
-                    pageSpacing = 12.dp,
-                    // 固定高度:不同卡片内容量不同,不固定的话滑动时整页跳高度
-                    modifier = Modifier.fillMaxWidth().height(190.dp)
-                ) { page ->
-                    when (liveCards[page]) {
-                        "countdown" -> CountdownCard(countdowns, onOpenTool)
-                        "todo" -> TodoCard(
-                            items = todos,
-                            onToggle = { id, done ->
-                                HomeCardData.toggleTodo(id, done)
-                                todos = HomeCardData.getTodos(context)
-                            },
-                            onOpenTool = onOpenTool,
-                        )
-                        "bookkeep" -> BookkeepCard(
-                            summary = bookkeep!!,
-                            onQuickAdd = { amount, category ->
-                                HomeCardData.addExpense(amount, category)
-                                bookkeep = HomeCardData.getBookkeepSummary(context)
-                            },
-                            onOpenTool = onOpenTool,
-                        )
-                        "onthisday" -> OnThisDayCard(onThisDay!!, onOpenTool)
-                    }
-                }
-                if (liveCards.size > 1) {
-                    Spacer(Modifier.height(10.dp))
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        repeat(liveCards.size) { i ->
-                            Box(
-                                Modifier
-                                    .size(if (pagerState.currentPage == i) 7.dp else 5.dp)
-                                    .clip(CircleShape)
-                                    .background(if (pagerState.currentPage == i) palette.label else palette.tertiaryLabel.copy(alpha = 0.3f))
-                            )
-                            if (i != liveCards.lastIndex) Spacer(Modifier.width(6.dp))
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(liveCards.size) { index ->
+                        Box(Modifier.width(280.dp).height(180.dp)) {
+                            when (liveCards[index]) {
+                                "countdown" -> CountdownCard(countdowns, onOpenTool)
+                                "todo" -> TodoCard(
+                                    items = todos,
+                                    onToggle = { id, done ->
+                                        HomeCardData.toggleTodo(id, done)
+                                        todos = HomeCardData.getTodos(context)
+                                    },
+                                    onOpenTool = onOpenTool,
+                                )
+                                "bookkeep" -> BookkeepCard(
+                                    summary = bookkeep!!,
+                                    onQuickAdd = { amount, category ->
+                                        HomeCardData.addExpense(amount, category)
+                                        bookkeep = HomeCardData.getBookkeepSummary(context)
+                                    },
+                                    onOpenTool = onOpenTool,
+                                )
+                                "onthisday" -> OnThisDayCard(onThisDay!!, onOpenTool)
+                            }
                         }
                     }
                 }
@@ -241,8 +229,9 @@ fun HomeScreen(
                     color = palette.label
                 )
             }
-            toolGrid(filtered, onOpenTool)
+            toolGrid(filtered, onOpenTool, largeTiles = false)
         } else {
+            // 常用工具:前 8 个,2x4 大卡片布局
             if (frequent.isNotEmpty()) {
                 item {
                     Text(
@@ -252,18 +241,41 @@ fun HomeScreen(
                         color = palette.label
                     )
                 }
-                toolGrid(frequent, onOpenTool)
+                toolGrid(frequent, onOpenTool, largeTiles = true)
             }
+            // 全部工具:按分类折叠
             categories.forEach { category ->
                 item {
-                    Text(
-                        category.name,
-                        Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp),
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = palette.label
-                    )
+                    val expanded = category.name in expandedCategories
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                expandedCategories = if (expanded) {
+                                    expandedCategories - category.name
+                                } else {
+                                    expandedCategories + category.name
+                                }
+                            }
+                            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            category.name,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = palette.label
+                        )
+                        Text(
+                            if (expanded) "收起" else "${category.tools.size} 个 ›",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = palette.secondaryLabel
+                        )
+                    }
                 }
-                toolGrid(category.tools, onOpenTool)
+                if (category.name in expandedCategories) {
+                    toolGrid(category.tools, onOpenTool, largeTiles = false)
+                }
             }
         }
     }
@@ -504,26 +516,87 @@ private fun OnThisDayCard(event: String, onOpenTool: (String) -> Unit) {
 
 private fun androidx.compose.foundation.lazy.LazyListScope.toolGrid(
     tools: List<ToolDef>,
-    onOpenTool: (String) -> Unit
+    onOpenTool: (String) -> Unit,
+    largeTiles: Boolean = false
 ) {
-    tools.chunked(2).forEach { pair ->
-        item {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                pair.forEach { tool ->
-                    ToolCard(
-                        tool = tool,
-                        modifier = Modifier.weight(1f),
-                        onClick = { onOpenTool(tool.route) }
-                    )
+    if (largeTiles) {
+        // 大卡片:常用工具,2x4 布局,每个占半宽,图标 48dp
+        tools.chunked(2).forEach { pair ->
+            item {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    pair.forEach { tool ->
+                        LargeToolCard(
+                            tool = tool,
+                            modifier = Modifier.weight(1f),
+                            onClick = { onOpenTool(tool.route) }
+                        )
+                    }
+                    if (pair.size == 1) Spacer(Modifier.weight(1f))
                 }
-                if (pair.size == 1) Spacer(Modifier.weight(1f))
+                Spacer(Modifier.height(10.dp))
             }
-            Spacer(Modifier.height(10.dp))
+        }
+    } else {
+        // 小卡片:全部工具和搜索结果,2 列布局
+        tools.chunked(2).forEach { pair ->
+            item {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    pair.forEach { tool ->
+                        ToolCard(
+                            tool = tool,
+                            modifier = Modifier.weight(1f),
+                            onClick = { onOpenTool(tool.route) }
+                        )
+                    }
+                    if (pair.size == 1) Spacer(Modifier.weight(1f))
+                }
+                Spacer(Modifier.height(10.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun LargeToolCard(
+    tool: ToolDef,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val palette = LocalIosPalette.current
+    Column(
+        modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(palette.cardBackground)
+            .clickable(onClick = onClick)
+            .padding(18.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        IconTile(tool.icon, tool.tint(palette), size = 48.dp)
+        Column {
+            Text(
+                tool.title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = palette.label,
+                maxLines = 1
+            )
+            Text(
+                tool.subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.secondaryLabel,
+                minLines = 2,
+                maxLines = 2
+            )
         }
     }
 }
