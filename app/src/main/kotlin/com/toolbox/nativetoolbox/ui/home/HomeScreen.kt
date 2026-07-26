@@ -20,6 +20,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.ui.draw.rotate
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -248,6 +256,10 @@ fun HomeScreen(
             categories.forEach { category ->
                 item {
                     val expanded = category.name in expandedCategories
+                    val rotation by animateFloatAsState(
+                        targetValue = if (expanded) 90f else 0f,
+                        animationSpec = tween(durationMillis = 300)
+                    )
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -267,15 +279,31 @@ fun HomeScreen(
                             style = MaterialTheme.typography.headlineMedium,
                             color = palette.label
                         )
-                        Text(
-                            if (expanded) "收起" else "${category.tools.size} 个 ›",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = palette.secondaryLabel
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                "${category.tools.size} 个",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = palette.secondaryLabel
+                            )
+                            Text(
+                                " ›",
+                                Modifier.rotate(rotation),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = palette.secondaryLabel
+                            )
+                        }
                     }
                 }
-                if (category.name in expandedCategories) {
-                    toolGrid(category.tools, onOpenTool, largeTiles = false)
+                item {
+                    AnimatedVisibility(
+                        visible = category.name in expandedCategories,
+                        enter = expandVertically(animationSpec = tween(300)) + fadeIn(tween(200)),
+                        exit = shrinkVertically(animationSpec = tween(300)) + fadeOut(tween(200))
+                    ) {
+                        Column {
+                            toolGrid(category.tools, onOpenTool, largeTiles = false)
+                        }
+                    }
                 }
             }
         }
